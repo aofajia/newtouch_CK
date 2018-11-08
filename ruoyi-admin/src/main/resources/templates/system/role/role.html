@@ -11,117 +11,127 @@
 				<form id="role-form">
 					<div class="select-list">
 						<ul>
+							<li>
+								角色名称：<input type="text" name="roleName"/>
+							</li>
+							<li>
+								权限字符：<input type="text" name="roleKey"/>
+							</li>
+							<li>
+								角色状态：<select name="status" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+							</li>
 							<li class="select-time">
-								<label>对账期间： </label>
+								<label>创建时间： </label>
 								<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
 								<span>-</span>
 								<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
 							</li>
-                        </ul>
-                        <ul>
-							<li>
-								订单状态：
-                                <select name="status">
-                                    <option value="">可开票</option>
-                                    <option value="">全部</option>
-								</select>
-							</li>
-							<li>
-								供应商类型：
-								<select id="suppliertype" style="width:268px;">
-								</select>
-							</li>
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							    <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
 							</li>
 						</ul>
 					</div>
 				</form>
 			</div>
-
+		
+			<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:role:add">
+	                <i class="fa fa-plus"></i> 新增
+	            </a>
+	            <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:role:edit">
+		            <i class="fa fa-edit"></i> 修改
+		        </a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:role:remove">
+		            <i class="fa fa-remove"></i> 删除
+		        </a>
+		        <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+		            <i class="fa fa-download"></i> 导出
+		        </a>
+	        </div>
+	        
 	        <div class="col-sm-12 select-table table-striped">
-                <label>账金相符： </label>
-                <table id="bootstrap-table" data-mobile-responsive="true"></table>
+			    <table id="bootstrap-table" data-mobile-responsive="true"></table>
 			</div>
 		</div>
 	</div>
 	<div th:include="include :: footer"></div>
-
-
 	<script th:inline="javascript">
-
-        $.ajax(
-        {
-            type : "POST",
-            url : "/fi/orderchecking/storelist",
-            dataType : "JSON",
-            data : {},
-            success : function(msg)
-            {
-                for (var i = 0; i < msg.length; i++)
-                {
-                    $("#suppliertype").append("<option value="+msg[i].store_id+">"+msg[i].shop_name+"</option>");
-                }
-                if(msg.length == 0)
-                {
-                    $("#suppliertype").append("<option value='0'>请选择</option>");//添加第一个option值
-                    confirm("未查到任何供应商信息，请联系运维人员。");
-                }
-
-            },
-            error:function()
-            {
-                alert("获取数据失败", "error");
-            }
-        });
-
-
-
-       /* var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
+		var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
 		var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
 		var datas = [[${@dict.getType('sys_normal_disable')}]];
 		var prefix = ctx + "system/role";
-		console.log(ctx);*/
+		
 
-
-		/*$(function()
-        {
-		    var options =
-            {
-		        sortName: "order_id",
-		        modalName: "订单对账",
+		$(function() {
+		    var options = {
+		        url: prefix + "/list",
+		        createUrl: prefix + "/add",
+		        updateUrl: prefix + "/edit/{id}",
+		        removeUrl: prefix + "/remove",
+		        exportUrl: prefix + "/export",
+		        sortName: "roleSort",
+		        modalName: "角色",
 		        search: false,
 		        showExport: false,
 		        columns: [{
-		            checkbox: false
+		            checkbox: true
 		        },
 		        {
-		            field: 'order_id',
-		            title: '商城订单号',
-                    sortable: true
+		            field: 'roleId',
+		            title: '角色编号'
 		        },
 		        {
-		            field: 'final_amount',
-		            title: '订单总额'
-		        },
-		        {
-		            field: 'other_order_id',
-		            title: '第三方订单号',
+		            field: 'roleName',
+		            title: '角色名称',
 		            sortable: true
 		        },
 		        {
-		            field: 'other_final_amount',
-		            title: '第三方订单金额'
+		            field: 'roleKey',
+		            title: '权限字符',
+		            sortable: true
+		        },
+		        {
+		            field: 'roleSort',
+		            title: '显示顺序',
+		            sortable: true
+		        },
+		        {
+		            field: 'status',
+		            title: '状态',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	return $.table.selectDictLabel(datas, value);
+		            }
+		        },
+		        {
+		            field: 'createTime',
+		            title: '创建时间',
+		            sortable: true
+		        },
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		                var actions = [];
+		                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.roleId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+		                actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="rule(\'' + row.roleId + '\')"><i class="fa fa-check-square-o"></i>数据权限</a> ');
+		                actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.roleId + '\')"><i class="fa fa-remove"></i>删除</a>');
+		                return actions.join('');
+		            }
 		        }]
 		    };
 		    $.table.init(options);
-		});*/
+		});
 		
-		/*/!*角色管理-分配数据权限*!/
+		/*角色管理-分配数据权限*/
 		function rule(roleId) {
 		    var url = prefix + '/rule/' + roleId;
 		    $.modal.open("分配数据权限", url);
-		}*/
+		}
 	</script>
 </body>
 </html>
