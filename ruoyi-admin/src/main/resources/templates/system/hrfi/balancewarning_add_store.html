@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-balancewarning-add-store">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">供应商名称：</label>
+            <div class="col-sm-8">
+                <select id="configname" name="configname" class="{required:true}">
+                    <option value="">请选择....</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">预警余额：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="warningmoney" id="warningmoney">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">月度总消费金额：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="monthlymoney" id="monthlymoney">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">供应商账户：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="storeaccount" id="storeaccount">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">负责人：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="contacts" id="contacts">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">负责人邮箱：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="email" id="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">有效起始时间：</label>
+
+            <div class="col-sm-8">
+                <li class="select-time">
+                    <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
+                </li>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">有效结束时间：</label>
+            <div class="col-sm-8">
+                <li class="select-time">
+                    <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+                </li>
+            </div>
+        </div>
+
+
+
+
+
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+
+    $.ajax(
+    {
+        type : "POST",
+        url : "/fi/orderchecking/storelist",
+        dataType : "JSON",
+        data : {},
+        success : function(msg)
+        {
+            for (var i = 0; i < msg.length; i++)
+            {
+                $("#configname").append("<option value="+msg[i].store_id+">"+msg[i].shop_name+"</option>");
+            }
+            if(msg.length == 0)
+            {
+                $("#configname").append("<option value=''>请选择</option>");//添加第一个option值
+                confirm("未查到任何供应商信息，请联系运维人员。");
+            }
+
+        },
+        error:function()
+        {
+            alert("获取数据失败", "error");
+        }
+    });
+
+   $("#form-balancewarning-add-store").validate({
+        rules:{
+            warningmoney:{
+                required:true,
+                number:true
+            },
+            monthlymoney:{
+                required:true,
+                number:true
+            },
+            storeaccount:{
+                required:true,
+                digits:true
+            },
+            contacts:{
+                required:true
+            },
+            email:{
+                required:true,
+                email:true
+            },
+            startTime:{
+                required:true
+            },
+            endTime:{
+                required:true
+            }
+        },
+        messages: {
+            "warningmoney": {
+                number: "所填金额格式不正确"
+            },
+            "monthlymoney": {
+                number: "所填金额格式不正确"
+            },
+            "storeaccount": {
+                digits: "所账户格式不正确"
+            },
+            "contacts": {
+                required: "负责人必填"
+            },
+            "email": {
+                email: "负责人邮箱可是不正确"
+            },
+            "startTime": {
+                required: "有效起始时间必填"
+            },
+            "endTime": {
+                required: "有效结束时间必填"
+            }
+        }
+    });
+
+    function submitHandler()
+    {
+        var suppliertype = $('#configname option:selected').val();
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+        if(suppliertype == "")
+        {
+            alert("请选择供应商类型");
+        }
+        if(startTime == "")
+        {
+            alert("请选择有效起始时间");
+        }
+        if(endTime == "")
+        {
+            alert("请选择有效结束时间");
+        }
+        else if ($.validate.form())
+        {
+            add();
+        }
+    }
+
+    function add()
+    {
+        var suppliertype = $('#configname option:selected').val();
+        var warningmoney = $('#warningmoney').val();
+        var monthlymoney = $('#monthlymoney').val();
+        var storeaccount = $('#storeaccount').val();
+        var contacts = $('#contacts').val();
+        var email = $('#email').val();
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+        var data =
+        {
+            "suppliertype" : suppliertype,
+            "warningmoney" : warningmoney,
+            "monthlymoney" : monthlymoney,
+            "storeaccount" : storeaccount,
+            "contacts" : contacts,
+            "email" : email,
+            "startTime" : startTime,
+            "endTime" : endTime
+        };
+        console.log(data);
+        $.ajax({
+        cache : true,
+        type : "POST",
+        url : ctx + "fi/balancewarning/add",
+        data : {
+            "data": data
+        },
+        async : false,
+        error : function(request) {
+            $.modal.alertError("系统错误");
+        },
+        success : function(data) {
+            $.operate.saveSuccess(data);
+        }
+        });
+    }
+</script>
+</body>
+</html>

@@ -66,7 +66,7 @@
         <!-- pojo 实体生成器 -->
         <!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
         <!-- schema即为数据库名 可不写 -->
-        <table  tableName="sdb_business_storemanger" domainObjectName="Storemanger"
+        <table  tableName="hrfi_balancewarning_config_type" domainObjectName="BWConfigtype"
                 enableInsert="true" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                 enableSelectByExample="false" selectByExampleQueryId="false">
             <!-- 忽略字段 可选的（0 or 1） -->
@@ -74,6 +74,8 @@
             <!--//无论字段是什么类型，生成的类属性都是varchar。 可选的（0 or 1） 测试无效 -->
             <!-- <columnOverride column="city_code" jdbcType="VARCHAR" /> -->
         </table>
+
+
 
     </context>
 </generatorConfiguration>

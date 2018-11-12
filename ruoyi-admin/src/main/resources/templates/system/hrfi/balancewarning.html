@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+	<div class="row">
+        <div class="btn-group-sm hidden-xs" id="toolbar">
+            <a class="btn btn-success" onclick="$.operate.add()">
+                <i class="fa fa-plus"></i> 新增供应商配置
+            </a>
+			<a class="btn btn-success" onclick="$.operate.addtwo()">
+				<i class="fa fa-plus"></i> 新增商城负责人
+			</a>
+		</div>
+
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+
+    var prefix = ctx + "fi/balancewarning";
+
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/addstore",
+            createtwoUrl: prefix + "/addmanage",
+            updateUrl: prefix + "/edit/{id}",
+            method: 'post',
+            sortName: "order_id",
+            modalName: "商城参数配置",
+            search: false,
+            showExport: false,
+            columns: [
+            {
+                checkbox: false
+            },
+            {
+                field: 'id',
+                title: '主键',
+                visible: false
+            },
+            {
+                field: 'configtype',
+                title: '配置类型'
+            },
+            {
+                field: 'configname',
+                title: '配置名称'
+            },
+            {
+                field: 'warningmoney',
+                title: '预警余额'
+            },
+            {
+                field: 'monthlymoney',
+                title: '月度总消费金额'
+            },
+            {
+                field: 'storeaccount',
+                title: '供应商账户'
+            },
+            {
+                field: 'contacts',
+                title: '负责人'
+            },
+            {
+                field: 'email',
+                title: '负责人邮箱'
+            },
+            {
+                field: 'startdate',
+                title: '有效起始时间'
+            },
+            {
+                field: 'enddate',
+                title: '有效结束时间'
+            },
+            {
+                title: '操作',
+                align: 'center',
+                formatter: function(value, row, index) {
+                    var actions = [];
+                    actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                    return actions.join('');
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+   /* var options = {
+        url: prefix + "/list",
+        createUrl: prefix + "/add",
+        updateUrl: prefix + "/edit/{id}",
+        method: 'post',
+        sortName: "configtype",
+        modalName: "余额预警",
+        search: false,
+        showExport: false,
+        columns: [
+		{
+			checkbox: false
+		},
+		{
+			field: 'id',
+			title: '配置类型',
+            hidden: true
+		},
+		{
+			field: 'configtype',
+			title: '配置类型'
+		},
+		{
+			field: 'configname',
+			title: '配置名称'
+		},
+		{
+			field: 'warningmoney',
+			title: '预警余额'
+		},
+		{
+			field: 'monthlymoney',
+			title: '月度总消费金额'
+		},
+		{
+			field: 'storeaccount',
+			title: '供应商账户'
+		},
+		{
+			field: 'contacts',
+			title: '负责人'
+		},
+		{
+			field: 'email',
+			title: '负责人邮箱'
+		},
+		{
+			field: 'startdate',
+			title: '有效起始时间'
+		},
+		{
+			field: 'enddate',
+			title: '有效结束时间'
+		},
+		{
+			title: '操作',
+			align: 'center',
+			formatter: function(value, row, index) {
+				var actions = [];
+				actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+				return actions.join('');
+			}
+        }]
+    };
+    $.table.init(options);*/
+</script>
+</body>
+</html>

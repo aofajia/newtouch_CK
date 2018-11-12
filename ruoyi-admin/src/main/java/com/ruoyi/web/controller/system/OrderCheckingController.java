@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequestMapping("/system/hrfi")
+@RequestMapping("/fi/orderchecking")
 public class OrderCheckingController extends BaseController
 {
 
