@@ -174,6 +174,20 @@ public class BalanceWarningController extends BaseController
         return toAjax(i);
     }
 
+    @PostMapping("/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids)
+    {
+        try
+        {
+            int i = balanceWarningService.deleteConfigByIds(ids);
+            return toAjax(i);
+        }
+        catch (Exception e)
+        {
+            return error(e.getMessage());
+        }
+    }
     /**
      * 获取供应商配置信息
      *

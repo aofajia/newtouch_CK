@@ -141,4 +141,11 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
         List<StoreConfig> storeConfigs = bwConfigMapper.selectStoreConfigAll();
         return storeConfigs;
     }
+
+    @Override
+    public int deleteConfigByIds(String id) throws Exception
+    {
+        int i = bwConfigMapper.deleteByPrimaryKey(id);
+        return i;
+    }
 }

@@ -33,6 +33,7 @@
             createUrl: prefix + "/addstore",
             createtwoUrl: prefix + "/addmanage",
             updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
             method: 'post',
             // sortName: "configtype",
             modalName: "商城参数配置",
@@ -94,6 +95,7 @@
                 formatter: function(value, row, index) {
                     var actions = [];
                     actions.push('<a class="btn btn-success btn-xs" href="#" onclick="editOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\')"><i class="fa fa-edit"></i>编辑</a> ');
+                    actions.push('<a class="btn btn-danger btn-xs " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                     return actions.join('');
                 }
             }]
@@ -103,11 +105,8 @@
 
     function editOpen(rowinfo)
     {
-        console.log(rowinfo);
         var arr=new Array();
         arr=rowinfo.split(',');
-        console.log(arr[0]);
-        console.log(arr[1]);
         var url = "/404.html";
         if(arr[1] == 0001)
         {

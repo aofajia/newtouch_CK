@@ -82,4 +82,12 @@ public interface IBalanceWarningService
      * @return 配置信息列表
      */
     public List<StoreConfig> getStoreMonthlyMoney();
+    /**
+     * 删除配置信息
+     *
+     * @param id 需要删除的数据ID
+     * @return 结果
+     * @throws Exception 异常
+     */
+    public int deleteConfigByIds(String id) throws Exception;
 }
