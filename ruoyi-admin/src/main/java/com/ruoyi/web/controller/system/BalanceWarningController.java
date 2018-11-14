@@ -179,7 +179,7 @@ public class BalanceWarningController extends BaseController
      *
      * @return
      */
-    @RequestMapping(value = "/FI/getStoreMonthlyMoney", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/FI/getStoreMonthlyMoney", method = RequestMethod.POST)
     public Result getStoreMonthlyMoney() {
         try {
             List<StoreConfig> list = balanceWarningService.getStoreMonthlyMoney();
@@ -196,5 +196,5 @@ public class BalanceWarningController extends BaseController
 
         }
         return Result.success();
-    }
+    }*/
 }
