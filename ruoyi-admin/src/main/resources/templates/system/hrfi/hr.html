@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            月份：<input type="text" name="roleKey"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-primary" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+                <i class="fa fa-download"></i> 导入模板下载
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+                <i class="fa fa-download"></i> 导入
+            </a>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "system/newtouch";
+    $(function() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            sortName: "roleSort",
+            modalName: "角色",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'employee_id',
+                    title: '员工编号'
+                },
+                {
+                    field: 'employee_name',
+                    title: '员工姓名',
+                },
+                {
+                    field: 'company_name',
+                    title: '公司名称',
+                },
+                {
+                    field: 'department_name',
+                    title: '部门名称',
+                },
+                {
+                    field: 'rice_money',
+                    title: '饭贴',
+                    align: 'center',
+                },
+                {
+                    field: 'rice_money',
+                    title: '期间',
+                    align: 'center',
+                },
+                {
+                    field: 'welfare_money',
+                    title: '福利',
+                },
+                {   field: 'trade_money',
+                    title: '工会费',
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

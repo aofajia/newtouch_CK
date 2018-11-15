@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                    <ul>
+                        <ul>
+                            <li>
+                                <label style="margin-top: 5px">开票期间:</label>
+                            </li>
+                            <li>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间"
+                                       name="params[beginTime]"/>
+                            </li>
+                            <li>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间"
+                                       name="params[endTime]"/>
+                            </li>
+                            <button class="btn btn-primary" onclick="searchData()" id="search">搜索</button>
+                        </ul>
+                        <li>
+                            供应商类型：
+                            <select id="suppliertype" style="width:268px;" name="suppliertype">
+                            </select>
+                            开票总金额：
+                            <input type="text" class="text" id="money"/>
+                        </li>
+                        <li class="select-time">
+                            <button class="btn btn-primary" id="get_open_ticket_info">获取开票信息</button>
+                            <button class="btn btn-primary" onclick="applyOpenTicket()" id="apply_open_ticket">申请开票</button>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </form>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+
+    //搜索
+    function searchData() {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+
+
+    }
+
+    //申请开票
+    function applyOpenTicket() {
+        confirm("确定申请开票？请保证数据准确无误！", function (result) {
+            if (!result) {
+                return;
+            }else{
+
+            }
+
+        })
+    }
+
+
+    $(function () {
+        var options = {
+            url: "/system/hr/list",
+            search: false,
+            showExport: false,
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'company_id',
+                    title: '法人体ID'
+                },
+                {
+                    field: 'open_ticket_rise',
+                    title: '开票抬头'
+                },
+                {
+                    field: 'order_num',
+                    title: '订单总数量'
+                },
+                {
+                    field: 'money_num',
+                    title: '订单总金额'
+                },
+                {
+                    field: 'account',
+                    title: '开票金额比列'
+                },
+                {
+                    field: 'other_final_amount',
+                    title: '调整发票明细'
+                },
+            ]
+        };
+        $.table.init(options);
+    });
+
+</script>
+</body>
+</html>

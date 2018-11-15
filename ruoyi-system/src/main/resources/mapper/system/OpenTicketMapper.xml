@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.OpenTicketMapper">
+
+    <!-- 查询开票汇总信息 -->
+    <select id="list" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
+		SELECT
+		order_legalman AS company_id,
+		invoice_legalman AS open_ticket_rise,
+		COUNT(order_id) AS order_num,
+		SUM(final_amount) AS money_num
+	FROM
+		sdb_b2c_orders
+
+	GROUP BY
+		order_legalman
+    </select>
+
+	<!-- 查询总金额数量 -->
+	<select id="order_num" resultType="java.lang.Integer">
+        select SUM(final_amount) from sdb_b2c_orders
+	</select>
+
+</mapper>
