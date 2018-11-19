@@ -188,27 +188,12 @@ public class BalanceWarningController extends BaseController
             return error(e.getMessage());
         }
     }
-    /**
-     * 获取供应商配置信息
-     *
-     * @return
-     */
-    /*@RequestMapping(value = "/FI/getStoreMonthlyMoney", method = RequestMethod.POST)
-    public Result getStoreMonthlyMoney() {
-        try {
-            List<StoreConfig> list = balanceWarningService.getStoreMonthlyMoney();
-            //如果查询的结果大于0返回success为0提示今天没有离职员工
-            if (list.size() > 0) {
-                return Result.success(list);
-            }
-            if (list.size() == 0) {
-                return Result.failure(SPECIFIED_STOREMONTHLYMONEY_ISNULL);
-            }
-        } catch (Exception e) {
-//            logger.debug("获取供应商配置信息失败！" + e.getMessage());
-            return Result.failure(INTERFACE_INNER_INVOKE_ERROR);
 
-        }
-        return Result.success();
-    }*/
+    @GetMapping("/recharge/{roleId}")
+    public String recharge(@PathVariable("roleId") String roleId, ModelMap mmap)
+    {
+        BWConfig bwConfig = balanceWarningService.selectManageConfigById(roleId);
+        mmap.put("recharge", bwConfig);
+        return prefix + "/balancewarning_edit_manage";
+    }
 }

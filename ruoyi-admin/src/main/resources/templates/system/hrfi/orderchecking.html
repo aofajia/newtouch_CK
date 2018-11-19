@@ -4,40 +4,58 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-	
+
 	<div class="container-div">
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
-				<form id="role-form">
-					<div class="select-list">
-						<ul>
-                            <li class="select-time">
-                                <label>对账期间： </label>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
-                                <span>-</span>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>
-                                订单状态：
-                                <select id="orderstatus" name="orderstatus">
-                                    <option value="invoice" selected="selected">可开票</option>
-                                    <option value="all">全部</option>
-                                </select>
-                            </li>
-                            <li>
-                                供应商类型：
-                                <select id="suppliertype" style="width:268px;" name="suppliertype">
-                                </select>
-                            </li>
-							<li>
-								<a class="btn btn-primary btn-rounded btn-sm" onclick="validate()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-							</li>
-						</ul>
-					</div>
-				</form>
+                <ul>
+                    <li>
+                        <label for="employee_paymoney" style="font-size:17px;">员工消费总金额：</label><label id="employee_paymoney"  style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;</label>
+                        <label for="employee_residuemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;员工剩余账户总金额：</label><label id="employee_residuemoney"  style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;</label><label id="adju_card_code"></label>
+                        <label for="employee_leavemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;离职提现额度：</label><label id="employee_leavemoney" style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;</label><label id="adju_asset_name"></label>
+                        <label for="mall_rechargemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;商城充值总金额：</label><label id="mall_rechargemoney" style="font-size:17px;"></label>
+                    </li>
+                </ul>
+                <div class="select-list">
+                    <ul>
+                        <li class="select-time">
+                            <label>对账截至日期：</label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]" style="display:none"/>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+                            <label>（当日之前）</label>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="chinking()"><i class="fa fa-search"></i>&nbsp;对账</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			</div>
+
+            <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
 
 	        <div class="col-sm-12 select-table table-striped">
 			    <table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -46,62 +64,37 @@
 	</div>
 	<div th:include="include :: footer"></div>
 	<script th:inline="javascript">
-        $.ajax(
-        {
-            type : "POST",
-            url : "/fi/orderchecking/storelist",
-            dataType : "JSON",
-            data : {},
-            success : function(msg)
-            {
-                for (var i = 0; i < msg.length; i++)
-                {
-                    $("#suppliertype").append("<option value="+msg[i].store_id+">"+msg[i].shop_name+"</option>");
-                }
-                if(msg.length == 0)
-                {
-                    $("#suppliertype").append("<option value='0'>请选择</option>");//添加第一个option值
-                    confirm("未查到任何供应商信息，请联系运维人员。");
-                }
 
-            },
-            error:function()
-            {
-                alert("获取数据失败", "error");
-            }
-        });
-
-        function validate()
+        function chinking()
         {
-            var startTime = $('#startTime').val();
             var endTime = $('#endTime').val();
-            var orderstatus = $("#orderstatus option:selected").val();
-            var suppliertype = $('#suppliertype option:selected').val();
-            if(startTime == "")
+            if(endTime == "")
             {
-                alert("请选择对账开始时间");
+                alert("请选择对账截至日期");
             }
-            else if(endTime == "")
+            $.ajax(
             {
-                alert("请选择对账结束时间");
-            }
-            else if(orderstatus == "")
-            {
-                alert("请选择对账订单类型");
-            }
-            else if(suppliertype == "")
-            {
-                alert("请选择供应商类型");
-            }
-            else
-            {
-                $.table.search()
-            }
+                type : "POST",
+                url : "/fi/orderchecking/chinking",
+                dataType : "JSON",
+                data :
+                {
+                    "endTime" : endTime
+                },
+                success : function(msg)
+                {
+
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
         }
 
 		var prefix = ctx + "fi/orderchecking";
 
-        $('#bootstrap-table').bootstrapTable( {
+        var options = {
             url: prefix + "/list",
             method: 'post',
             sortName: "order_id",
@@ -111,6 +104,10 @@
             columns: [
             {
                 checkbox: false
+            },
+            {
+                field: 'store',
+                title: '供应商'
             },
             {
                 field: 'order_id',
@@ -127,18 +124,10 @@
             {
                 field: 'other_final_amount',
                 title: '第三方订单金额'
-            },
-            {
-                field: 'reason',
-                title: '说明'
-            }]
-        });
-
-		/*角色管理-分配数据权限*/
-		/*function rule(roleId) {
-		    var url = prefix + '/rule/' + roleId;
-		    $.modal.open("分配数据权限", url);
-		}*/
+            }
+            ]
+        };
+        $.table.init(options);
 	</script>
 </body>
 </html>

@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +30,12 @@ public class OrderCheckingController extends BaseController
     @Autowired
     private IOrderCheckingService orderCheckingService;
 
+    @RequestMapping("/home")
+    public String home()
+    {
+        return  prefix+"/orderchecking";
+    }
+
     @PostMapping("/storelist")
     @ResponseBody
     public List<Storemanger> storeList()
@@ -47,15 +50,28 @@ public class OrderCheckingController extends BaseController
     public TableDataInfo list(@RequestBody Map map)
     {
         startPage();
+        //先获取商城订单中（可开票/全部）订单
+        //调用京东接口 按日期获取所有订单
         List list = new ArrayList();
         return getDataTable(list);
     }
 
-    @RequestMapping("/home")
-    public String home()
+    @PostMapping("/chinking")
+    @ResponseBody
+    public List chinking(@RequestParam(required = false) String endTime)
     {
-        return  prefix+"/orderchecking";
+        //先获取商城订单中（可开票/全部）订单
+        //调用京东接口 按日期获取所有订单
+        List list = new ArrayList();
+        return list;
     }
 
-
+    @PostMapping("/companylist")
+    @ResponseBody
+    public List<Storemanger> companyList()
+    {
+        startPage();
+        List<Storemanger> storemangers = orderCheckingService.selectStoreAll();
+        return storemangers;
+    }
 }

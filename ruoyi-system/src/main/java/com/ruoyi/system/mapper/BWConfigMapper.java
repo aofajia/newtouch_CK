@@ -2,7 +2,6 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.BWConfig;
 import com.ruoyi.system.domain.StoreConfig;
-import com.ruoyi.system.domain.Storemanger;
 
 import java.util.List;
 import java.util.Map;
@@ -22,9 +21,9 @@ public interface BWConfigMapper {
 
     Map checkConfigName(String configName);
 
-    Map checkConfigNameExceptMe(BWConfig record);
-
     List<BWConfig> selectConfigAll();
+
+    Map checkConfigNameExceptMe(BWConfig bwConfig);
 
     List<StoreConfig> selectStoreConfigAll();
 }

@@ -14,6 +14,16 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label ">付款方式：</label>
+            <div class="col-sm-8">
+                <select id="paymethod" name="paymethod">
+                    <option value="">请选择....</option>
+                    <option value="precharge">预充值</option>
+                    <option value="monthly">月结</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">预警余额：</label>
             <div class="col-sm-8">
                 <input class="form-control" type="text" name="warningmoney" id="warningmoney">
@@ -145,11 +155,16 @@
     function submitHandler()
     {
         var suppliertype = $('#configname option:selected').val();
+        var paymethod = $('#paymethod option:selected').val();
         var startTime = $('#startTime').val();
         var endTime = $('#endTime').val();
         if(suppliertype == "")
         {
             alert("请选择供应商类型");
+        }
+        if(paymethod == "")
+        {
+            alert("请选择支付方式");
         }
         if(startTime == "")
         {
@@ -169,6 +184,7 @@
     {
         var supplierid = $('#configname option:selected').val();
         var suppliername = $('#configname option:selected').text();
+        var paymethod = $('#paymethod option:selected').val();
         var warningmoney = $('#warningmoney').val();
         var monthlymoney = $('#monthlymoney').val();
         var storeaccount = $('#storeaccount').val();
@@ -199,6 +215,7 @@
         data : {
             "supplierid" : supplierid,
             "configname" : suppliername,
+            "paymethod" : paymethod,
             "warningmoney" : warningmoney,
             "monthlymoney" : monthlymoney,
             "storeaccount" : storeaccount,

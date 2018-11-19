@@ -11,6 +11,8 @@ public class BWConfig {
 
     private String supplierid;
 
+    private String paymethod;
+
     private BigDecimal warningmoney;
 
     private BigDecimal monthlymoney;
@@ -57,6 +59,14 @@ public class BWConfig {
 
     public void setSupplierid(String supplierid) {
         this.supplierid = supplierid == null ? null : supplierid.trim();
+    }
+
+    public String getPaymethod() {
+        return paymethod;
+    }
+
+    public void setPaymethod(String paymethod) {
+        this.paymethod = paymethod == null ? null : paymethod.trim();
     }
 
     public BigDecimal getWarningmoney() {
