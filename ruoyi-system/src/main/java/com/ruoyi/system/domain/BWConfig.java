@@ -19,6 +19,8 @@ public class BWConfig {
 
     private String storeaccount;
 
+    private String invoicetype;
+
     private String contacts;
 
     private String email;
@@ -91,6 +93,14 @@ public class BWConfig {
 
     public void setStoreaccount(String storeaccount) {
         this.storeaccount = storeaccount == null ? null : storeaccount.trim();
+    }
+
+    public String getInvoicetype() {
+        return invoicetype;
+    }
+
+    public void setInvoicetype(String invoicetype) {
+        this.invoicetype = invoicetype == null ? null : invoicetype.trim();
     }
 
     public String getContacts() {

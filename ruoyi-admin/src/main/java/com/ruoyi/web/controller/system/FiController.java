@@ -43,7 +43,6 @@ public class FiController {
     public Result getStoreMonthlyMoney() {
         try {
             List<StoreConfig> list = balanceWarningService.getStoreMonthlyMoney();
-            //如果查询的结果大于0返回success为0提示今天没有离职员工
             if (list.size() > 0) {
                 return Result.success(list);
             }

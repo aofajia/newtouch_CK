@@ -1,15 +1,16 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.system.domain.BWConfig;
-import com.ruoyi.system.domain.BWConfigtype;
-import com.ruoyi.system.domain.StoreConfig;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.BWConfigMapper;
 import com.ruoyi.system.mapper.BWConfigtypeMapper;
+import com.ruoyi.system.mapper.CompanyMapper;
+import com.ruoyi.system.mapper.RechargeLogMapper;
 import com.ruoyi.system.service.IBalanceWarningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +23,10 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     private BWConfigtypeMapper bwConfigtypeMapper;
     @Autowired
     private BWConfigMapper bwConfigMapper;
+    @Autowired
+    private CompanyMapper companyMapper;
+    @Autowired
+    private RechargeLogMapper rechargeLogMapper;
 
     @Override
     public List<BWConfigtype> selectConfigTypeAll()
@@ -147,5 +152,26 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     {
         int i = bwConfigMapper.deleteByPrimaryKey(id);
         return i;
+    }
+
+    @Override
+    public List<Company> companyList()
+    {
+        List<Company> companies = companyMapper.selectAllCompany();
+        return companies;
+    }
+
+    @Override
+    public int saveRecharge(RechargeLog rechargeLogMap)
+    {
+        int insert = rechargeLogMapper.insert(rechargeLogMap);
+        return insert;
+    }
+
+    @Override
+    public List<RechargeLog> getRechargeList(RechargeLog rechargeLogMap)
+    {
+        List<RechargeLog> rechargeLogs = rechargeLogMapper.selectRoleList(rechargeLogMap);
+        return rechargeLogs;
     }
 }

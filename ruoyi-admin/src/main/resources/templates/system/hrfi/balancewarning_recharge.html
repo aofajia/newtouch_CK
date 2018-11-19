@@ -4,18 +4,35 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+<div class="container-div">
+<div class="row">
+<div class="col-sm-12 search-collapse">
     <form class="form-horizontal m" id="form-balancewarning-recharge" th:object="${recharge}">
         <input id="id" name="id" type="hidden" th:field="*{id}"/>
-        <div class="form-group">
-            <label class="col-sm-3 control-label ">所属法人体：</label>
-            <div class="col-sm-8">
-                <select id="company" name="company" class="{required:true}">
-                    <option value="">请选择....</option>
-                </select>
-            </div>
-        </div>
+        <input id="supplier" name="supplier" type="hidden" th:field="*{supplierid}"/>
+        <input id="configname" name="configname" type="hidden" th:field="*{configname}"/>
+        <li>
+            <label>所属法人体：</label>
+            <select id="companyid" name="companyid" class="{required:true}">
+                <option value="">请选择....</option>
+            </select>
+            <label>充值金额：</label>
+            <input id="rechargeMoney" type="text" style="display:inline;" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)" title="提示: 请输入充值金额" placeholder="提示: 请输入充值金额">
+            <button class="btn btn-primary btn-rounded btn-sm" id="recharge">充值</button>
+        </li>
+        <li>
+            <label>供应商名称：</label>
+            <select id="supplierid" name="supplierid" style="width:210px;">
+                <option value="">请选择....</option>
+            </select>
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+        </li>
     </form>
+</div>
+    <div class="col-sm-12 select-table table-striped">
+        <table id="bootstrap-table" data-mobile-responsive="true"></table>
+    </div>
+</div>
 </div>
 <div th:include="include::footer"></div>
 <script type="text/javascript">
@@ -23,18 +40,110 @@
     $.ajax(
     {
         type : "POST",
-        url : "/fi/orderchecking/companylist",
+        url : "/fi/orderchecking/storeConfigList",
+        dataType : "JSON",
+        async: false,
+        data : {},
+        success : function(msg)
+        {
+            for (var i = 0; i < msg.length; i++)
+            {
+                $("#supplierid").append("<option value="+msg[i].store_id+">"+msg[i].shop_name+"</option>");
+            }
+            if(msg.length == 0)
+            {
+                $("#supplierid").append("<option value=''>请选择</option>");//添加第一个option值
+                confirm("未查到任何供应商信息，请联系运维人员。");
+            }
+            if($("#supplier").val() == "")
+            {
+            }
+            else if($("#supplier").val() != "")
+            {
+                $('#supplierid').val($("#supplier").val());
+                $('#supplierid').attr("disabled","disabled");
+            }
+
+        },
+        error:function()
+        {
+            alert("获取数据失败", "error");
+        }
+    });
+
+    $("#recharge").click(btnRechargeEvent);
+    function btnRechargeEvent()
+    {
+        var id = $("#id").val();
+        var supplierid = $('#supplierid option:selected').val();
+        var suppliername = $('#supplierid option:selected').text();
+        var companyid = $('#companyid option:selected').val();
+        var companyname = $('#companyid option:selected').text();
+        var rechargemoney = $('#rechargeMoney').val();
+        if(companyid == "")
+        {
+            alert("请选择充值公司");
+            return false;
+        }
+        else if(rechargemoney == "" || rechargemoney == 0)
+        {
+            alert("请输入充值金额");
+            return false;
+        }
+        else if(supplierid == "")
+        {
+            alert("请输入选择供应商");
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : ctx + "fi/balancewarning/saverecharge",
+                // contentType: "application/json; charset=utf-8",
+                dataType : 'json',
+                // data : JSON.stringify(data),
+                data : {
+                    "id" : '',
+                    "supplierid" : supplierid,
+                    "suppliername" : suppliername,
+                    "companyid" : companyid,
+                    "companyname" : companyname,
+                    "rechargemoney" : rechargemoney,
+                    "commitdate" : ''
+                },
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+                    $.operate.saveSuccess(data);
+                }
+            });
+        }
+    };
+
+    function save()
+    {
+
+    }
+
+    $.ajax(
+    {
+        type : "POST",
+        url : "/fi/balancewarning/companylist",
         dataType : "JSON",
         data : {},
         success : function(msg)
         {
             for (var i = 0; i < msg.length; i++)
             {
-                $("#company").append("<option value="+msg[i].store_id+">"+msg[i].shop_name+"</option>");
+                $("#companyid").append("<option value="+msg[i].company_id+">"+msg[i].bank_card_name+"</option>");
             }
             if(msg.length == 0)
             {
-                $("#company").append("<option value=''>请选择</option>");//添加第一个option值
+                $("#companyid").append("<option value=''>请选择</option>");//添加第一个option值
                 confirm("未查到任何公司信息，请联系运维人员。");
             }
 
@@ -45,160 +154,61 @@
         }
     });
 
-
-    setTimeout(function ()
-    {
-        $.ajax(
+    var prefix = ctx + "fi/balancewarning";
+    var options = {
+        url: prefix + "/rechargelist",
+        method: 'post',
+        // sortName: "configtype",
+        modalName: "供应商充值记录",
+        queryParams: queryParams, //参数
+        search: false,
+        showExport: false,
+        columns: [
             {
-                type : "POST",
-                url : "/fi/balancewarning/getnotextinfo",
-                dataType : "JSON",
-                data :
-                    {
-                        id : $("#id").val()
-                    },
-                success : function(msg)
-                {
-                    console.log(msg);
-                    $('#configname').val(msg.supplierid);
-                    $('#paymethod').val(msg.paymethod);
-                    $('#startTime').val(msg.startdate);
-                    $('#endTime').val(msg.enddate);
+                checkbox: false
+            },
+            {
+                field: 'id',
+                title: '主键',
+                visible: false
+            },
+            {
+                field: 'supplierid',
+                title: '供应商ID',
+                visible: false
+            },
+            {
+                field: 'suppliername',
+                title: '供应商名称'
+            },
+            {
+                field: 'companyid',
+                title: '公司ID',
+                visible: false
+            },
+            {
+                field: 'companyname',
+                title: '公司名称'
+            },
+            {
+                field: 'rechargemoney',
+                title: '充值金额'
+            },
+            {
+                field: 'commitdate',
+                title: '充值时间'
+            }]
+    };
+    $.table.init(options);
 
-                },
-                error:function()
-                {
-                    alert("获取数据失败", "error");
-                }
-            });
-    }, 500);
-
-
-
-    $("#form-balancewarning-edit-store").validate({
-        rules:{
-            warningmoney:{
-                required:true,
-                number:true
-            },
-            monthlymoney:{
-                required:true,
-                number:true
-            },
-            storeaccount:{
-                required:true,
-                digits:true
-            },
-            contacts:{
-                required:true
-            },
-            email:{
-                required:true,
-                email:true
-            },
-            startTime:{
-                required:true
-            },
-            endTime:{
-                required:true
-            }
-        },
-        messages: {
-            "warningmoney": {
-                number: "所填金额格式不正确"
-            },
-            "monthlymoney": {
-                number: "所填金额格式不正确"
-            },
-            "storeaccount": {
-                digits: "所账户格式不正确"
-            },
-            "contacts": {
-                required: "负责人必填"
-            },
-            "email": {
-                email: "负责人邮箱可是不正确"
-            },
-            "startTime": {
-                required: "有效起始时间必填"
-            },
-            "endTime": {
-                required: "有效结束时间必填"
-            }
-        }
-    });
-
-    function submitHandler()
-    {
-        var suppliertype = $('#configname option:selected').val();
-        var paymethod = $('#paymethod option:selected').val();
-        var startTime = $('#startTime').val();
-        var endTime = $('#endTime').val();
-        if(suppliertype == "")
-        {
-            alert("请选择供应商类型");
-        }
-        if(paymethod == "")
-        {
-            alert("请选择支付方式");
-        }
-        if(startTime == "")
-        {
-            alert("请选择有效起始时间");
-        }
-        if(endTime == "")
-        {
-            alert("请选择有效结束时间");
-        }
-        else if ($.validate.form())
-        {
-            edit();
-        }
-    }
-
-    function edit()
-    {
-        var id = $("#id").val();
-        var configtype = $("#configtype").val();
-        var supplierid = $('#configname option:selected').val();
-        var suppliername = $('#configname option:selected').text();
-        var paymethod = $('#paymethod option:selected').val();
-        var warningmoney = $('#warningmoney').val();
-        var monthlymoney = $('#monthlymoney').val();
-        var storeaccount = $('#storeaccount').val();
-        var contacts = $('#contacts').val();
-        var email = $('#email').val();
-        var startdate = $('#startTime').val();
-        var enddate = $('#endTime').val();
-        $.ajax({
-            cache : true,
-            type : "POST",
-            url : ctx + "fi/balancewarning/editstoreconfig",
-            // contentType: "application/json; charset=utf-8",
-            dataType : 'json',
-            // data : JSON.stringify(data),
-            data : {
-                "id" : id,
-                "configtype" : configtype,
-                "supplierid" : supplierid,
-                "configname" : suppliername,
-                "paymethod" : paymethod,
-                "warningmoney" : warningmoney,
-                "monthlymoney" : monthlymoney,
-                "storeaccount" : storeaccount,
-                "contacts" : contacts,
-                "email" : email,
-                "startdate" : startdate,
-                "enddate" : enddate
-            },
-            async : false,
-            error : function(request) {
-                $.modal.alertError("系统错误");
-            },
-            success : function(data) {
-                $.operate.saveSuccess(data);
-            }
-        });
+    function queryParams(params)
+    {  //配置参数
+        var temp =
+        {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            supplierid: $('#supplierid option:selected').val(),
+            companyid: $('#companyid option:selected').val()
+        };
+        return temp;
     }
 </script>
 </body>

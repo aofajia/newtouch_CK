@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.RechargeLogMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.RechargeLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="supplierid" property="supplierid" jdbcType="VARCHAR" />
+    <result column="suppliername" property="suppliername" jdbcType="VARCHAR" />
+    <result column="companyid" property="companyid" jdbcType="VARCHAR" />
+    <result column="companyname" property="companyname" jdbcType="VARCHAR" />
+    <result column="rechargemoney" property="rechargemoney" jdbcType="DECIMAL" />
+    <result column="commitdate" property="commitdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, supplierid, suppliername, companyid, companyname, rechargemoney, commitdate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hrfi_balancewarning_rechargelog
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hrfi_balancewarning_rechargelog
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.RechargeLog" >
+    insert into hrfi_balancewarning_rechargelog (id, supplierid, suppliername, 
+      companyid, companyname, rechargemoney, 
+      commitdate)
+    values (#{id,jdbcType=VARCHAR}, #{supplierid,jdbcType=VARCHAR}, #{suppliername,jdbcType=VARCHAR}, 
+      #{companyid,jdbcType=VARCHAR}, #{companyname,jdbcType=VARCHAR}, #{rechargemoney,jdbcType=DECIMAL}, 
+      #{commitdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.RechargeLog" >
+    insert into hrfi_balancewarning_rechargelog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierid != null" >
+        supplierid,
+      </if>
+      <if test="suppliername != null" >
+        suppliername,
+      </if>
+      <if test="companyid != null" >
+        companyid,
+      </if>
+      <if test="companyname != null" >
+        companyname,
+      </if>
+      <if test="rechargemoney != null" >
+        rechargemoney,
+      </if>
+      <if test="commitdate != null" >
+        commitdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierid != null" >
+        #{supplierid,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliername != null" >
+        #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargemoney != null" >
+        #{rechargemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commitdate != null" >
+        #{commitdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.RechargeLog" >
+    update hrfi_balancewarning_rechargelog
+    <set >
+      <if test="supplierid != null" >
+        supplierid = #{supplierid,jdbcType=VARCHAR},
+      </if>
+      <if test="suppliername != null" >
+        suppliername = #{suppliername,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        companyid = #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        companyname = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargemoney != null" >
+        rechargemoney = #{rechargemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="commitdate != null" >
+        commitdate = #{commitdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.RechargeLog" >
+    update hrfi_balancewarning_rechargelog
+    set supplierid = #{supplierid,jdbcType=VARCHAR},
+      suppliername = #{suppliername,jdbcType=VARCHAR},
+      companyid = #{companyid,jdbcType=VARCHAR},
+      companyname = #{companyname,jdbcType=VARCHAR},
+      rechargemoney = #{rechargemoney,jdbcType=DECIMAL},
+      commitdate = #{commitdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectRoleList" parameterType="RechargeLog" resultType="java.util.Map">
+    SELECT * FROM hrfi_balancewarning_rechargelog br
+      where 1 = 1
+      <if test="supplierid != null and supplierid != ''">
+          AND br.supplierid = #{supplierid}
+      </if>
+      <if test="companyid != null and companyid != ''">
+          AND br.companyid = #{companyid}
+      </if>
+  </select>
+</mapper>

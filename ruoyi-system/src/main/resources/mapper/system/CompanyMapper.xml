@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Company" >
+    <id column="company_id" property="companyId" jdbcType="BIGINT" />
+    <result column="account_cat" property="accountCat" jdbcType="CHAR" />
+    <result column="linkman" property="linkman" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="company_taxno" property="companyTaxno" jdbcType="VARCHAR" />
+    <result column="company_ctel" property="companyCtel" jdbcType="VARCHAR" />
+    <result column="company_addr" property="companyAddr" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_cardid" property="bankCardid" jdbcType="INTEGER" />
+    <result column="bank_card_name" property="bankCardName" jdbcType="VARCHAR" />
+    <result column="invoice_name" property="invoiceName" jdbcType="VARCHAR" />
+    <result column="invoice_tel" property="invoiceTel" jdbcType="VARCHAR" />
+    <result column="invoice_addr" property="invoiceAddr" jdbcType="VARCHAR" />
+    <result column="invoice_company_name" property="invoiceCompanyName" jdbcType="VARCHAR" />
+    <result column="invoicetype" property="invoicetype" jdbcType="CHAR" />
+    <result column="invoicestate" property="invoicestate" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    company_id, account_cat, linkman, tel, email, company_taxno, company_ctel, company_addr, 
+    bank_name, bank_cardid, bank_card_name, invoice_name, invoice_tel, invoice_addr, 
+    invoice_company_name, invoicetype, invoicestate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sdb_b2c_member_company
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sdb_b2c_member_company
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.Company" >
+    insert into sdb_b2c_member_company (company_id, account_cat, linkman, 
+      tel, email, company_taxno, 
+      company_ctel, company_addr, bank_name, 
+      bank_cardid, bank_card_name, invoice_name, 
+      invoice_tel, invoice_addr, invoice_company_name, 
+      invoicetype, invoicestate)
+    values (#{companyId,jdbcType=BIGINT}, #{accountCat,jdbcType=CHAR}, #{linkman,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{companyTaxno,jdbcType=VARCHAR}, 
+      #{companyCtel,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, 
+      #{bankCardid,jdbcType=INTEGER}, #{bankCardName,jdbcType=VARCHAR}, #{invoiceName,jdbcType=VARCHAR}, 
+      #{invoiceTel,jdbcType=VARCHAR}, #{invoiceAddr,jdbcType=VARCHAR}, #{invoiceCompanyName,jdbcType=VARCHAR}, 
+      #{invoicetype,jdbcType=CHAR}, #{invoicestate,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.Company" >
+    insert into sdb_b2c_member_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="accountCat != null" >
+        account_cat,
+      </if>
+      <if test="linkman != null" >
+        linkman,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="companyTaxno != null" >
+        company_taxno,
+      </if>
+      <if test="companyCtel != null" >
+        company_ctel,
+      </if>
+      <if test="companyAddr != null" >
+        company_addr,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankCardid != null" >
+        bank_cardid,
+      </if>
+      <if test="bankCardName != null" >
+        bank_card_name,
+      </if>
+      <if test="invoiceName != null" >
+        invoice_name,
+      </if>
+      <if test="invoiceTel != null" >
+        invoice_tel,
+      </if>
+      <if test="invoiceAddr != null" >
+        invoice_addr,
+      </if>
+      <if test="invoiceCompanyName != null" >
+        invoice_company_name,
+      </if>
+      <if test="invoicetype != null" >
+        invoicetype,
+      </if>
+      <if test="invoicestate != null" >
+        invoicestate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="accountCat != null" >
+        #{accountCat,jdbcType=CHAR},
+      </if>
+      <if test="linkman != null" >
+        #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="companyTaxno != null" >
+        #{companyTaxno,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCtel != null" >
+        #{companyCtel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null" >
+        #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardid != null" >
+        #{bankCardid,jdbcType=INTEGER},
+      </if>
+      <if test="bankCardName != null" >
+        #{bankCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceName != null" >
+        #{invoiceName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTel != null" >
+        #{invoiceTel,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceAddr != null" >
+        #{invoiceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceCompanyName != null" >
+        #{invoiceCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoicetype != null" >
+        #{invoicetype,jdbcType=CHAR},
+      </if>
+      <if test="invoicestate != null" >
+        #{invoicestate,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.Company" >
+    update sdb_b2c_member_company
+    <set >
+      <if test="accountCat != null" >
+        account_cat = #{accountCat,jdbcType=CHAR},
+      </if>
+      <if test="linkman != null" >
+        linkman = #{linkman,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="companyTaxno != null" >
+        company_taxno = #{companyTaxno,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCtel != null" >
+        company_ctel = #{companyCtel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddr != null" >
+        company_addr = #{companyAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardid != null" >
+        bank_cardid = #{bankCardid,jdbcType=INTEGER},
+      </if>
+      <if test="bankCardName != null" >
+        bank_card_name = #{bankCardName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceName != null" >
+        invoice_name = #{invoiceName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceTel != null" >
+        invoice_tel = #{invoiceTel,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceAddr != null" >
+        invoice_addr = #{invoiceAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceCompanyName != null" >
+        invoice_company_name = #{invoiceCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoicetype != null" >
+        invoicetype = #{invoicetype,jdbcType=CHAR},
+      </if>
+      <if test="invoicestate != null" >
+        invoicestate = #{invoicestate,jdbcType=CHAR},
+      </if>
+    </set>
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Company" >
+    update sdb_b2c_member_company
+    set account_cat = #{accountCat,jdbcType=CHAR},
+      linkman = #{linkman,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      company_taxno = #{companyTaxno,jdbcType=VARCHAR},
+      company_ctel = #{companyCtel,jdbcType=VARCHAR},
+      company_addr = #{companyAddr,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_cardid = #{bankCardid,jdbcType=INTEGER},
+      bank_card_name = #{bankCardName,jdbcType=VARCHAR},
+      invoice_name = #{invoiceName,jdbcType=VARCHAR},
+      invoice_tel = #{invoiceTel,jdbcType=VARCHAR},
+      invoice_addr = #{invoiceAddr,jdbcType=VARCHAR},
+      invoice_company_name = #{invoiceCompanyName,jdbcType=VARCHAR},
+      invoicetype = #{invoicetype,jdbcType=CHAR},
+      invoicestate = #{invoicestate,jdbcType=CHAR}
+    where company_id = #{companyId,jdbcType=BIGINT}
+  </update>
+
+    <select id="selectAllCompany" resultType="java.util.Map">
+        SELECT mc.company_id,mc.bank_card_name FROM sdb_b2c_member_company mc
+    </select>
+</mapper>

@@ -55,7 +55,12 @@
             },
             {
                 field: 'configtypename',
-                title: '配置类型名称'
+                title: '配置类型名称',
+                visible: false
+            },
+            {
+                field: 'configname',
+                title: '配置名称'
             },
             {
                 field: 'paymethod',
@@ -65,10 +70,6 @@
             {
                 field: 'paymethodname',
                 title: '付款方式'
-            },
-            {
-                field: 'configname',
-                title: '配置名称'
             },
             {
                 field: 'warningmoney',
@@ -81,6 +82,15 @@
             {
                 field: 'storeaccount',
                 title: '供应商账户'
+            },
+            {
+                field: 'invoicetype',
+                title: '发票类型',
+                visible: false
+            },
+            {
+                field: 'invoicetypename',
+                title: '发票类型'
             },
             {
                 field: 'contacts',
@@ -104,7 +114,7 @@
                 formatter: function(value, row, index) {
                     var actions = [];
                     actions.push('<a class="btn btn-success btn-xs" href="#" onclick="editOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\')"><i class="fa fa-edit"></i>编辑</a> ');
-                    actions.push('<a class="btn btn-success btn-xs" href="#" onclick="rechargeOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\'+\',\'+\''+row.paymethod+'\')"><i class="fa fa-edit"></i>充值</a> ');
+                    actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="rechargeOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\'+\',\'+\''+row.paymethod+'\')"><i class="fa fa-edit"></i>充值</a> ');
                     actions.push('<a class="btn btn-danger btn-xs " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                     return actions.join('');
                 }

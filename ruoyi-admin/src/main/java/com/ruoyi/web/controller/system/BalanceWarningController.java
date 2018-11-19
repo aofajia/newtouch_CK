@@ -4,9 +4,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.system.domain.BWConfig;
-import com.ruoyi.system.domain.BWConfigtype;
-import com.ruoyi.system.domain.StoreConfig;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IBalanceWarningService;
 import com.ruoyi.web.controller.tool.Result;
 import com.ruoyi.web.core.base.BaseController;
@@ -15,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.ruoyi.web.controller.tool.ResultCode.INTERFACE_INNER_INVOKE_ERROR;
 import static com.ruoyi.web.controller.tool.ResultCode.SPECIFIED_STOREMONTHLYMONEY_ISNULL;
@@ -194,6 +192,48 @@ public class BalanceWarningController extends BaseController
     {
         BWConfig bwConfig = balanceWarningService.selectManageConfigById(roleId);
         mmap.put("recharge", bwConfig);
-        return prefix + "/balancewarning_edit_manage";
+        return prefix + "/balancewarning_recharge.html";
+    }
+
+    @PostMapping("/companylist")
+    @ResponseBody
+    public List<Company> companyList()
+    {
+        startPage();
+        List<Company> companies = balanceWarningService.companyList();
+        return companies;
+    }
+
+    /**
+     * 新增余额充值信息
+     */
+    @Log(title = "新增余额充值信息", businessType = BusinessType.INSERT)
+    @PostMapping("/saverecharge")
+    @Transactional(rollbackFor = Exception.class)
+    @ResponseBody
+    public AjaxResult saveRecharge(RechargeLog rechargeLogMap)
+    {
+        if("".equals(rechargeLogMap.getId()))
+        {
+            rechargeLogMap.setId(UUID.randomUUID().toString().toUpperCase());
+        }
+        if(rechargeLogMap.getCommitdate() == null)
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date nowdate = new Date();
+            String commitdate = sdf.format(nowdate);
+            rechargeLogMap.setCommitdate(nowdate);
+        }
+        int i = balanceWarningService.saveRecharge(rechargeLogMap);
+        return toAjax(i);
+    }
+
+    @PostMapping("/rechargelist")
+    @ResponseBody
+    public TableDataInfo rechargelist(RechargeLog rechargeLogMap)
+    {
+        startPage();
+        List<RechargeLog> list = balanceWarningService.getRechargeList(rechargeLogMap);
+        return getDataTable(list);
     }
 }

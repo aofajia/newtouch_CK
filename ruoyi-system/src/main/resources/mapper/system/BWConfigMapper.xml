@@ -10,6 +10,7 @@
     <result column="warningmoney" property="warningmoney" jdbcType="DECIMAL" />
     <result column="monthlymoney" property="monthlymoney" jdbcType="DECIMAL" />
     <result column="storeaccount" property="storeaccount" jdbcType="VARCHAR" />
+    <result column="invoicetype" property="invoicetype" jdbcType="VARCHAR" />
     <result column="contacts" property="contacts" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="storebalanceurl" property="storebalanceurl" jdbcType="VARCHAR" />
@@ -18,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, configtype, configname, supplierid, paymethod, warningmoney, monthlymoney, storeaccount, 
-    contacts, email, storebalanceurl, startdate, enddate
+    invoicetype, contacts, email, storebalanceurl, startdate, enddate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -33,14 +34,14 @@
   <insert id="insert" parameterType="com.ruoyi.system.domain.BWConfig" >
     insert into hrfi_balancewarning_config (id, configtype, configname, 
       supplierid, paymethod, warningmoney, 
-      monthlymoney, storeaccount, contacts, 
-      email, storebalanceurl, startdate, 
-      enddate)
+      monthlymoney, storeaccount, invoicetype, 
+      contacts, email, storebalanceurl, 
+      startdate, enddate)
     values (#{id,jdbcType=VARCHAR}, #{configtype,jdbcType=VARCHAR}, #{configname,jdbcType=VARCHAR}, 
       #{supplierid,jdbcType=VARCHAR}, #{paymethod,jdbcType=VARCHAR}, #{warningmoney,jdbcType=DECIMAL}, 
-      #{monthlymoney,jdbcType=DECIMAL}, #{storeaccount,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{storebalanceurl,jdbcType=VARCHAR}, #{startdate,jdbcType=VARCHAR}, 
-      #{enddate,jdbcType=VARCHAR})
+      #{monthlymoney,jdbcType=DECIMAL}, #{storeaccount,jdbcType=VARCHAR}, #{invoicetype,jdbcType=VARCHAR}, 
+      #{contacts,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{storebalanceurl,jdbcType=VARCHAR}, 
+      #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.BWConfig" >
     insert into hrfi_balancewarning_config
@@ -68,6 +69,9 @@
       </if>
       <if test="storeaccount != null" >
         storeaccount,
+      </if>
+      <if test="invoicetype != null" >
+        invoicetype,
       </if>
       <if test="contacts != null" >
         contacts,
@@ -110,6 +114,9 @@
       <if test="storeaccount != null" >
         #{storeaccount,jdbcType=VARCHAR},
       </if>
+      <if test="invoicetype != null" >
+        #{invoicetype,jdbcType=VARCHAR},
+      </if>
       <if test="contacts != null" >
         #{contacts,jdbcType=VARCHAR},
       </if>
@@ -151,6 +158,9 @@
       <if test="storeaccount != null" >
         storeaccount = #{storeaccount,jdbcType=VARCHAR},
       </if>
+      <if test="invoicetype != null" >
+        invoicetype = #{invoicetype,jdbcType=VARCHAR},
+      </if>
       <if test="contacts != null" >
         contacts = #{contacts,jdbcType=VARCHAR},
       </if>
@@ -178,6 +188,7 @@
       warningmoney = #{warningmoney,jdbcType=DECIMAL},
       monthlymoney = #{monthlymoney,jdbcType=DECIMAL},
       storeaccount = #{storeaccount,jdbcType=VARCHAR},
+      invoicetype = #{invoicetype,jdbcType=VARCHAR},
       contacts = #{contacts,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       storebalanceurl = #{storebalanceurl,jdbcType=VARCHAR},
@@ -185,7 +196,6 @@
       enddate = #{enddate,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
   <select id="checkConfigName" resultType="java.util.Map" parameterType="java.lang.String">
     SELECT COUNT(0) FROM hrfi_balancewarning_config bc WHERE bc.configname = #{configName,jdbcType=VARCHAR}
   </select>
@@ -196,13 +206,16 @@
     SELECT ct.typename as configtypename,bc.*,
     case when bc.paymethod = 'precharge' then '预充值'
     when bc.paymethod = 'monthly' then '月结'
-    else '' end as paymethodname
+    else '' end as paymethodname,
+    case when bc.invoicetype = 'specialinvoice' then '增值税专用发票'
+    when bc.invoicetype = 'invoice' then '增值税普通发票'
+    else '' end as invoicetypename
     FROM hrfi_balancewarning_config bc
     LEFT JOIN hrfi_balancewarning_config_type ct ON ct.configtype = bc.configtype
     ORDER BY bc.configtype
   </select>
   <select id="selectStoreConfigAll" resultType="com.ruoyi.system.domain.StoreConfig">
-    SELECT bc.supplierid as storeid, bc.configname as shopname, bc.monthlymoney
+    SELECT bc.supplierid as store_id, bc.configname as shop_name, bc.monthlymoney
     FROM hrfi_balancewarning_config bc
     INNER JOIN hrfi_balancewarning_config_type ct ON ct.configtype = bc.configtype
     INNER JOIN sdb_business_storemanger bs ON bs.store_id = bc.supplierid

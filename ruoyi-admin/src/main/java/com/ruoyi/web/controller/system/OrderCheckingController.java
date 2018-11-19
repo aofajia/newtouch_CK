@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.system;
 
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.system.domain.BWConfig;
+import com.ruoyi.system.domain.StoreConfig;
 import com.ruoyi.system.domain.Storemanger;
+import com.ruoyi.system.mapper.RechargeLogMapper;
 import com.ruoyi.system.service.IOrderCheckingService;
 import com.ruoyi.web.core.base.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,15 @@ public class OrderCheckingController extends BaseController
         return storemangers;
     }
 
+    @PostMapping("/storeConfigList")
+    @ResponseBody
+    public List<StoreConfig> storeConfigList()
+    {
+        startPage();
+        List<StoreConfig> storeConfigs = orderCheckingService.selectStoreConfigList();
+        return storeConfigs;
+    }
+
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(@RequestBody Map map)
@@ -66,12 +78,12 @@ public class OrderCheckingController extends BaseController
         return list;
     }
 
-    @PostMapping("/companylist")
+    /*@PostMapping("/companylist")
     @ResponseBody
     public List<Storemanger> companyList()
     {
         startPage();
         List<Storemanger> storemangers = orderCheckingService.selectStoreAll();
         return storemangers;
-    }
+    }*/
 }

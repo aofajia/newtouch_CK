@@ -8,26 +8,26 @@ import java.util.Date;
 public class StoreConfig
 {
 
-    private String storeid;
+    private String store_id;
 
-    private String shopname;
+    private String shop_name;
 
     private String monthlymoney;
 
-    public String getStoreid() {
-        return storeid;
+    public String getStore_id() {
+        return store_id;
     }
 
-    public void setStoreid(String storeid) {
-        this.storeid = storeid;
+    public void setStore_id(String store_id) {
+        this.store_id = store_id;
     }
 
-    public String getShopname() {
-        return shopname;
+    public String getShop_name() {
+        return shop_name;
     }
 
-    public void setShopname(String shopname) {
-        this.shopname = shopname;
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
     }
 
     public String getMonthlymoney() {

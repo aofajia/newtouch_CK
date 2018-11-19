@@ -1,9 +1,6 @@
 package com.ruoyi.system.service;
 
-import com.ruoyi.system.domain.BWConfig;
-import com.ruoyi.system.domain.BWConfigtype;
-import com.ruoyi.system.domain.StoreConfig;
-import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -90,4 +87,22 @@ public interface IBalanceWarningService
      * @throws Exception 异常
      */
     public int deleteConfigByIds(String id) throws Exception;
+    /**
+     * 查询所有法人体
+     *
+     * @return 配置信息列表
+     */
+    public List<Company> companyList();
+    /**
+     * 新增充值记录
+     *
+     * @return
+     */
+    public int saveRecharge(RechargeLog rechargeLogMap);
+    /**
+     * 查询充值记录信息
+     *
+     * @return 充值记录信息
+     */
+    public List<RechargeLog> getRechargeList(RechargeLog rechargeLogMap);
 }

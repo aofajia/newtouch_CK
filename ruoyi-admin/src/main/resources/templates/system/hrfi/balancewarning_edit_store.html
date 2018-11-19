@@ -45,6 +45,16 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label ">发票类型：</label>
+            <div class="col-sm-8">
+                <select id="invoicetype" name="invoicetype">
+                    <option value="">请选择....</option>
+                    <option value="specialinvoice">增值税专用发票</option>
+                    <option value="invoice">增值税普通发票</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">负责人：</label>
             <div class="col-sm-8">
                 <input class="form-control" type="text" name="contacts" id="contacts" th:field="*{contacts}">
@@ -80,7 +90,7 @@
     $.ajax(
     {
         type : "POST",
-        url : "/fi/orderchecking/storelist",
+        url : "/fi/orderchecking/storeConfigList",
         dataType : "JSON",
         data : {},
         success : function(msg)
@@ -106,28 +116,29 @@
     setTimeout(function ()
     {
         $.ajax(
-            {
-                type : "POST",
-                url : "/fi/balancewarning/getnotextinfo",
-                dataType : "JSON",
-                data :
-                    {
-                        id : $("#id").val()
-                    },
-                success : function(msg)
+        {
+            type : "POST",
+            url : "/fi/balancewarning/getnotextinfo",
+            dataType : "JSON",
+            data :
                 {
-                    console.log(msg);
-                    $('#configname').val(msg.supplierid);
-                    $('#paymethod').val(msg.paymethod);
-                    $('#startTime').val(msg.startdate);
-                    $('#endTime').val(msg.enddate);
-
+                    id : $("#id").val()
                 },
-                error:function()
-                {
-                    alert("获取数据失败", "error");
-                }
-            });
+            success : function(msg)
+            {
+                console.log(msg);
+                $('#configname').val(msg.supplierid);
+                $('#paymethod').val(msg.paymethod);
+                $('#invoicetype').val(msg.invoicetype);
+                $('#startTime').val(msg.startdate);
+                $('#endTime').val(msg.enddate);
+
+            },
+            error:function()
+            {
+                alert("获取数据失败", "error");
+            }
+        });
     }, 500);
 
 
@@ -189,21 +200,26 @@
     {
         var suppliertype = $('#configname option:selected').val();
         var paymethod = $('#paymethod option:selected').val();
+        var invoicetype = $('#invoicetype option:selected').val();
         var startTime = $('#startTime').val();
         var endTime = $('#endTime').val();
         if(suppliertype == "")
         {
             alert("请选择供应商类型");
         }
-        if(paymethod == "")
+        else if(paymethod == "")
         {
             alert("请选择支付方式");
         }
-        if(startTime == "")
+        else if(invoicetype == "")
+        {
+            alert("请选择发票类型");
+        }
+        else if(startTime == "")
         {
             alert("请选择有效起始时间");
         }
-        if(endTime == "")
+        else if(endTime == "")
         {
             alert("请选择有效结束时间");
         }
@@ -220,6 +236,7 @@
         var supplierid = $('#configname option:selected').val();
         var suppliername = $('#configname option:selected').text();
         var paymethod = $('#paymethod option:selected').val();
+        var invoicetype = $('#invoicetype option:selected').val();
         var warningmoney = $('#warningmoney').val();
         var monthlymoney = $('#monthlymoney').val();
         var storeaccount = $('#storeaccount').val();
@@ -243,6 +260,7 @@
                 "warningmoney" : warningmoney,
                 "monthlymoney" : monthlymoney,
                 "storeaccount" : storeaccount,
+                "invoicetype" : invoicetype,
                 "contacts" : contacts,
                 "email" : email,
                 "startdate" : startdate,
