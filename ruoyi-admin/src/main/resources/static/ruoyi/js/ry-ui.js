@@ -17,11 +17,13 @@
                 _sortOrder = $.common.isEmpty(options.sortOrder) ? "asc" : options.sortOrder;
                 _sortName = $.common.isEmpty(options.sortName) ? "" : options.sortName;
                 _striped = $.common.isEmpty(options.striped) ? false : options.striped;
+                _showfooter = $.common.isEmpty(options.showFooter) ? false : options.showFooter;
                 $('#bootstrap-table').bootstrapTable({
                     url: options.url,                                   // 请求后台的URL（*）
                     contentType: "application/x-www-form-urlencoded",   // 编码类型
                     method: 'post',                                     // 请求方式（*）
                     cache: false,                                       // 是否使用缓存
+                    showFooter: _showfooter,                            // 是否开启统计功能
                     striped: _striped,                                  // 是否显示行间隔色
                     sortable: true,                                     // 是否启用排序
                     sortStable: true,                                   // 设置为 true 将获得稳定的排序

@@ -1,19 +1,14 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.mapper.BWConfigMapper;
-import com.ruoyi.system.mapper.BWConfigtypeMapper;
-import com.ruoyi.system.mapper.CompanyMapper;
-import com.ruoyi.system.mapper.RechargeLogMapper;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IBalanceWarningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,6 +18,8 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     private BWConfigtypeMapper bwConfigtypeMapper;
     @Autowired
     private BWConfigMapper bwConfigMapper;
+    @Autowired
+    private BWConfigLOGMapper bwConfigLOGMapper;
     @Autowired
     private CompanyMapper companyMapper;
     @Autowired
@@ -59,6 +56,15 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
         {
             //该供应商配置不存在
             int insert = bwConfigMapper.insert(configMap);
+
+            BWConfigLOG bwConfigLOG = new BWConfigLOG(configMap);
+            bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date nowdate = new Date();
+            String createtime = sdf.format(nowdate);
+            bwConfigLOG.setCreatetime(createtime);
+            bwConfigLOGMapper.insert(bwConfigLOG);
+
             return insert;
         }
         else
@@ -79,6 +85,15 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
         {
             //该商城负责人配置不存在
             int insert = bwConfigMapper.insert(configMap);
+
+            BWConfigLOG bwConfigLOG = new BWConfigLOG(configMap);
+            bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date nowdate = new Date();
+            String createtime = sdf.format(nowdate);
+            bwConfigLOG.setCreatetime(createtime);
+            bwConfigLOGMapper.insert(bwConfigLOG);
+
             return insert;
         }
         else
@@ -116,6 +131,15 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
         if("0".equals(count))
         {
             int i = bwConfigMapper.updateByPrimaryKey(bwConfig);
+
+            BWConfigLOG bwConfigLOG = new BWConfigLOG(bwConfig);
+            bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date nowdate = new Date();
+            String createtime = sdf.format(nowdate);
+            bwConfigLOG.setCreatetime(createtime);
+            bwConfigLOGMapper.insert(bwConfigLOG);
+
             return i;
         }
         else
@@ -132,6 +156,15 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
         if("0".equals(count))
         {
             int i = bwConfigMapper.updateByPrimaryKey(bwConfig);
+
+            BWConfigLOG bwConfigLOG = new BWConfigLOG(bwConfig);
+            bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date nowdate = new Date();
+            String createtime = sdf.format(nowdate);
+            bwConfigLOG.setCreatetime(createtime);
+            bwConfigLOGMapper.insert(bwConfigLOG);
+
             return i;
         }
         else
@@ -151,6 +184,15 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     public int deleteConfigByIds(String id) throws Exception
     {
         int i = bwConfigMapper.deleteByPrimaryKey(id);
+
+        BWConfigLOG bwConfigLOG = new BWConfigLOG(id);
+        bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date nowdate = new Date();
+        String createtime = sdf.format(nowdate);
+        bwConfigLOG.setCreatetime(createtime);
+        bwConfigLOGMapper.insert(bwConfigLOG);
+
         return i;
     }
 

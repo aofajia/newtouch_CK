@@ -160,44 +160,62 @@
         method: 'post',
         // sortName: "configtype",
         modalName: "供应商充值记录",
+        showFooter:true,
         queryParams: queryParams, //参数
         search: false,
         showExport: false,
         columns: [
+        {
+            checkbox: false
+        },
+        {
+            field: 'id',
+            title: '主键',
+            visible: false
+        },
+        {
+            field: 'supplierid',
+            title: '供应商ID',
+            visible: false
+        },
+        {
+            field: 'suppliername',
+            title: '供应商名称',
+            footerFormatter: function(value)
             {
-                checkbox: false
+                return "Total RechargeMoney   ";
+            }
+        },
+        {
+            field: 'companyid',
+            title: '公司ID',
+            visible: false
+        },
+        {
+            field: 'companyname',
+            title: '公司名称'
+        },
+        {
+            field: 'rechargemoney',
+            title: '充值金额',
+            align:'right',
+            formatter: function(value,row,index){
+                return "￥"+row.rechargemoney;
             },
+            footerFormatter : function (rows)
             {
-                field: 'id',
-                title: '主键',
-                visible: false
-            },
-            {
-                field: 'supplierid',
-                title: '供应商ID',
-                visible: false
-            },
-            {
-                field: 'suppliername',
-                title: '供应商名称'
-            },
-            {
-                field: 'companyid',
-                title: '公司ID',
-                visible: false
-            },
-            {
-                field: 'companyname',
-                title: '公司名称'
-            },
-            {
-                field: 'rechargemoney',
-                title: '充值金额'
-            },
-            {
-                field: 'commitdate',
-                title: '充值时间'
-            }]
+                var count = 0;
+                for (var i in rows) {
+                    count += rows[i].rechargemoney;
+                }
+                var summoney =  "￥"+count;
+                return summoney;
+            }
+        },
+        {
+            field: 'commitdate',
+            title: '充值时间'
+        }]
     };
     $.table.init(options);
 
