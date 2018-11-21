@@ -2,23 +2,119 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ruoyi.system.mapper.OpenTicketMapper">
 
-    <!-- 查询开票汇总信息 -->
-    <select id="list" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
-		SELECT
-		order_legalman AS company_id,
-		invoice_legalman AS open_ticket_rise,
-		COUNT(order_id) AS order_num,
-		SUM(final_amount) AS money_num
-	FROM
-		sdb_b2c_orders
 
-	GROUP BY
-		order_legalman
+    <!-- 修改公司发票抬头 -->
+    <update id="updateTicketRise">
+            UPDATE hrfi_openticket s
+        SET s.invoice_legalman = #{rise}
+        AND s.order_legalman = #{rise}
+        WHERE
+            order_id = #{id}
+    </update>
+
+
+
+    <!-- 查询每个公司开票汇总信息 -->
+    <select id="tableWith" resultType="java.lang.Integer">
+                 DROP TABLE
+        IF EXISTS `hrfi_openticket`;
     </select>
 
-	<!-- 查询总金额数量 -->
-	<select id="order_num" resultType="java.lang.Integer">
-        select SUM(final_amount) from sdb_b2c_orders
+    <select id="tableCreate" resultType="java.lang.Integer">
+        CREATE TABLE `hrfi_openticket` (
+            `order_id` BIGINT (20) NOT NULL ,
+            `order_legalman` MEDIUMINT (8) ,
+            `invoice_legalman` MEDIUMINT (8) ,
+            `final_amount` DECIMAL (20, 3),
+            `store_id` BIGINT (20) ,
+            `createtime` INT (10),
+            PRIMARY KEY (`order_id`)
+        ) ENGINE = INNODB DEFAULT CHARSET = utf8;
+    </select>
+    
+    <select id="tableInsert" resultType="java.lang.Integer">
+         INSERT INTO hrfi_openticket SELECT
+            order_id,
+            order_legalman,
+            invoice_legalman,
+            final_amount,
+            store_id,
+            createtime
+        FROM
+            sdb_b2c_orders
+    </select>
+
+
+    <!-- 查询每个公司开票汇总信息 -->
+    <select id="list" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
+        SELECT
+        order_legalman AS company_id,
+        invoice_legalman AS open_ticket_rise,
+        COUNT(order_id) AS order_num,
+        SUM(final_amount) AS money_num
+        FROM
+        hrfi_openticket
+        <where>
+            <if test="supplier != null">
+                AND store_id = #{supplier}
+            </if>
+            <if test="startDate != null and endDate != null  ">
+                AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
+            </if>
+        </where>
+        GROUP BY
+        order_legalman
+    </select>
+
+
+    <!-- 查询每个公司开票汇总信息 -->
+    <select id="listOrders" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
+        SELECT
+        order_id AS ordersId,
+        order_legalman AS company_id,
+        invoice_legalman AS open_ticket_rise,
+        final_amount AS money_num
+        FROM
+        hrfi_openticket
+        <where>
+            <if test="supplier != null">
+                AND store_id = #{supplier}
+            </if>
+            <if test="startDate != null and endDate != null">
+                AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
+            </if>
+            <if test=" id != null  ">
+                AND order_legalman = #{id}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 查询总金额数量 -->
+    <select id="order_num" resultType="java.lang.Double">
+        select SUM(final_amount) from hrfi_openticket
+        <where>
+            <if test="supplier != null">
+                AND store_id = #{supplier}
+            </if>
+            <if test="startDate != null and endDate != null  ">
+                AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 查询发票抬头-->
+    <select id="selectInvoice" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
+        SELECT
+            order_legalman AS company_id,
+            invoice_legalman AS open_ticket_rise
+        FROM
+            hrfi_openticket
+        GROUP BY
+            invoice_legalman
 	</select>
+
+
 
 </mapper>

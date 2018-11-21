@@ -1,46 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      lang="zh">
 <meta charset="utf-8">
-<head th:include="include :: header"></head>
+<head th:include="include :: header">
+</head>
 <body class="gray-bg">
-
 <div class="container-div">
     <div class="row">
         <div class="col-sm-12 search-collapse">
             <form id="role-form">
                 <div class="select-list">
                     <ul>
-                        <ul>
-                            <li>
-                                <label style="margin-top: 5px">开票期间:</label>
-                            </li>
-                            <li>
-                                <input type="text" class="time-input" id="startTime" placeholder="开始时间"
-                                       name="params[beginTime]"/>
-                            </li>
-                            <li>
-                                <input type="text" class="time-input" id="endTime" placeholder="结束时间"
-                                       name="params[endTime]"/>
-                            </li>
-                            <button class="btn btn-primary" onclick="searchData()" id="search">搜索</button>
-                        </ul>
+                        <li>
+                            <label style="margin-top: 5px">开票期间:</label>
+                        </li>
+                        <li>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间"
+                                   name="params[beginTime]"/>
+                        </li>
+                        <li>
+                            <input type="text" class="time-input" id="endTime" placeholder="结束时间"
+                                   name="params[endTime]"/>
+                        </li>
+                        <a style="margin-top: 5px;margin-left: -14px" class="btn btn-primary btn-rounded btn-sm" onclick="Search()"><i
+                                class="fa fa-search"></i>搜索</a>
+                        <a style="margin-top: 5px;margin-left: -3px" class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()"><i
+                                class=""></i>同步数据</a>
                         <li>
                             供应商类型：
                             <select id="suppliertype" style="width:268px;" name="suppliertype">
                             </select>
-                            开票总金额：
-                            <input type="text" class="text" id="money"/>
                         </li>
                         <li class="select-time">
-                            <button class="btn btn-primary" id="get_open_ticket_info">获取开票信息</button>
-                            <button class="btn btn-primary" onclick="applyOpenTicket()" id="apply_open_ticket">申请开票</button>
+                            <button class="btn btn-primary btn-rounded btn-sm" onclick="applyOpenTicket()"
+                                    id="apply_open_ticket">申请开票
+                            </button>
                         </li>
-
                     </ul>
-
                 </div>
-
             </form>
         </div>
 
@@ -52,26 +49,148 @@
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
 
-    //搜索
-    function searchData() {
+    $.ajax(
+        {
+            type: "POST",
+            url: "/fi/orderchecking/storelist",
+            dataType: "JSON",
+            data: {},
+            success: function (msg) {
+                for (var i = 0; i < msg.length; i++) {
+                    $("#suppliertype").append("<option value=" + msg[i].store_id + ">" + msg[i].shop_name + "</option>");
+                }
+                if (msg.length == 0) {
+                    $("#suppliertype").append("<option value='0'>请选择</option>");//添加第一个option值
+                    confirm("未查到任何供应商信息，请联系运维人员。");
+                }
+
+            },
+            error: function () {
+                alert("获取数据失败", "error");
+            }
+        });
+
+    function tableWith() {
+        layer.confirm('确定同步数据，请确认已保存以往数据？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/system/hr/tableWith",
+                    dataType: "JSON",
+                    data: {},
+                    success: function (msg) {
+                        layer.msg('同步成功', {
+                            time: 2000, //20s后自动关闭
+                        });
+                    }
+                });
+        }, function(){
+            layer.msg('取消成功', {
+                time: 2000, //20s后自动关闭
+            });
+        });
+    }
+    
+    function Search() {
         var startTime = $('#startTime').val();
         var endTime = $('#endTime').val();
+        var suppliertype = $('#suppliertype option:selected').val();
+        //校验开始日期是否为空
+        if (startTime == null || startTime == ''){
+            alert("请选择开始时间");
+            return;
+        }
+        //校验结束日期是否为空
+        if (endTime == null || endTime == ''){
+            alert("请选择结束时间");
+            return;
+        }
+        //校验供应商是否为空
+        if (suppliertype == null || suppliertype == ''){
+            alert("请选择供应商");
+            return;
+        }else{
+            if(suppliertype == '102'){
 
-
+            }
+        }
+        var options = $('#bootstrap-table').bootstrapTable('refresh', {
+            url: "/system/hr/list",
+            query:
+                {
+                    supplier: suppliertype,
+                    endDate: endTime,
+                    startDate: startTime
+                }
+        });
     }
 
+    
     //申请开票
     function applyOpenTicket() {
         confirm("确定申请开票？请保证数据准确无误！", function (result) {
             if (!result) {
                 return;
-            }else{
+            } else {
 
             }
 
         })
     }
 
+
+    //String 转为 data: ("yyyy-MM-dd")格式的字符串 转为 Wed Jul 05 2017 13:50:11 GMT+0800 (中国标准时间)
+    function convertDateFromString(dateString) {
+        if (dateString) {
+            var date = new Date(dateString.replace(/-/,"/"))
+            return date;
+        }
+    }
+    //格式化日期 : Wed Jul 05 2017 13:50:11 GMT+0800 (中国标准时间) 准尉  格式为 yyyy-mm-dd 的日期类型
+    function formatTime(date) {
+        var year = date.getFullYear();
+        var month = date.getMonth()+1, month = month < 10 ? '0' + month : month;
+        var day = date.getDate(), day =day < 10 ? '0' + day : day;
+        return year + '-' + month + '-' + day;
+    }
+
+
+
+
+    //编辑订单
+    function editOrders(id) {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+        var suppliertype = $('#suppliertype option:selected').val();
+        if(startTime == null || startTime == ''){
+            startTime = 0;
+        }
+        if(endTime == null || endTime == ''){
+            endTime = 0;
+        }
+        if(suppliertype == null || suppliertype == ''){
+            suppliertype = 0;
+        }
+        var url = "/system/hr/editOrders";
+        $.ajax(
+            {
+                type: "POST",
+                url: "/system/hr/storeCompanyByRedis",
+                data: {
+                    id: id,
+                    startTime : startTime,
+                    endTime : endTime,
+                    suppliertype : suppliertype
+                },
+                success: function (msg) {
+
+                },
+            });
+        $.modal.open("修改" + "订单信息", url);
+
+    }
 
     $(function () {
         var options = {
@@ -81,6 +200,11 @@
             columns: [
                 {
                     checkbox: true
+                },
+                {
+                    field: 'company_id',
+                    title: '法人体ID',
+                    visible: false
                 },
                 {
                     field: 'company_id',
@@ -104,7 +228,13 @@
                 },
                 {
                     field: 'other_final_amount',
-                    title: '调整发票明细'
+                    title: '调整发票明细',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="editOrders(\'' + row.company_id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+
                 },
             ]
         };

@@ -4,6 +4,10 @@ package com.ruoyi.system.domain;
  * 开票信息汇总
  */
 public class OpenTicketInfoCollect {
+
+    //订单编号
+    Long ordersId;
+
     //法人体ID
     String company_id;
 
@@ -14,16 +18,25 @@ public class OpenTicketInfoCollect {
     Integer order_num;
 
     //金额数量
-    Integer money_num;
+    Double money_num;
 
     //比列
     String account;
 
-    public Integer getMoney_num() {
+    public Long getOrdersId() {
+        return ordersId;
+    }
+
+    public void setOrdersId(Long ordersId) {
+        this.ordersId = ordersId;
+    }
+
+
+    public Double getMoney_num() {
         return money_num;
     }
 
-    public void setMoney_num(Integer money_num) {
+    public void setMoney_num(Double money_num) {
         this.money_num = money_num;
     }
 

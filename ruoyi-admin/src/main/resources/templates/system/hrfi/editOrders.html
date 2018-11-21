@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+    开票抬头调整:
+    <select id="suppliertype" style="width:268px;" name="suppliertype">
+    </select>
+    <a class="btn btn-success btn-sm" onclick="change()">
+        调整
+    </a>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <table id="bootstrap-table" data-mobile-responsive="true"></table>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+
+    function change() {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        var suppliertype = $("#suppliertype").val();
+        if (suppliertype == null || suppliertype == ''){
+            alert("请选择公司！");
+            return;
+        }
+        if (data == null || data == ''){
+            alert("请选择订单！");
+            return;
+        }
+        $.ajax(
+            {
+                type : "POST",
+                url : "/system/hr/changeTicketRise",
+                dataType : "JSON",
+                data : {
+                    data : JSON.stringify(data),
+                    rise : suppliertype
+                },
+                success : function(msg)
+                {
+                   alert("调整成功！");
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
+
+    }
+
+    //获取开票抬头信息
+    $.ajax(
+        {
+            type : "POST",
+            url : "/system/hr/selectInvoice",
+            dataType : "JSON",
+            data : {},
+            success : function(msg)
+            {
+                for (var i = 0; i < msg.length; i++)
+                {
+                    $("#suppliertype").append("<option value="+msg[i].company_id+">"+msg[i].open_ticket_rise+"</option>");
+                }
+                if(msg.length == 0)
+                {
+                    $("#suppliertype").append("<option value='0'>请选择</option>");//添加第一个option值
+                    confirm("未查到任何公司信息，请联系运维人员。");
+                }
+
+            },
+            error:function()
+            {
+                alert("获取数据失败", "error");
+            }
+        });
+
+    //初始化列表
+    $(function () {
+        var options = {
+            url: "/system/hr/listOrders",
+            search: false,
+            showExport: false,
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'ordersId',
+                    title: '订单编号'
+                },
+                {
+                    field: 'company_id',
+                    title: '法人体'
+                },
+                {
+                    field: 'open_ticket_rise',
+                    title: '开票抬头'
+                },
+                {
+                    field: 'money_num',
+                    title: '订单金额'
+                },
+            ]
+        };
+        $.table.init(options);
+    });
+
+
+</script>
+</body>
+</html>
