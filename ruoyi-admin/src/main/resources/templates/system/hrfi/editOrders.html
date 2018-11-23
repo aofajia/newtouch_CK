@@ -4,8 +4,9 @@
 <head th:include="include :: header"></head>
 <body class="white-bg">
 <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-    开票抬头调整:
-    <select id="suppliertype" style="width:268px;" name="suppliertype">
+    <label>发票抬头：</label>
+    <select id="companyid" name="companyid" class="{required:true}">
+        <option value="">请选择....</option>
     </select>
     <a class="btn btn-success btn-sm" onclick="change()">
         调整
@@ -19,7 +20,7 @@
 
     function change() {
         var data = $("#bootstrap-table").bootstrapTable('getSelections');
-        var suppliertype = $("#suppliertype").val();
+        var suppliertype = $("#companyid").val();
         if (suppliertype == null || suppliertype == ''){
             alert("请选择公司！");
             return;
@@ -39,7 +40,8 @@
                 },
                 success : function(msg)
                 {
-                   alert("调整成功！");
+                    $("#bootstrap-table").bootstrapTable('refresh');
+                    alert("调整成功！");
                 },
                 error:function()
                 {
@@ -49,22 +51,22 @@
 
     }
 
-    //获取开票抬头信息
+    //查看发票抬头信息
     $.ajax(
         {
             type : "POST",
-            url : "/system/hr/selectInvoice",
+            url : "/fi/balancewarning/companylist",
             dataType : "JSON",
             data : {},
             success : function(msg)
             {
                 for (var i = 0; i < msg.length; i++)
                 {
-                    $("#suppliertype").append("<option value="+msg[i].company_id+">"+msg[i].open_ticket_rise+"</option>");
+                    $("#companyid").append("<option value="+msg[i].company_id+">"+msg[i].bank_card_name+"</option>");
                 }
                 if(msg.length == 0)
                 {
-                    $("#suppliertype").append("<option value='0'>请选择</option>");//添加第一个option值
+                    $("#companyid").append("<option value=''>请选择</option>");//添加第一个option值
                     confirm("未查到任何公司信息，请联系运维人员。");
                 }
 
@@ -91,11 +93,114 @@
                 },
                 {
                     field: 'company_id',
-                    title: '法人体'
+                    title: '法人体',
+                    formatter: function (value, row, index) {
+                        var company = value;
+                        if( company == '1'){
+                            company = "上海新致软件股份有限公司"
+                        }
+                        if( company == '2'){
+                            company = "北京新致君阳信息技术有限公司"
+                        }
+                        if( company == '3'){
+                            company = "西安新致信息技术有限公司"
+                        }
+                        if( company == '4'){
+                            company = "上海新致信息技术有限公司"
+                        }
+                        if( company == '13'){
+                            company = "大连新致软件有限公司"
+                        }
+                        if( company == '17'){
+                            company = "上海新致百果信息科技有限公司"
+                        }
+                        if( company == '21'){
+                            company = "重庆新致金服信息技术有限公司"
+                        }
+                        if( company == '22'){
+                            company = "贵州新致普惠信息技术有限公司"
+                        }
+                        if( company == '23'){
+                            company = "上海新致晟欧软件技术有限公司"
+                        }
+                        if( company == '24'){
+                            company = "上海中件管理咨询有限公司"
+                        }
+                        if( company == '25'){
+                            company = "上海全栈投资中心（有限合伙）"
+                        }
+                        if( company == '26'){
+                            company = "武汉新致信息技术有限公司"
+                        }
+                        if( company == '27'){
+                            company = "上海前置通信技术有限公司"
+                        }
+                        if( company == '99'){
+                            company = "上海全端网络科技有限公司"
+                        }
+                        return company;
+                    }
                 },
                 {
                     field: 'open_ticket_rise',
-                    title: '开票抬头'
+                    title: '开票抬头',
+                    formatter: function (value, row, index) {
+                        var company = value;
+                        if( company == '1'){
+                            company = "上海新致软件股份有限公司"
+                        }
+                        if( company == '2'){
+                            company = "北京新致君阳信息技术有限公司"
+                        }
+                        if( company == '3'){
+                            company = "西安新致信息技术有限公司"
+                        }
+                        if( company == '4'){
+                            company = "上海新致信息技术有限公司"
+                        }
+                        if( company == '13'){
+                            company = "大连新致软件有限公司"
+                        }
+                        if( company == '17'){
+                            company = "上海新致百果信息科技有限公司"
+                        }
+                        if( company == '21'){
+                            company = "重庆新致金服信息技术有限公司"
+                        }
+                        if( company == '22'){
+                            company = "贵州新致普惠信息技术有限公司"
+                        }
+                        if( company == '23'){
+                            company = "上海新致晟欧软件技术有限公司"
+                        }
+                        if( company == '24'){
+                            company = "上海中件管理咨询有限公司"
+                        }
+                        if( company == '25'){
+                            company = "上海全栈投资中心（有限合伙）"
+                        }
+                        if( company == '26'){
+                            company = "武汉新致信息技术有限公司"
+                        }
+                        if( company == '27'){
+                            company = "上海前置通信技术有限公司"
+                        }
+                        if( company == '99'){
+                            company = "上海全端网络科技有限公司"
+                        }
+                        return company;
+                    }
+                },
+                {
+                    field: 'supplier',
+                    title: '供应商',
+                    formatter: function (value, row, index) {
+                        var supplier = value;
+                        if( value == '102' ){
+                            supplier = '京东'
+                        }
+                        return supplier;
+                    }
                 },
                 {
                     field: 'money_num',

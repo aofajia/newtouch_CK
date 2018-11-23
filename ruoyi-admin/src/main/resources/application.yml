@@ -67,6 +67,7 @@ spring:
       # 热部署开关
       enabled: true
 
+
 # MyBatis
 mybatis:
     # 搜索指定包别名
@@ -93,7 +94,7 @@ shiro:
     # 首页地址
     indexUrl: /index
     # 验证码开关
-    captchaEnabled: true
+    captchaEnabled: false
     # 验证码类型 math 数组计算 char 字符
     captchaType: math
   cookie:
@@ -132,3 +133,4 @@ gen:
   autoRemovePre: true
   # 表前缀(类名不会包含表前缀)
   tablePrefix: sys_
+

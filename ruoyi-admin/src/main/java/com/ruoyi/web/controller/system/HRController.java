@@ -66,6 +66,15 @@ public class HRController extends BaseController {
         return prefix + "/editOrders";
     }
 
+
+    /**
+     * 跳转开票历史记录页面
+     */
+    @RequestMapping("/openTicketRecord")
+    public String openTicketRecord() {
+        return prefix + "/openticketrecord";
+    }
+
     /**
      * 开票界面数据
      */

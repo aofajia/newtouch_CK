@@ -7,7 +7,6 @@
     <update id="updateTicketRise">
             UPDATE hrfi_openticket s
         SET s.invoice_legalman = #{rise}
-        AND s.order_legalman = #{rise}
         WHERE
             order_id = #{id}
     </update>
@@ -67,13 +66,38 @@
     </select>
 
 
+
+    <!-- 根据发票抬头查询比率,供应商，开始日期，结束日期查询每个公司的汇总信息 -->
+    <select id="listByRise" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
+        SELECT
+        order_legalman AS company_id,
+        invoice_legalman AS open_ticket_rise,
+        COUNT(order_id) AS order_num,
+        SUM(final_amount) AS money_num
+        FROM
+        hrfi_openticket
+        <where>
+            <if test="supplier != null">
+                AND store_id = #{supplier}
+            </if>
+            <if test="startDate != null and endDate != null  ">
+                AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
+            </if>
+                AND invoice_legalman = #{rise}
+        </where>
+        GROUP BY
+        invoice_legalman
+    </select>
+
+
     <!-- 查询每个公司开票汇总信息 -->
     <select id="listOrders" resultType="com.ruoyi.system.domain.OpenTicketInfoCollect">
         SELECT
         order_id AS ordersId,
         order_legalman AS company_id,
         invoice_legalman AS open_ticket_rise,
-        final_amount AS money_num
+        final_amount AS money_num,
+        store_id AS supplier
         FROM
         hrfi_openticket
         <where>

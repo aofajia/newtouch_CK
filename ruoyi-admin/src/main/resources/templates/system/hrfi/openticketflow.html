@@ -22,23 +22,24 @@
                             <input type="text" class="time-input" id="endTime" placeholder="结束时间"
                                    name="params[endTime]"/>
                         </li>
-                        <a style="margin-top: 5px;margin-left: -14px" class="btn btn-primary btn-rounded btn-sm" onclick="Search()"><i
-                                class="fa fa-search"></i>搜索</a>
-                        <a style="margin-top: 5px;margin-left: -3px" class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()"><i
-                                class=""></i>同步数据</a>
-                        <li>
-                            供应商类型：
-                            <select id="suppliertype" style="width:268px;" name="suppliertype">
+                            <span style="margin-top: 5px;">供应商类型：</span>
+                            <select  id="suppliertype" style="width:268px;margin-top: 5px;" name="suppliertype">
                             </select>
                         </li>
-                        <li class="select-time">
-                            <button class="btn btn-primary btn-rounded btn-sm" onclick="applyOpenTicket()"
-                                    id="apply_open_ticket">申请开票
-                            </button>
-                        </li>
+                        <a style="margin-top: 5px;" class="btn btn-primary btn-rounded btn-sm" onclick="Search()"><i
+                                class="fa fa-search"></i>搜索</a>
                     </ul>
                 </div>
             </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="applyOpenTicket()">
+                <i class="fa fa-plus"></i> 申请开票
+            </a>
+            <a class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()" >
+                <i class=""></i> 同步数据
+            </a>
         </div>
 
         <div class="col-sm-12 select-table table-striped">
@@ -208,11 +209,103 @@
                 },
                 {
                     field: 'company_id',
-                    title: '法人体ID'
+                    title: '法人体ID',
+                    formatter: function (value, row, index) {
+                        var company = value;
+                        if( company == '1'){
+                            company = "上海新致软件股份有限公司"
+                        }
+                        if( company == '2'){
+                            company = "北京新致君阳信息技术有限公司"
+                        }
+                        if( company == '3'){
+                            company = "西安新致信息技术有限公司"
+                        }
+                        if( company == '4'){
+                            company = "上海新致信息技术有限公司"
+                        }
+                        if( company == '13'){
+                            company = "大连新致软件有限公司"
+                        }
+                        if( company == '17'){
+                            company = "上海新致百果信息科技有限公司"
+                        }
+                        if( company == '21'){
+                            company = "重庆新致金服信息技术有限公司"
+                        }
+                        if( company == '22'){
+                            company = "贵州新致普惠信息技术有限公司"
+                        }
+                        if( company == '23'){
+                            company = "上海新致晟欧软件技术有限公司"
+                        }
+                        if( company == '24'){
+                            company = "上海中件管理咨询有限公司"
+                        }
+                        if( company == '25'){
+                            company = "上海全栈投资中心（有限合伙）"
+                        }
+                        if( company == '26'){
+                            company = "武汉新致信息技术有限公司"
+                        }
+                        if( company == '27'){
+                            company = "上海前置通信技术有限公司"
+                        }
+                        if( company == '99'){
+                            company = "上海全端网络科技有限公司"
+                        }
+                        return company;
+                    }
                 },
                 {
                     field: 'open_ticket_rise',
-                    title: '开票抬头'
+                    title: '开票抬头',
+                    formatter: function (value, row, index) {
+                        var company = value;
+                        if( company == '1'){
+                            company = "上海新致软件股份有限公司"
+                        }
+                        if( company == '2'){
+                            company = "北京新致君阳信息技术有限公司"
+                        }
+                        if( company == '3'){
+                            company = "西安新致信息技术有限公司"
+                        }
+                        if( company == '4'){
+                            company = "上海新致信息技术有限公司"
+                        }
+                        if( company == '13'){
+                            company = "大连新致软件有限公司"
+                        }
+                        if( company == '17'){
+                            company = "上海新致百果信息科技有限公司"
+                        }
+                        if( company == '21'){
+                            company = "重庆新致金服信息技术有限公司"
+                        }
+                        if( company == '22'){
+                            company = "贵州新致普惠信息技术有限公司"
+                        }
+                        if( company == '23'){
+                            company = "上海新致晟欧软件技术有限公司"
+                        }
+                        if( company == '24'){
+                            company = "上海中件管理咨询有限公司"
+                        }
+                        if( company == '25'){
+                            company = "上海全栈投资中心（有限合伙）"
+                        }
+                        if( company == '26'){
+                            company = "武汉新致信息技术有限公司"
+                        }
+                        if( company == '27'){
+                            company = "上海前置通信技术有限公司"
+                        }
+                        if( company == '99'){
+                            company = "上海全端网络科技有限公司"
+                        }
+                        return company;
+                    }
                 },
                 {
                     field: 'order_num',

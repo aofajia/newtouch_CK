@@ -23,6 +23,17 @@ public class OpenTicketInfoCollect {
     //比列
     String account;
 
+    //供应商
+    String supplier;
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
     public Long getOrdersId() {
         return ordersId;
     }
