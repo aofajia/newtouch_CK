@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.MemberAdvanceMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.MemberAdvance" >
+    <id column="log_id" property="logId" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DECIMAL" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="mtime" property="mtime" jdbcType="INTEGER" />
+    <result column="payment_id" property="paymentId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="porderno" property="porderno" jdbcType="BIGINT" />
+    <result column="jdporderno" property="jdporderno" jdbcType="BIGINT" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="import_money" property="importMoney" jdbcType="DECIMAL" />
+    <result column="explode_money" property="explodeMoney" jdbcType="DECIMAL" />
+    <result column="member_advance" property="memberAdvance" jdbcType="DECIMAL" />
+    <result column="shop_advance" property="shopAdvance" jdbcType="DECIMAL" />
+    <result column="disabled" property="disabled" jdbcType="CHAR" />
+    <result column="union_fee" property="unionFee" jdbcType="DECIMAL" />
+    <result column="subsidy" property="subsidy" jdbcType="DECIMAL" />
+    <result column="welfare" property="welfare" jdbcType="DECIMAL" />
+    <result column="target_id" property="targetId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    log_id, member_id, money, message, mtime, payment_id, order_id, porderno, jdporderno, 
+    memo, import_money, explode_money, member_advance, shop_advance, disabled, union_fee, 
+    subsidy, welfare, target_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sdb_b2c_member_advance
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sdb_b2c_member_advance
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.MemberAdvance" >
+    insert into sdb_b2c_member_advance (log_id, member_id, money, 
+      message, mtime, payment_id, 
+      order_id, porderno, jdporderno, 
+      memo, import_money, explode_money, 
+      member_advance, shop_advance, disabled, 
+      union_fee, subsidy, welfare, 
+      target_id)
+    values (#{logId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, 
+      #{message,jdbcType=VARCHAR}, #{mtime,jdbcType=INTEGER}, #{paymentId,jdbcType=VARCHAR}, 
+      #{orderId,jdbcType=BIGINT}, #{porderno,jdbcType=BIGINT}, #{jdporderno,jdbcType=BIGINT}, 
+      #{memo,jdbcType=VARCHAR}, #{importMoney,jdbcType=DECIMAL}, #{explodeMoney,jdbcType=DECIMAL}, 
+      #{memberAdvance,jdbcType=DECIMAL}, #{shopAdvance,jdbcType=DECIMAL}, #{disabled,jdbcType=CHAR}, 
+      #{unionFee,jdbcType=DECIMAL}, #{subsidy,jdbcType=DECIMAL}, #{welfare,jdbcType=DECIMAL}, 
+      #{targetId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.MemberAdvance" >
+    insert into sdb_b2c_member_advance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        log_id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="mtime != null" >
+        mtime,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="porderno != null" >
+        porderno,
+      </if>
+      <if test="jdporderno != null" >
+        jdporderno,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="importMoney != null" >
+        import_money,
+      </if>
+      <if test="explodeMoney != null" >
+        explode_money,
+      </if>
+      <if test="memberAdvance != null" >
+        member_advance,
+      </if>
+      <if test="shopAdvance != null" >
+        shop_advance,
+      </if>
+      <if test="disabled != null" >
+        disabled,
+      </if>
+      <if test="unionFee != null" >
+        union_fee,
+      </if>
+      <if test="subsidy != null" >
+        subsidy,
+      </if>
+      <if test="welfare != null" >
+        welfare,
+      </if>
+      <if test="targetId != null" >
+        target_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logId != null" >
+        #{logId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="mtime != null" >
+        #{mtime,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="porderno != null" >
+        #{porderno,jdbcType=BIGINT},
+      </if>
+      <if test="jdporderno != null" >
+        #{jdporderno,jdbcType=BIGINT},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="importMoney != null" >
+        #{importMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="explodeMoney != null" >
+        #{explodeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="memberAdvance != null" >
+        #{memberAdvance,jdbcType=DECIMAL},
+      </if>
+      <if test="shopAdvance != null" >
+        #{shopAdvance,jdbcType=DECIMAL},
+      </if>
+      <if test="disabled != null" >
+        #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="unionFee != null" >
+        #{unionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidy != null" >
+        #{subsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="welfare != null" >
+        #{welfare,jdbcType=DECIMAL},
+      </if>
+      <if test="targetId != null" >
+        #{targetId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.MemberAdvance" >
+    update sdb_b2c_member_advance
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DECIMAL},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="mtime != null" >
+        mtime = #{mtime,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="porderno != null" >
+        porderno = #{porderno,jdbcType=BIGINT},
+      </if>
+      <if test="jdporderno != null" >
+        jdporderno = #{jdporderno,jdbcType=BIGINT},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="importMoney != null" >
+        import_money = #{importMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="explodeMoney != null" >
+        explode_money = #{explodeMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="memberAdvance != null" >
+        member_advance = #{memberAdvance,jdbcType=DECIMAL},
+      </if>
+      <if test="shopAdvance != null" >
+        shop_advance = #{shopAdvance,jdbcType=DECIMAL},
+      </if>
+      <if test="disabled != null" >
+        disabled = #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="unionFee != null" >
+        union_fee = #{unionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidy != null" >
+        subsidy = #{subsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="welfare != null" >
+        welfare = #{welfare,jdbcType=DECIMAL},
+      </if>
+      <if test="targetId != null" >
+        target_id = #{targetId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.MemberAdvance" >
+    update sdb_b2c_member_advance
+    set member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL},
+      message = #{message,jdbcType=VARCHAR},
+      mtime = #{mtime,jdbcType=INTEGER},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      order_id = #{orderId,jdbcType=BIGINT},
+      porderno = #{porderno,jdbcType=BIGINT},
+      jdporderno = #{jdporderno,jdbcType=BIGINT},
+      memo = #{memo,jdbcType=VARCHAR},
+      import_money = #{importMoney,jdbcType=DECIMAL},
+      explode_money = #{explodeMoney,jdbcType=DECIMAL},
+      member_advance = #{memberAdvance,jdbcType=DECIMAL},
+      shop_advance = #{shopAdvance,jdbcType=DECIMAL},
+      disabled = #{disabled,jdbcType=CHAR},
+      union_fee = #{unionFee,jdbcType=DECIMAL},
+      subsidy = #{subsidy,jdbcType=DECIMAL},
+      welfare = #{welfare,jdbcType=DECIMAL},
+      target_id = #{targetId,jdbcType=INTEGER}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+    <select id="getMonthMoney" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+        sum(ma.import_money) as import_money,
+        sum(ma.explode_money) as explode_money
+        FROM sdb_b2c_member_advance ma
+        WHERE FROM_UNIXTIME(ma.mtime, '%Y-%m-%d') &lt;= #{startTime}
+        AND ma.disabled = 'false'
+        <if test="memo != null" >
+            AND ma.memo = #{memo,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getOffjobMoney" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+        sum(ma.import_money) as import_money,
+        sum(ma.explode_money) as explode_money
+        FROM sdb_b2c_member_advance ma
+        WHERE FROM_UNIXTIME(ma.mtime, '%Y-%m-%d') &lt;= #{startTime}
+        AND ma.disabled = 'false'
+        <if test="memo != null" >
+            AND ma.memo = #{memo,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

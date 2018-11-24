@@ -215,7 +215,7 @@
     ORDER BY bc.configtype
   </select>
   <select id="selectStoreConfigAll" resultType="com.ruoyi.system.domain.StoreConfig">
-    SELECT bc.supplierid as store_id, bc.configname as shop_name, bc.monthlymoney
+    SELECT bc.supplierid as store_id, bc.configname as shop_name, bc.monthlymoney, bc.paymethod
     FROM hrfi_balancewarning_config bc
     INNER JOIN hrfi_balancewarning_config_type ct ON ct.configtype = bc.configtype
     INNER JOIN sdb_business_storemanger bs ON bs.store_id = bc.supplierid

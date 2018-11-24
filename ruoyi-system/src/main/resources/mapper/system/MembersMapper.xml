@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.MembersMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Members" >
+    <id column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="member_lv_id" property="memberLvId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="passport" property="passport" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="INTEGER" />
+    <result column="lastname" property="lastname" jdbcType="VARCHAR" />
+    <result column="firstname" property="firstname" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="zip" property="zip" jdbcType="VARCHAR" />
+    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+    <result column="refer_id" property="referId" jdbcType="VARCHAR" />
+    <result column="refer_url" property="referUrl" jdbcType="VARCHAR" />
+    <result column="b_year" property="bYear" jdbcType="SMALLINT" />
+    <result column="b_month" property="bMonth" jdbcType="TINYINT" />
+    <result column="b_day" property="bDay" jdbcType="TINYINT" />
+    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="wedlock" property="wedlock" jdbcType="CHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="vocation" property="vocation" jdbcType="VARCHAR" />
+    <result column="advance" property="advance" jdbcType="DECIMAL" />
+    <result column="advance_freeze" property="advanceFreeze" jdbcType="DECIMAL" />
+    <result column="point_freeze" property="pointFreeze" jdbcType="INTEGER" />
+    <result column="point_history" property="pointHistory" jdbcType="INTEGER" />
+    <result column="score_rate" property="scoreRate" jdbcType="DECIMAL" />
+    <result column="reg_ip" property="regIp" jdbcType="VARCHAR" />
+    <result column="regtime" property="regtime" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="BIT" />
+    <result column="pay_time" property="payTime" jdbcType="INTEGER" />
+    <result column="biz_money" property="bizMoney" jdbcType="DECIMAL" />
+    <result column="pw_answer" property="pwAnswer" jdbcType="VARCHAR" />
+    <result column="pw_question" property="pwQuestion" jdbcType="VARCHAR" />
+    <result column="seller" property="seller" jdbcType="VARCHAR" />
+    <result column="cur" property="cur" jdbcType="VARCHAR" />
+    <result column="lang" property="lang" jdbcType="VARCHAR" />
+    <result column="unreadmsg" property="unreadmsg" jdbcType="SMALLINT" />
+    <result column="disabled" property="disabled" jdbcType="CHAR" />
+    <result column="remark_type" property="remarkType" jdbcType="VARCHAR" />
+    <result column="login_count" property="loginCount" jdbcType="INTEGER" />
+    <result column="experience" property="experience" jdbcType="INTEGER" />
+    <result column="foreign_id" property="foreignId" jdbcType="VARCHAR" />
+    <result column="member_refer" property="memberRefer" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="CHAR" />
+    <result column="reg_type" property="regType" jdbcType="CHAR" />
+    <result column="verify_email" property="verifyEmail" jdbcType="CHAR" />
+    <result column="verify_email_code" property="verifyEmailCode" jdbcType="VARCHAR" />
+    <result column="need_change_pw" property="needChangePw" jdbcType="CHAR" />
+    <result column="verify_mobile" property="verifyMobile" jdbcType="CHAR" />
+    <result column="legalman" property="legalman" jdbcType="INTEGER" />
+    <result column="legalman_name" property="legalmanName" jdbcType="VARCHAR" />
+    <result column="branch_card" property="branchCard" jdbcType="INTEGER" />
+    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
+    <result column="staff_card" property="staffCard" jdbcType="INTEGER" />
+    <result column="staff_name" property="staffName" jdbcType="VARCHAR" />
+    <result column="union_fee" property="unionFee" jdbcType="DECIMAL" />
+    <result column="subsidy" property="subsidy" jdbcType="DECIMAL" />
+    <result column="welfare" property="welfare" jdbcType="DECIMAL" />
+    <result column="period" property="period" jdbcType="VARCHAR" />
+    <result column="onjob" property="onjob" jdbcType="CHAR" />
+    <result column="quitjob" property="quitjob" jdbcType="VARCHAR" />
+    <result column="login_time" property="loginTime" jdbcType="INTEGER" />
+    <result column="clogin_time" property="cloginTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ruoyi.system.domain.MembersWithBLOBs" extends="BaseResultMap" >
+    <result column="addon" property="addon" jdbcType="LONGVARCHAR" />
+    <result column="interest" property="interest" jdbcType="LONGVARCHAR" />
+    <result column="fav_tags" property="favTags" jdbcType="LONGVARCHAR" />
+    <result column="custom" property="custom" jdbcType="LONGVARCHAR" />
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    member_id, member_lv_id, name, idcard, nickname, passport, point, lastname, firstname, 
+    area, addr, mobile, tel, email, zip, order_num, refer_id, refer_url, b_year, b_month, 
+    b_day, sex, wedlock, education, vocation, advance, advance_freeze, point_freeze, 
+    point_history, score_rate, reg_ip, regtime, state, pay_time, biz_money, pw_answer, 
+    pw_question, seller, cur, lang, unreadmsg, disabled, remark_type, login_count, experience, 
+    foreign_id, member_refer, source, reg_type, verify_email, verify_email_code, need_change_pw, 
+    verify_mobile, legalman, legalman_name, branch_card, branch_name, staff_card, staff_name, 
+    union_fee, subsidy, welfare, period, onjob, quitjob, login_time, clogin_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    addon, interest, fav_tags, custom, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sdb_b2c_members
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sdb_b2c_members
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.MembersWithBLOBs" >
+    insert into sdb_b2c_members (member_id, member_lv_id, name, 
+      idcard, nickname, passport, 
+      point, lastname, firstname, 
+      area, addr, mobile, 
+      tel, email, zip, order_num, 
+      refer_id, refer_url, b_year, 
+      b_month, b_day, sex, wedlock, 
+      education, vocation, advance, 
+      advance_freeze, point_freeze, point_history, 
+      score_rate, reg_ip, regtime, 
+      state, pay_time, biz_money, 
+      pw_answer, pw_question, seller, 
+      cur, lang, unreadmsg, 
+      disabled, remark_type, login_count, 
+      experience, foreign_id, member_refer, 
+      source, reg_type, verify_email, 
+      verify_email_code, need_change_pw, verify_mobile, 
+      legalman, legalman_name, branch_card, 
+      branch_name, staff_card, staff_name, 
+      union_fee, subsidy, welfare, 
+      period, onjob, quitjob, 
+      login_time, clogin_time, addon, 
+      interest, fav_tags, custom, 
+      remark)
+    values (#{memberId,jdbcType=INTEGER}, #{memberLvId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{idcard,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{passport,jdbcType=VARCHAR}, 
+      #{point,jdbcType=INTEGER}, #{lastname,jdbcType=VARCHAR}, #{firstname,jdbcType=VARCHAR}, 
+      #{area,jdbcType=VARCHAR}, #{addr,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{zip,jdbcType=VARCHAR}, #{orderNum,jdbcType=INTEGER}, 
+      #{referId,jdbcType=VARCHAR}, #{referUrl,jdbcType=VARCHAR}, #{bYear,jdbcType=SMALLINT}, 
+      #{bMonth,jdbcType=TINYINT}, #{bDay,jdbcType=TINYINT}, #{sex,jdbcType=CHAR}, #{wedlock,jdbcType=CHAR}, 
+      #{education,jdbcType=VARCHAR}, #{vocation,jdbcType=VARCHAR}, #{advance,jdbcType=DECIMAL}, 
+      #{advanceFreeze,jdbcType=DECIMAL}, #{pointFreeze,jdbcType=INTEGER}, #{pointHistory,jdbcType=INTEGER}, 
+      #{scoreRate,jdbcType=DECIMAL}, #{regIp,jdbcType=VARCHAR}, #{regtime,jdbcType=INTEGER}, 
+      #{state,jdbcType=BIT}, #{payTime,jdbcType=INTEGER}, #{bizMoney,jdbcType=DECIMAL}, 
+      #{pwAnswer,jdbcType=VARCHAR}, #{pwQuestion,jdbcType=VARCHAR}, #{seller,jdbcType=VARCHAR}, 
+      #{cur,jdbcType=VARCHAR}, #{lang,jdbcType=VARCHAR}, #{unreadmsg,jdbcType=SMALLINT}, 
+      #{disabled,jdbcType=CHAR}, #{remarkType,jdbcType=VARCHAR}, #{loginCount,jdbcType=INTEGER}, 
+      #{experience,jdbcType=INTEGER}, #{foreignId,jdbcType=VARCHAR}, #{memberRefer,jdbcType=VARCHAR}, 
+      #{source,jdbcType=CHAR}, #{regType,jdbcType=CHAR}, #{verifyEmail,jdbcType=CHAR}, 
+      #{verifyEmailCode,jdbcType=VARCHAR}, #{needChangePw,jdbcType=CHAR}, #{verifyMobile,jdbcType=CHAR}, 
+      #{legalman,jdbcType=INTEGER}, #{legalmanName,jdbcType=VARCHAR}, #{branchCard,jdbcType=INTEGER}, 
+      #{branchName,jdbcType=VARCHAR}, #{staffCard,jdbcType=INTEGER}, #{staffName,jdbcType=VARCHAR}, 
+      #{unionFee,jdbcType=DECIMAL}, #{subsidy,jdbcType=DECIMAL}, #{welfare,jdbcType=DECIMAL}, 
+      #{period,jdbcType=VARCHAR}, #{onjob,jdbcType=CHAR}, #{quitjob,jdbcType=VARCHAR}, 
+      #{loginTime,jdbcType=INTEGER}, #{cloginTime,jdbcType=INTEGER}, #{addon,jdbcType=LONGVARCHAR}, 
+      #{interest,jdbcType=LONGVARCHAR}, #{favTags,jdbcType=LONGVARCHAR}, #{custom,jdbcType=LONGVARCHAR}, 
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.MembersWithBLOBs" >
+    insert into sdb_b2c_members
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="memberLvId != null" >
+        member_lv_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="passport != null" >
+        passport,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="lastname != null" >
+        lastname,
+      </if>
+      <if test="firstname != null" >
+        firstname,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="zip != null" >
+        zip,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="referId != null" >
+        refer_id,
+      </if>
+      <if test="referUrl != null" >
+        refer_url,
+      </if>
+      <if test="bYear != null" >
+        b_year,
+      </if>
+      <if test="bMonth != null" >
+        b_month,
+      </if>
+      <if test="bDay != null" >
+        b_day,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="wedlock != null" >
+        wedlock,
+      </if>
+      <if test="education != null" >
+        education,
+      </if>
+      <if test="vocation != null" >
+        vocation,
+      </if>
+      <if test="advance != null" >
+        advance,
+      </if>
+      <if test="advanceFreeze != null" >
+        advance_freeze,
+      </if>
+      <if test="pointFreeze != null" >
+        point_freeze,
+      </if>
+      <if test="pointHistory != null" >
+        point_history,
+      </if>
+      <if test="scoreRate != null" >
+        score_rate,
+      </if>
+      <if test="regIp != null" >
+        reg_ip,
+      </if>
+      <if test="regtime != null" >
+        regtime,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="bizMoney != null" >
+        biz_money,
+      </if>
+      <if test="pwAnswer != null" >
+        pw_answer,
+      </if>
+      <if test="pwQuestion != null" >
+        pw_question,
+      </if>
+      <if test="seller != null" >
+        seller,
+      </if>
+      <if test="cur != null" >
+        cur,
+      </if>
+      <if test="lang != null" >
+        lang,
+      </if>
+      <if test="unreadmsg != null" >
+        unreadmsg,
+      </if>
+      <if test="disabled != null" >
+        disabled,
+      </if>
+      <if test="remarkType != null" >
+        remark_type,
+      </if>
+      <if test="loginCount != null" >
+        login_count,
+      </if>
+      <if test="experience != null" >
+        experience,
+      </if>
+      <if test="foreignId != null" >
+        foreign_id,
+      </if>
+      <if test="memberRefer != null" >
+        member_refer,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="regType != null" >
+        reg_type,
+      </if>
+      <if test="verifyEmail != null" >
+        verify_email,
+      </if>
+      <if test="verifyEmailCode != null" >
+        verify_email_code,
+      </if>
+      <if test="needChangePw != null" >
+        need_change_pw,
+      </if>
+      <if test="verifyMobile != null" >
+        verify_mobile,
+      </if>
+      <if test="legalman != null" >
+        legalman,
+      </if>
+      <if test="legalmanName != null" >
+        legalman_name,
+      </if>
+      <if test="branchCard != null" >
+        branch_card,
+      </if>
+      <if test="branchName != null" >
+        branch_name,
+      </if>
+      <if test="staffCard != null" >
+        staff_card,
+      </if>
+      <if test="staffName != null" >
+        staff_name,
+      </if>
+      <if test="unionFee != null" >
+        union_fee,
+      </if>
+      <if test="subsidy != null" >
+        subsidy,
+      </if>
+      <if test="welfare != null" >
+        welfare,
+      </if>
+      <if test="period != null" >
+        period,
+      </if>
+      <if test="onjob != null" >
+        onjob,
+      </if>
+      <if test="quitjob != null" >
+        quitjob,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+      <if test="cloginTime != null" >
+        clogin_time,
+      </if>
+      <if test="addon != null" >
+        addon,
+      </if>
+      <if test="interest != null" >
+        interest,
+      </if>
+      <if test="favTags != null" >
+        fav_tags,
+      </if>
+      <if test="custom != null" >
+        custom,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="memberLvId != null" >
+        #{memberLvId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="passport != null" >
+        #{passport,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=INTEGER},
+      </if>
+      <if test="lastname != null" >
+        #{lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="firstname != null" >
+        #{firstname,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="zip != null" >
+        #{zip,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="referId != null" >
+        #{referId,jdbcType=VARCHAR},
+      </if>
+      <if test="referUrl != null" >
+        #{referUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="bYear != null" >
+        #{bYear,jdbcType=SMALLINT},
+      </if>
+      <if test="bMonth != null" >
+        #{bMonth,jdbcType=TINYINT},
+      </if>
+      <if test="bDay != null" >
+        #{bDay,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="wedlock != null" >
+        #{wedlock,jdbcType=CHAR},
+      </if>
+      <if test="education != null" >
+        #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="vocation != null" >
+        #{vocation,jdbcType=VARCHAR},
+      </if>
+      <if test="advance != null" >
+        #{advance,jdbcType=DECIMAL},
+      </if>
+      <if test="advanceFreeze != null" >
+        #{advanceFreeze,jdbcType=DECIMAL},
+      </if>
+      <if test="pointFreeze != null" >
+        #{pointFreeze,jdbcType=INTEGER},
+      </if>
+      <if test="pointHistory != null" >
+        #{pointHistory,jdbcType=INTEGER},
+      </if>
+      <if test="scoreRate != null" >
+        #{scoreRate,jdbcType=DECIMAL},
+      </if>
+      <if test="regIp != null" >
+        #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        #{regtime,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=BIT},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=INTEGER},
+      </if>
+      <if test="bizMoney != null" >
+        #{bizMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="pwAnswer != null" >
+        #{pwAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="pwQuestion != null" >
+        #{pwQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="seller != null" >
+        #{seller,jdbcType=VARCHAR},
+      </if>
+      <if test="cur != null" >
+        #{cur,jdbcType=VARCHAR},
+      </if>
+      <if test="lang != null" >
+        #{lang,jdbcType=VARCHAR},
+      </if>
+      <if test="unreadmsg != null" >
+        #{unreadmsg,jdbcType=SMALLINT},
+      </if>
+      <if test="disabled != null" >
+        #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="remarkType != null" >
+        #{remarkType,jdbcType=VARCHAR},
+      </if>
+      <if test="loginCount != null" >
+        #{loginCount,jdbcType=INTEGER},
+      </if>
+      <if test="experience != null" >
+        #{experience,jdbcType=INTEGER},
+      </if>
+      <if test="foreignId != null" >
+        #{foreignId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRefer != null" >
+        #{memberRefer,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="regType != null" >
+        #{regType,jdbcType=CHAR},
+      </if>
+      <if test="verifyEmail != null" >
+        #{verifyEmail,jdbcType=CHAR},
+      </if>
+      <if test="verifyEmailCode != null" >
+        #{verifyEmailCode,jdbcType=VARCHAR},
+      </if>
+      <if test="needChangePw != null" >
+        #{needChangePw,jdbcType=CHAR},
+      </if>
+      <if test="verifyMobile != null" >
+        #{verifyMobile,jdbcType=CHAR},
+      </if>
+      <if test="legalman != null" >
+        #{legalman,jdbcType=INTEGER},
+      </if>
+      <if test="legalmanName != null" >
+        #{legalmanName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchCard != null" >
+        #{branchCard,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCard != null" >
+        #{staffCard,jdbcType=INTEGER},
+      </if>
+      <if test="staffName != null" >
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="unionFee != null" >
+        #{unionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidy != null" >
+        #{subsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="welfare != null" >
+        #{welfare,jdbcType=DECIMAL},
+      </if>
+      <if test="period != null" >
+        #{period,jdbcType=VARCHAR},
+      </if>
+      <if test="onjob != null" >
+        #{onjob,jdbcType=CHAR},
+      </if>
+      <if test="quitjob != null" >
+        #{quitjob,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="cloginTime != null" >
+        #{cloginTime,jdbcType=INTEGER},
+      </if>
+      <if test="addon != null" >
+        #{addon,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="interest != null" >
+        #{interest,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="favTags != null" >
+        #{favTags,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="custom != null" >
+        #{custom,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.MembersWithBLOBs" >
+    update sdb_b2c_members
+    <set >
+      <if test="memberLvId != null" >
+        member_lv_id = #{memberLvId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="passport != null" >
+        passport = #{passport,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=INTEGER},
+      </if>
+      <if test="lastname != null" >
+        lastname = #{lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="firstname != null" >
+        firstname = #{firstname,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="zip != null" >
+        zip = #{zip,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=INTEGER},
+      </if>
+      <if test="referId != null" >
+        refer_id = #{referId,jdbcType=VARCHAR},
+      </if>
+      <if test="referUrl != null" >
+        refer_url = #{referUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="bYear != null" >
+        b_year = #{bYear,jdbcType=SMALLINT},
+      </if>
+      <if test="bMonth != null" >
+        b_month = #{bMonth,jdbcType=TINYINT},
+      </if>
+      <if test="bDay != null" >
+        b_day = #{bDay,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="wedlock != null" >
+        wedlock = #{wedlock,jdbcType=CHAR},
+      </if>
+      <if test="education != null" >
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="vocation != null" >
+        vocation = #{vocation,jdbcType=VARCHAR},
+      </if>
+      <if test="advance != null" >
+        advance = #{advance,jdbcType=DECIMAL},
+      </if>
+      <if test="advanceFreeze != null" >
+        advance_freeze = #{advanceFreeze,jdbcType=DECIMAL},
+      </if>
+      <if test="pointFreeze != null" >
+        point_freeze = #{pointFreeze,jdbcType=INTEGER},
+      </if>
+      <if test="pointHistory != null" >
+        point_history = #{pointHistory,jdbcType=INTEGER},
+      </if>
+      <if test="scoreRate != null" >
+        score_rate = #{scoreRate,jdbcType=DECIMAL},
+      </if>
+      <if test="regIp != null" >
+        reg_ip = #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="regtime != null" >
+        regtime = #{regtime,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=BIT},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=INTEGER},
+      </if>
+      <if test="bizMoney != null" >
+        biz_money = #{bizMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="pwAnswer != null" >
+        pw_answer = #{pwAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="pwQuestion != null" >
+        pw_question = #{pwQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="seller != null" >
+        seller = #{seller,jdbcType=VARCHAR},
+      </if>
+      <if test="cur != null" >
+        cur = #{cur,jdbcType=VARCHAR},
+      </if>
+      <if test="lang != null" >
+        lang = #{lang,jdbcType=VARCHAR},
+      </if>
+      <if test="unreadmsg != null" >
+        unreadmsg = #{unreadmsg,jdbcType=SMALLINT},
+      </if>
+      <if test="disabled != null" >
+        disabled = #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="remarkType != null" >
+        remark_type = #{remarkType,jdbcType=VARCHAR},
+      </if>
+      <if test="loginCount != null" >
+        login_count = #{loginCount,jdbcType=INTEGER},
+      </if>
+      <if test="experience != null" >
+        experience = #{experience,jdbcType=INTEGER},
+      </if>
+      <if test="foreignId != null" >
+        foreign_id = #{foreignId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRefer != null" >
+        member_refer = #{memberRefer,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=CHAR},
+      </if>
+      <if test="regType != null" >
+        reg_type = #{regType,jdbcType=CHAR},
+      </if>
+      <if test="verifyEmail != null" >
+        verify_email = #{verifyEmail,jdbcType=CHAR},
+      </if>
+      <if test="verifyEmailCode != null" >
+        verify_email_code = #{verifyEmailCode,jdbcType=VARCHAR},
+      </if>
+      <if test="needChangePw != null" >
+        need_change_pw = #{needChangePw,jdbcType=CHAR},
+      </if>
+      <if test="verifyMobile != null" >
+        verify_mobile = #{verifyMobile,jdbcType=CHAR},
+      </if>
+      <if test="legalman != null" >
+        legalman = #{legalman,jdbcType=INTEGER},
+      </if>
+      <if test="legalmanName != null" >
+        legalman_name = #{legalmanName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchCard != null" >
+        branch_card = #{branchCard,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        branch_name = #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCard != null" >
+        staff_card = #{staffCard,jdbcType=INTEGER},
+      </if>
+      <if test="staffName != null" >
+        staff_name = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="unionFee != null" >
+        union_fee = #{unionFee,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidy != null" >
+        subsidy = #{subsidy,jdbcType=DECIMAL},
+      </if>
+      <if test="welfare != null" >
+        welfare = #{welfare,jdbcType=DECIMAL},
+      </if>
+      <if test="period != null" >
+        period = #{period,jdbcType=VARCHAR},
+      </if>
+      <if test="onjob != null" >
+        onjob = #{onjob,jdbcType=CHAR},
+      </if>
+      <if test="quitjob != null" >
+        quitjob = #{quitjob,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=INTEGER},
+      </if>
+      <if test="cloginTime != null" >
+        clogin_time = #{cloginTime,jdbcType=INTEGER},
+      </if>
+      <if test="addon != null" >
+        addon = #{addon,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="interest != null" >
+        interest = #{interest,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="favTags != null" >
+        fav_tags = #{favTags,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="custom != null" >
+        custom = #{custom,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ruoyi.system.domain.MembersWithBLOBs" >
+    update sdb_b2c_members
+    set member_lv_id = #{memberLvId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      passport = #{passport,jdbcType=VARCHAR},
+      point = #{point,jdbcType=INTEGER},
+      lastname = #{lastname,jdbcType=VARCHAR},
+      firstname = #{firstname,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      zip = #{zip,jdbcType=VARCHAR},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      refer_id = #{referId,jdbcType=VARCHAR},
+      refer_url = #{referUrl,jdbcType=VARCHAR},
+      b_year = #{bYear,jdbcType=SMALLINT},
+      b_month = #{bMonth,jdbcType=TINYINT},
+      b_day = #{bDay,jdbcType=TINYINT},
+      sex = #{sex,jdbcType=CHAR},
+      wedlock = #{wedlock,jdbcType=CHAR},
+      education = #{education,jdbcType=VARCHAR},
+      vocation = #{vocation,jdbcType=VARCHAR},
+      advance = #{advance,jdbcType=DECIMAL},
+      advance_freeze = #{advanceFreeze,jdbcType=DECIMAL},
+      point_freeze = #{pointFreeze,jdbcType=INTEGER},
+      point_history = #{pointHistory,jdbcType=INTEGER},
+      score_rate = #{scoreRate,jdbcType=DECIMAL},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      regtime = #{regtime,jdbcType=INTEGER},
+      state = #{state,jdbcType=BIT},
+      pay_time = #{payTime,jdbcType=INTEGER},
+      biz_money = #{bizMoney,jdbcType=DECIMAL},
+      pw_answer = #{pwAnswer,jdbcType=VARCHAR},
+      pw_question = #{pwQuestion,jdbcType=VARCHAR},
+      seller = #{seller,jdbcType=VARCHAR},
+      cur = #{cur,jdbcType=VARCHAR},
+      lang = #{lang,jdbcType=VARCHAR},
+      unreadmsg = #{unreadmsg,jdbcType=SMALLINT},
+      disabled = #{disabled,jdbcType=CHAR},
+      remark_type = #{remarkType,jdbcType=VARCHAR},
+      login_count = #{loginCount,jdbcType=INTEGER},
+      experience = #{experience,jdbcType=INTEGER},
+      foreign_id = #{foreignId,jdbcType=VARCHAR},
+      member_refer = #{memberRefer,jdbcType=VARCHAR},
+      source = #{source,jdbcType=CHAR},
+      reg_type = #{regType,jdbcType=CHAR},
+      verify_email = #{verifyEmail,jdbcType=CHAR},
+      verify_email_code = #{verifyEmailCode,jdbcType=VARCHAR},
+      need_change_pw = #{needChangePw,jdbcType=CHAR},
+      verify_mobile = #{verifyMobile,jdbcType=CHAR},
+      legalman = #{legalman,jdbcType=INTEGER},
+      legalman_name = #{legalmanName,jdbcType=VARCHAR},
+      branch_card = #{branchCard,jdbcType=INTEGER},
+      branch_name = #{branchName,jdbcType=VARCHAR},
+      staff_card = #{staffCard,jdbcType=INTEGER},
+      staff_name = #{staffName,jdbcType=VARCHAR},
+      union_fee = #{unionFee,jdbcType=DECIMAL},
+      subsidy = #{subsidy,jdbcType=DECIMAL},
+      welfare = #{welfare,jdbcType=DECIMAL},
+      period = #{period,jdbcType=VARCHAR},
+      onjob = #{onjob,jdbcType=CHAR},
+      quitjob = #{quitjob,jdbcType=VARCHAR},
+      login_time = #{loginTime,jdbcType=INTEGER},
+      clogin_time = #{cloginTime,jdbcType=INTEGER},
+      addon = #{addon,jdbcType=LONGVARCHAR},
+      interest = #{interest,jdbcType=LONGVARCHAR},
+      fav_tags = #{favTags,jdbcType=LONGVARCHAR},
+      custom = #{custom,jdbcType=LONGVARCHAR},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Members" >
+    update sdb_b2c_members
+    set member_lv_id = #{memberLvId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      passport = #{passport,jdbcType=VARCHAR},
+      point = #{point,jdbcType=INTEGER},
+      lastname = #{lastname,jdbcType=VARCHAR},
+      firstname = #{firstname,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      zip = #{zip,jdbcType=VARCHAR},
+      order_num = #{orderNum,jdbcType=INTEGER},
+      refer_id = #{referId,jdbcType=VARCHAR},
+      refer_url = #{referUrl,jdbcType=VARCHAR},
+      b_year = #{bYear,jdbcType=SMALLINT},
+      b_month = #{bMonth,jdbcType=TINYINT},
+      b_day = #{bDay,jdbcType=TINYINT},
+      sex = #{sex,jdbcType=CHAR},
+      wedlock = #{wedlock,jdbcType=CHAR},
+      education = #{education,jdbcType=VARCHAR},
+      vocation = #{vocation,jdbcType=VARCHAR},
+      advance = #{advance,jdbcType=DECIMAL},
+      advance_freeze = #{advanceFreeze,jdbcType=DECIMAL},
+      point_freeze = #{pointFreeze,jdbcType=INTEGER},
+      point_history = #{pointHistory,jdbcType=INTEGER},
+      score_rate = #{scoreRate,jdbcType=DECIMAL},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      regtime = #{regtime,jdbcType=INTEGER},
+      state = #{state,jdbcType=BIT},
+      pay_time = #{payTime,jdbcType=INTEGER},
+      biz_money = #{bizMoney,jdbcType=DECIMAL},
+      pw_answer = #{pwAnswer,jdbcType=VARCHAR},
+      pw_question = #{pwQuestion,jdbcType=VARCHAR},
+      seller = #{seller,jdbcType=VARCHAR},
+      cur = #{cur,jdbcType=VARCHAR},
+      lang = #{lang,jdbcType=VARCHAR},
+      unreadmsg = #{unreadmsg,jdbcType=SMALLINT},
+      disabled = #{disabled,jdbcType=CHAR},
+      remark_type = #{remarkType,jdbcType=VARCHAR},
+      login_count = #{loginCount,jdbcType=INTEGER},
+      experience = #{experience,jdbcType=INTEGER},
+      foreign_id = #{foreignId,jdbcType=VARCHAR},
+      member_refer = #{memberRefer,jdbcType=VARCHAR},
+      source = #{source,jdbcType=CHAR},
+      reg_type = #{regType,jdbcType=CHAR},
+      verify_email = #{verifyEmail,jdbcType=CHAR},
+      verify_email_code = #{verifyEmailCode,jdbcType=VARCHAR},
+      need_change_pw = #{needChangePw,jdbcType=CHAR},
+      verify_mobile = #{verifyMobile,jdbcType=CHAR},
+      legalman = #{legalman,jdbcType=INTEGER},
+      legalman_name = #{legalmanName,jdbcType=VARCHAR},
+      branch_card = #{branchCard,jdbcType=INTEGER},
+      branch_name = #{branchName,jdbcType=VARCHAR},
+      staff_card = #{staffCard,jdbcType=INTEGER},
+      staff_name = #{staffName,jdbcType=VARCHAR},
+      union_fee = #{unionFee,jdbcType=DECIMAL},
+      subsidy = #{subsidy,jdbcType=DECIMAL},
+      welfare = #{welfare,jdbcType=DECIMAL},
+      period = #{period,jdbcType=VARCHAR},
+      onjob = #{onjob,jdbcType=CHAR},
+      quitjob = #{quitjob,jdbcType=VARCHAR},
+      login_time = #{loginTime,jdbcType=INTEGER},
+      clogin_time = #{cloginTime,jdbcType=INTEGER}
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+    <select id="sumMemberadvance" resultType="com.ruoyi.system.domain.BalanceRecord">
+        SELECT SUM(bm.advance) as balancemoney, date_sub(current_date(),interval 1 day) as date
+        FROM sdb_b2c_members bm
+        where bm.disabled = 'false'
+    </select>
+</mapper>
