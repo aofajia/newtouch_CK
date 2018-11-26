@@ -97,7 +97,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
         HttpClientUtil httpUtil=new HttpClientUtil();
         String str=httpUtil.doPost(url,paramMap,"UTF-8");
         JSONObject result = JSONObject.parseObject(str);
-        String offjobmoney = "999";
+        String offjobmoney = "999.99";
         BigDecimal bleavemoney = new BigDecimal("999.990");
 //        String offjobmoney = result.getString("");
 //        BigDecimal bleavemoney = new BigDecimal(offjobmoney);
@@ -169,7 +169,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 responseMap.put("validmoney",validmoney);
 
                 //获取当前时间供应商余额记录表中的余额(定时任务 从供应商接口获取)
-                String storebalance = "999.12";
+                String storebalance = "999.99";
                 BigDecimal balance = new BigDecimal(storebalance);
                 responseMap.put("storebalance",storebalance);
 
