@@ -24,11 +24,14 @@
         </div>
 
         <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-            <a class="btn btn-primary" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
-                <i class="fa fa-download"></i> 导入模板下载
+            <a class="btn btn-primary" onclick="exportTemplet()" >
+                <i class="fa fa-download"></i> 导出模板下载
             </a>
-            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+            <a class="btn btn-primary" id="fileImport" >
                 <i class="fa fa-download"></i> 导入
+            </a>
+            <a>
+                <i><input type="file" style="display:none" id="files"></i>
             </a>
         </div>
 
@@ -39,9 +42,40 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
-    var datas = [[${@dict.getType('sys_normal_disable')}]];
+
+    //导出模板下载
+    function exportTemplet() {
+
+        window.location.href="/system/hr/export";
+    }
+
+    $("#fileImport").click(function () {
+        $("#files").click();
+        $("#files").onChange(hrOpen());
+    })
+
+
+    function hrOpen() {
+        if($('#files').val() == null || $('#files').val() == '') {
+            alert("请先选择一个文件！");
+            return;
+        }
+        $.ajax(
+            {
+                type : "POST",
+                url : "/system/hr/exportData",
+                dataType : "JSON",
+                data : {
+                    address : $('#files').val()
+                },
+                success : function(msg)
+                {
+                    alert("导入数据成功！");
+                },
+            });
+    }
+
+
     var prefix = ctx + "system/newtouch";
     $(function() {
         var options = {

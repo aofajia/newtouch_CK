@@ -1,8 +1,8 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.base.AjaxResult;
+import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.List;
 
@@ -36,4 +36,16 @@ public interface OpenTicketService {
      *  调整开票抬头
      */
     public AjaxResult changeTicketRise(List<OpenTicketInfoCollect> list,String rise);
+
+
+    /**
+     *  供应商开票同步数据
+     */
+    public AjaxResult getOpenCardInfo();
+
+
+    /**
+     *  供应商分页数据显示
+     */
+    public List<Employee> openCardDataList();
 }

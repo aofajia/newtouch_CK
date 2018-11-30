@@ -1,8 +1,25 @@
 package com.ruoyi.system.utils;
 
-import com.google.common.base.Optional;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import com.google.common.base.Optional;
+import com.ruoyi.system.domain.Employee;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class NumberArithmeticUtils {
 
@@ -162,6 +179,82 @@ public class NumberArithmeticUtils {
         }
         return new BigDecimal(Double.toString(val1)).divide(new BigDecimal(Double.toString(val2)))
                 .setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+
+
+    public static String sendPost(String url, Map<String, Object> params, String charset, String contentType, String requestBody) throws ClientProtocolException, IOException {
+
+
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(5000).setSocketTimeout(3000).build();
+        CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(url);
+        if (params != null && !params.isEmpty()) {
+            stringBuffer.append("?");
+            for (String key : params.keySet()) {
+                stringBuffer.append(key).append("=").append(params.get(key)).append("&");
+            }
+
+        }
+        String finalUrl=stringBuffer.toString();
+        if (finalUrl.endsWith("&")) {
+            finalUrl = finalUrl.substring(0, finalUrl.lastIndexOf("&"));
+        }
+        HttpPost httpPost = new HttpPost(finalUrl);
+        httpPost.setHeader("Content-type", contentType);
+        if (requestBody != null) {
+            httpPost.setEntity(new StringEntity(requestBody));
+        }
+
+        CloseableHttpResponse response = httpclient.execute(httpPost);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != 200) {
+            httpPost.abort();
+            throw new RuntimeException("HttpClient,error status code :" + statusCode);
+        }
+        HttpEntity entity = response.getEntity();
+        String result = null;
+        if (entity != null) {
+            result = EntityUtils.toString(entity, charset);
+            EntityUtils.consume(entity);
+            response.close();
+            return result;
+        } else {
+            return null;
+        }
+    }
+
+
+
+        public static JSONArray ProLogList2Json(List<Employee> list) {
+            JSONArray json = new JSONArray();
+            for (Employee pLog : list) {
+                JSONObject jo = new JSONObject();
+                jo.put("employeeNo", pLog.getEmployeeno());
+                jo.put("phoneNumber", pLog.getPhonenumber());
+                jo.put("name", pLog.getName());
+                jo.put("deptName",pLog.getDeptid());
+                json.put(jo);
+            }
+            System.out.println(json);
+            return json;
+        }
+
+
+    public static void main(String[] args) throws IOException {
+        List<Employee> list = new ArrayList<>();
+        Employee employee = new Employee();
+        employee.setPhonenumber("17680142326");
+        employee.setName("张三丰");
+        employee.setEmployeeno("111111");
+        employee.setDeptid("武当派");
+        list.add(employee);
+        ////String requestBody = "[{\"employeeno\":\"111111\",\"phonenumber\":\"17680142326\",\"name\":\"张三丰\",\"deptname\":\"武当派\",\"status\":\"\"}]";
+        //System.out.println(list.toString());
+        String result = sendPost("http://test.third-party.newtouch.com/elemp/ntpmp-api/batch-employee",null, "utf-8", "application/json",ProLogList2Json(list).toString());
+        System.out.println(result);
     }
 
 }

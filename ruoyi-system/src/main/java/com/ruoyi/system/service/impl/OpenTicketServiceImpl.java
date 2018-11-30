@@ -1,7 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.base.AjaxResult;
+import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
+import com.ruoyi.system.mapper.EmployeeMapper;
 import com.ruoyi.system.mapper.OpenTicketMapper;
 import com.ruoyi.system.service.OpenTicketService;
 import com.ruoyi.system.utils.NumberArithmeticUtils;
@@ -14,7 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import static com.ruoyi.common.utils.http.HttpClient.sendPost;
 
 @Service
 public class OpenTicketServiceImpl implements OpenTicketService {
@@ -24,6 +34,9 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     //注入开票订单表
     @Autowired
     private OpenTicketMapper openTicketMapper;
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
 
     @Override
     public List<OpenTicketInfoCollect> list(String supplier, String startDate, String endDate) {
@@ -46,6 +59,10 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                 }
                 BigDecimal b = NumberArithmeticUtils.safeDivide(sum, num);
                 collect.setAccount(b + "%");
+                collect.setAccount(collect.getAccount().substring(2, collect.getAccount().length()));
+                if (collect.getAccount().indexOf("0") >= 0) {
+                    collect.setAccount(collect.getAccount().substring(1, collect.getAccount().length()));
+                }
                 //collect.setMoney_num(sum);
                 sum = 0.0;
             }
@@ -117,6 +134,54 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         return AjaxResult.success();
     }
 
+    @Transactional
+    @Override
+    public AjaxResult getOpenCardInfo() {
+        try {
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("code", "23");
+            String result = sendPost("http://localhost:4090/HR/getOpenCardMassage", parameters);
+            JSONObject jsonObject = JSON.parseObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                Employee employee = new Employee();
+                String departmentName = object.getString("departmentName");
+                String employeeName = object.getString("employeeName");
+                String phone = object.getString("phone");
+                String employeeId = object.getString("employeeId");
+                String companyId = object.getString("companyId");
+                String idCard = object.getString("idCard");
+                String email = object.getString("email");
+                employee.setDeptid(departmentName);
+                employee.setEmployeeno(employeeId);
+                employee.setName(employeeName);
+                employee.setPhonenumber(phone);
+                employee.setCompanyId(companyId);
+                employee.setEmail(email);
+                if (idCard.length() == 18) {
+                    employee.setGender(getGender(idCard));
+                }
+                employeeMapper.insertSelective(employee);
+            }
+            return AjaxResult.success();
+        } catch (Exception e) {
+            logger.debug("供应商开卡同步数据失败！" + e.getMessage());
+            return AjaxResult.error();
+        }
+    }
+
+    @Override
+    public List<Employee> openCardDataList() {
+        List<Employee> list = new ArrayList<>();
+        try {
+            list = employeeMapper.openCardDataList();
+        }catch (Exception e){
+            logger.debug("查询供应商分页信息失败！"+e.getMessage());
+        }
+        return list;
+    }
+
 
     /**
      * 计算百分比
@@ -131,6 +196,17 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private String getTwoDecimal(Double d) {
         DecimalFormat df = new DecimalFormat("#.00");
         return df.format(d);
+    }
+
+
+    /**
+     * 判断奇数偶数
+     */
+    private String getGender(String card) {
+        String num = card.substring(16, 17);
+        Integer number = Integer.parseInt(num);
+        card = (number % 2 == 0) ? "女" : "男";
+        return card;
     }
 
 
