@@ -1,19 +1,27 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.base.AjaxResult;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.system.domain.BWConfig;
+import com.ruoyi.system.domain.DifferenceOrderList;
 import com.ruoyi.system.domain.StoreConfig;
 import com.ruoyi.system.domain.Storemanger;
-import com.ruoyi.system.mapper.RechargeLogMapper;
+import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.service.IOrderCheckingService;
+import com.ruoyi.web.controller.tool.Result;
 import com.ruoyi.web.core.base.BaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,31 +67,42 @@ public class OrderCheckingController extends BaseController
 
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(@RequestBody Map map)
+    public TableDataInfo gatDifferenceOrderList(String id,String startTime)
     {
         startPage();
-        //先获取商城订单中（可开票/全部）订单
-        //调用京东接口 按日期获取所有订单
-        List list = new ArrayList();
-        return getDataTable(list);
+        if(id != null && startTime != null)
+        {
+            List differenceOrderList = orderCheckingService.gatDifferenceOrderList(id, startTime);
+            return getDataTable(differenceOrderList);
+        }
+        else
+        {
+            return getDataTable(new ArrayList<>());
+        }
     }
 
     @PostMapping("/chinking")
     @ResponseBody
-    public List chinking(@RequestParam(required = false) String endTime)
+    public Result chinking(@RequestParam(required = false) String startTime)
     {
-        //先获取商城订单中（可开票/全部）订单
-        //调用京东接口 按日期获取所有订单
-        List list = new ArrayList();
-        return list;
+        Map map = orderCheckingService.chinkingMemberAdvance(startTime);
+        return Result.success(map);
     }
 
-    /*@PostMapping("/companylist")
+    @PostMapping("/storechecking")
     @ResponseBody
-    public List<Storemanger> companyList()
+    public List storeChecking(@RequestParam(required = false) String startTime)
     {
-        startPage();
-        List<Storemanger> storemangers = orderCheckingService.selectStoreAll();
-        return storemangers;
-    }*/
+        List storeCheckingList = orderCheckingService.storeChecking(startTime);
+        return storeCheckingList;
+    }
+
+    @PostMapping("/export")
+    @ResponseBody
+    public AjaxResult export(String id,String startTime)
+    {
+        List differenceOrderList = orderCheckingService.gatDifferenceOrderList(id, startTime);
+        ExcelUtil<DifferenceOrderList> util = new ExcelUtil<DifferenceOrderList>(DifferenceOrderList.class);
+        return util.exportExcel(differenceOrderList, "DifferenceOrderList");
+    }
 }

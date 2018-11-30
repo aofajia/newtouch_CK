@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Orders" >
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="discount_value" property="discountValue" jdbcType="DECIMAL" />
+    <result column="final_amount" property="finalAmount" jdbcType="DECIMAL" />
+    <result column="pay_status" property="payStatus" jdbcType="CHAR" />
+    <result column="ship_status" property="shipStatus" jdbcType="CHAR" />
+    <result column="is_delivery" property="isDelivery" jdbcType="CHAR" />
+    <result column="createtime" property="createtime" jdbcType="INTEGER" />
+    <result column="last_modified" property="lastModified" jdbcType="INTEGER" />
+    <result column="payment" property="payment" jdbcType="VARCHAR" />
+    <result column="shipping_id" property="shippingId" jdbcType="INTEGER" />
+    <result column="shipping" property="shipping" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="confirm" property="confirm" jdbcType="CHAR" />
+    <result column="ship_area" property="shipArea" jdbcType="VARCHAR" />
+    <result column="ship_name" property="shipName" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="itemnum" property="itemnum" jdbcType="DECIMAL" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="ship_zip" property="shipZip" jdbcType="VARCHAR" />
+    <result column="ship_tel" property="shipTel" jdbcType="VARCHAR" />
+    <result column="ship_email" property="shipEmail" jdbcType="VARCHAR" />
+    <result column="ship_time" property="shipTime" jdbcType="VARCHAR" />
+    <result column="ship_mobile" property="shipMobile" jdbcType="VARCHAR" />
+    <result column="cost_item" property="costItem" jdbcType="DECIMAL" />
+    <result column="is_tax" property="isTax" jdbcType="CHAR" />
+    <result column="cost_tax" property="costTax" jdbcType="DECIMAL" />
+    <result column="tax_company" property="taxCompany" jdbcType="VARCHAR" />
+    <result column="is_protect" property="isProtect" jdbcType="CHAR" />
+    <result column="cost_protect" property="costProtect" jdbcType="DECIMAL" />
+    <result column="cost_payment" property="costPayment" jdbcType="DECIMAL" />
+    <result column="currency" property="currency" jdbcType="VARCHAR" />
+    <result column="cur_rate" property="curRate" jdbcType="DECIMAL" />
+    <result column="score_u" property="scoreU" jdbcType="DECIMAL" />
+    <result column="score_g" property="scoreG" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="pmt_goods" property="pmtGoods" jdbcType="DECIMAL" />
+    <result column="pmt_order" property="pmtOrder" jdbcType="DECIMAL" />
+    <result column="payed" property="payed" jdbcType="DECIMAL" />
+    <result column="disabled" property="disabled" jdbcType="CHAR" />
+    <result column="mark_type" property="markType" jdbcType="VARCHAR" />
+    <result column="cost_freight" property="costFreight" jdbcType="DECIMAL" />
+    <result column="extend" property="extend" jdbcType="VARCHAR" />
+    <result column="order_refer" property="orderRefer" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="CHAR" />
+    <result column="confirm_time" property="confirmTime" jdbcType="INTEGER" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="comments_count" property="commentsCount" jdbcType="INTEGER" />
+    <result column="refund_status" property="refundStatus" jdbcType="CHAR" />
+    <result column="act_id" property="actId" jdbcType="INTEGER" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="is_extend" property="isExtend" jdbcType="CHAR" />
+    <result column="order_kind" property="orderKind" jdbcType="CHAR" />
+    <result column="jdorderno" property="jdorderno" jdbcType="BIGINT" />
+    <result column="jdporderno" property="jdporderno" jdbcType="BIGINT" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="CHAR" />
+    <result column="jdorderstate" property="jdorderstate" jdbcType="CHAR" />
+    <result column="order_legalman" property="orderLegalman" jdbcType="INTEGER" />
+    <result column="invoice_legalman" property="invoiceLegalman" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ruoyi.system.domain.OrdersWithBLOBs" extends="BaseResultMap" >
+    <result column="tostr" property="tostr" jdbcType="LONGVARCHAR" />
+    <result column="ship_addr" property="shipAddr" jdbcType="LONGVARCHAR" />
+    <result column="memo" property="memo" jdbcType="LONGVARCHAR" />
+    <result column="mark_text" property="markText" jdbcType="LONGVARCHAR" />
+    <result column="addon" property="addon" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, total_amount, discount_value, final_amount, pay_status, ship_status, is_delivery, 
+    createtime, last_modified, payment, shipping_id, shipping, member_id, status, confirm, 
+    ship_area, ship_name, weight, itemnum, ip, ship_zip, ship_tel, ship_email, ship_time, 
+    ship_mobile, cost_item, is_tax, cost_tax, tax_company, is_protect, cost_protect, 
+    cost_payment, currency, cur_rate, score_u, score_g, discount, pmt_goods, pmt_order, 
+    payed, disabled, mark_type, cost_freight, extend, order_refer, source, confirm_time, 
+    store_id, comments_count, refund_status, act_id, order_type, is_extend, order_kind, 
+    jdorderno, jdporderno, invoice_status, jdorderstate, order_legalman, invoice_legalman
+  </sql>
+  <sql id="Blob_Column_List" >
+    tostr, ship_addr, memo, mark_text, addon
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sdb_b2c_orders
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sdb_b2c_orders
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.OrdersWithBLOBs" >
+    insert into sdb_b2c_orders (order_id, total_amount, discount_value, 
+      final_amount, pay_status, ship_status, 
+      is_delivery, createtime, last_modified, 
+      payment, shipping_id, shipping, 
+      member_id, status, confirm, 
+      ship_area, ship_name, weight, 
+      itemnum, ip, ship_zip, 
+      ship_tel, ship_email, ship_time, 
+      ship_mobile, cost_item, is_tax, 
+      cost_tax, tax_company, is_protect, 
+      cost_protect, cost_payment, currency, 
+      cur_rate, score_u, score_g, 
+      discount, pmt_goods, pmt_order, 
+      payed, disabled, mark_type, 
+      cost_freight, extend, order_refer, 
+      source, confirm_time, store_id, 
+      comments_count, refund_status, act_id, 
+      order_type, is_extend, order_kind, 
+      jdorderno, jdporderno, invoice_status, 
+      jdorderstate, order_legalman, invoice_legalman, 
+      tostr, ship_addr, memo, 
+      mark_text, addon)
+    values (#{orderId,jdbcType=BIGINT}, #{totalAmount,jdbcType=DECIMAL}, #{discountValue,jdbcType=DECIMAL}, 
+      #{finalAmount,jdbcType=DECIMAL}, #{payStatus,jdbcType=CHAR}, #{shipStatus,jdbcType=CHAR}, 
+      #{isDelivery,jdbcType=CHAR}, #{createtime,jdbcType=INTEGER}, #{lastModified,jdbcType=INTEGER}, 
+      #{payment,jdbcType=VARCHAR}, #{shippingId,jdbcType=INTEGER}, #{shipping,jdbcType=VARCHAR}, 
+      #{memberId,jdbcType=INTEGER}, #{status,jdbcType=CHAR}, #{confirm,jdbcType=CHAR}, 
+      #{shipArea,jdbcType=VARCHAR}, #{shipName,jdbcType=VARCHAR}, #{weight,jdbcType=DECIMAL}, 
+      #{itemnum,jdbcType=DECIMAL}, #{ip,jdbcType=VARCHAR}, #{shipZip,jdbcType=VARCHAR}, 
+      #{shipTel,jdbcType=VARCHAR}, #{shipEmail,jdbcType=VARCHAR}, #{shipTime,jdbcType=VARCHAR}, 
+      #{shipMobile,jdbcType=VARCHAR}, #{costItem,jdbcType=DECIMAL}, #{isTax,jdbcType=CHAR}, 
+      #{costTax,jdbcType=DECIMAL}, #{taxCompany,jdbcType=VARCHAR}, #{isProtect,jdbcType=CHAR}, 
+      #{costProtect,jdbcType=DECIMAL}, #{costPayment,jdbcType=DECIMAL}, #{currency,jdbcType=VARCHAR}, 
+      #{curRate,jdbcType=DECIMAL}, #{scoreU,jdbcType=DECIMAL}, #{scoreG,jdbcType=DECIMAL}, 
+      #{discount,jdbcType=DECIMAL}, #{pmtGoods,jdbcType=DECIMAL}, #{pmtOrder,jdbcType=DECIMAL}, 
+      #{payed,jdbcType=DECIMAL}, #{disabled,jdbcType=CHAR}, #{markType,jdbcType=VARCHAR}, 
+      #{costFreight,jdbcType=DECIMAL}, #{extend,jdbcType=VARCHAR}, #{orderRefer,jdbcType=VARCHAR}, 
+      #{source,jdbcType=CHAR}, #{confirmTime,jdbcType=INTEGER}, #{storeId,jdbcType=BIGINT}, 
+      #{commentsCount,jdbcType=INTEGER}, #{refundStatus,jdbcType=CHAR}, #{actId,jdbcType=INTEGER}, 
+      #{orderType,jdbcType=VARCHAR}, #{isExtend,jdbcType=CHAR}, #{orderKind,jdbcType=CHAR}, 
+      #{jdorderno,jdbcType=BIGINT}, #{jdporderno,jdbcType=BIGINT}, #{invoiceStatus,jdbcType=CHAR}, 
+      #{jdorderstate,jdbcType=CHAR}, #{orderLegalman,jdbcType=INTEGER}, #{invoiceLegalman,jdbcType=INTEGER}, 
+      #{tostr,jdbcType=LONGVARCHAR}, #{shipAddr,jdbcType=LONGVARCHAR}, #{memo,jdbcType=LONGVARCHAR}, 
+      #{markText,jdbcType=LONGVARCHAR}, #{addon,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.OrdersWithBLOBs" >
+    insert into sdb_b2c_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+      <if test="discountValue != null" >
+        discount_value,
+      </if>
+      <if test="finalAmount != null" >
+        final_amount,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="shipStatus != null" >
+        ship_status,
+      </if>
+      <if test="isDelivery != null" >
+        is_delivery,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="lastModified != null" >
+        last_modified,
+      </if>
+      <if test="payment != null" >
+        payment,
+      </if>
+      <if test="shippingId != null" >
+        shipping_id,
+      </if>
+      <if test="shipping != null" >
+        shipping,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="confirm != null" >
+        confirm,
+      </if>
+      <if test="shipArea != null" >
+        ship_area,
+      </if>
+      <if test="shipName != null" >
+        ship_name,
+      </if>
+      <if test="weight != null" >
+        weight,
+      </if>
+      <if test="itemnum != null" >
+        itemnum,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="shipZip != null" >
+        ship_zip,
+      </if>
+      <if test="shipTel != null" >
+        ship_tel,
+      </if>
+      <if test="shipEmail != null" >
+        ship_email,
+      </if>
+      <if test="shipTime != null" >
+        ship_time,
+      </if>
+      <if test="shipMobile != null" >
+        ship_mobile,
+      </if>
+      <if test="costItem != null" >
+        cost_item,
+      </if>
+      <if test="isTax != null" >
+        is_tax,
+      </if>
+      <if test="costTax != null" >
+        cost_tax,
+      </if>
+      <if test="taxCompany != null" >
+        tax_company,
+      </if>
+      <if test="isProtect != null" >
+        is_protect,
+      </if>
+      <if test="costProtect != null" >
+        cost_protect,
+      </if>
+      <if test="costPayment != null" >
+        cost_payment,
+      </if>
+      <if test="currency != null" >
+        currency,
+      </if>
+      <if test="curRate != null" >
+        cur_rate,
+      </if>
+      <if test="scoreU != null" >
+        score_u,
+      </if>
+      <if test="scoreG != null" >
+        score_g,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="pmtGoods != null" >
+        pmt_goods,
+      </if>
+      <if test="pmtOrder != null" >
+        pmt_order,
+      </if>
+      <if test="payed != null" >
+        payed,
+      </if>
+      <if test="disabled != null" >
+        disabled,
+      </if>
+      <if test="markType != null" >
+        mark_type,
+      </if>
+      <if test="costFreight != null" >
+        cost_freight,
+      </if>
+      <if test="extend != null" >
+        extend,
+      </if>
+      <if test="orderRefer != null" >
+        order_refer,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="commentsCount != null" >
+        comments_count,
+      </if>
+      <if test="refundStatus != null" >
+        refund_status,
+      </if>
+      <if test="actId != null" >
+        act_id,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="isExtend != null" >
+        is_extend,
+      </if>
+      <if test="orderKind != null" >
+        order_kind,
+      </if>
+      <if test="jdorderno != null" >
+        jdorderno,
+      </if>
+      <if test="jdporderno != null" >
+        jdporderno,
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status,
+      </if>
+      <if test="jdorderstate != null" >
+        jdorderstate,
+      </if>
+      <if test="orderLegalman != null" >
+        order_legalman,
+      </if>
+      <if test="invoiceLegalman != null" >
+        invoice_legalman,
+      </if>
+      <if test="tostr != null" >
+        tostr,
+      </if>
+      <if test="shipAddr != null" >
+        ship_addr,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="markText != null" >
+        mark_text,
+      </if>
+      <if test="addon != null" >
+        addon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="discountValue != null" >
+        #{discountValue,jdbcType=DECIMAL},
+      </if>
+      <if test="finalAmount != null" >
+        #{finalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=CHAR},
+      </if>
+      <if test="shipStatus != null" >
+        #{shipStatus,jdbcType=CHAR},
+      </if>
+      <if test="isDelivery != null" >
+        #{isDelivery,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="lastModified != null" >
+        #{lastModified,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingId != null" >
+        #{shippingId,jdbcType=INTEGER},
+      </if>
+      <if test="shipping != null" >
+        #{shipping,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="confirm != null" >
+        #{confirm,jdbcType=CHAR},
+      </if>
+      <if test="shipArea != null" >
+        #{shipArea,jdbcType=VARCHAR},
+      </if>
+      <if test="shipName != null" >
+        #{shipName,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="itemnum != null" >
+        #{itemnum,jdbcType=DECIMAL},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="shipZip != null" >
+        #{shipZip,jdbcType=VARCHAR},
+      </if>
+      <if test="shipTel != null" >
+        #{shipTel,jdbcType=VARCHAR},
+      </if>
+      <if test="shipEmail != null" >
+        #{shipEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="shipTime != null" >
+        #{shipTime,jdbcType=VARCHAR},
+      </if>
+      <if test="shipMobile != null" >
+        #{shipMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="costItem != null" >
+        #{costItem,jdbcType=DECIMAL},
+      </if>
+      <if test="isTax != null" >
+        #{isTax,jdbcType=CHAR},
+      </if>
+      <if test="costTax != null" >
+        #{costTax,jdbcType=DECIMAL},
+      </if>
+      <if test="taxCompany != null" >
+        #{taxCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="isProtect != null" >
+        #{isProtect,jdbcType=CHAR},
+      </if>
+      <if test="costProtect != null" >
+        #{costProtect,jdbcType=DECIMAL},
+      </if>
+      <if test="costPayment != null" >
+        #{costPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="curRate != null" >
+        #{curRate,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreU != null" >
+        #{scoreU,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreG != null" >
+        #{scoreG,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="pmtGoods != null" >
+        #{pmtGoods,jdbcType=DECIMAL},
+      </if>
+      <if test="pmtOrder != null" >
+        #{pmtOrder,jdbcType=DECIMAL},
+      </if>
+      <if test="payed != null" >
+        #{payed,jdbcType=DECIMAL},
+      </if>
+      <if test="disabled != null" >
+        #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="markType != null" >
+        #{markType,jdbcType=VARCHAR},
+      </if>
+      <if test="costFreight != null" >
+        #{costFreight,jdbcType=DECIMAL},
+      </if>
+      <if test="extend != null" >
+        #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="orderRefer != null" >
+        #{orderRefer,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=CHAR},
+      </if>
+      <if test="confirmTime != null" >
+        #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="commentsCount != null" >
+        #{commentsCount,jdbcType=INTEGER},
+      </if>
+      <if test="refundStatus != null" >
+        #{refundStatus,jdbcType=CHAR},
+      </if>
+      <if test="actId != null" >
+        #{actId,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="isExtend != null" >
+        #{isExtend,jdbcType=CHAR},
+      </if>
+      <if test="orderKind != null" >
+        #{orderKind,jdbcType=CHAR},
+      </if>
+      <if test="jdorderno != null" >
+        #{jdorderno,jdbcType=BIGINT},
+      </if>
+      <if test="jdporderno != null" >
+        #{jdporderno,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=CHAR},
+      </if>
+      <if test="jdorderstate != null" >
+        #{jdorderstate,jdbcType=CHAR},
+      </if>
+      <if test="orderLegalman != null" >
+        #{orderLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLegalman != null" >
+        #{invoiceLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="tostr != null" >
+        #{tostr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="shipAddr != null" >
+        #{shipAddr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="markText != null" >
+        #{markText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="addon != null" >
+        #{addon,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.OrdersWithBLOBs" >
+    update sdb_b2c_orders
+    <set >
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="discountValue != null" >
+        discount_value = #{discountValue,jdbcType=DECIMAL},
+      </if>
+      <if test="finalAmount != null" >
+        final_amount = #{finalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=CHAR},
+      </if>
+      <if test="shipStatus != null" >
+        ship_status = #{shipStatus,jdbcType=CHAR},
+      </if>
+      <if test="isDelivery != null" >
+        is_delivery = #{isDelivery,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="lastModified != null" >
+        last_modified = #{lastModified,jdbcType=INTEGER},
+      </if>
+      <if test="payment != null" >
+        payment = #{payment,jdbcType=VARCHAR},
+      </if>
+      <if test="shippingId != null" >
+        shipping_id = #{shippingId,jdbcType=INTEGER},
+      </if>
+      <if test="shipping != null" >
+        shipping = #{shipping,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="confirm != null" >
+        confirm = #{confirm,jdbcType=CHAR},
+      </if>
+      <if test="shipArea != null" >
+        ship_area = #{shipArea,jdbcType=VARCHAR},
+      </if>
+      <if test="shipName != null" >
+        ship_name = #{shipName,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null" >
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="itemnum != null" >
+        itemnum = #{itemnum,jdbcType=DECIMAL},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="shipZip != null" >
+        ship_zip = #{shipZip,jdbcType=VARCHAR},
+      </if>
+      <if test="shipTel != null" >
+        ship_tel = #{shipTel,jdbcType=VARCHAR},
+      </if>
+      <if test="shipEmail != null" >
+        ship_email = #{shipEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="shipTime != null" >
+        ship_time = #{shipTime,jdbcType=VARCHAR},
+      </if>
+      <if test="shipMobile != null" >
+        ship_mobile = #{shipMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="costItem != null" >
+        cost_item = #{costItem,jdbcType=DECIMAL},
+      </if>
+      <if test="isTax != null" >
+        is_tax = #{isTax,jdbcType=CHAR},
+      </if>
+      <if test="costTax != null" >
+        cost_tax = #{costTax,jdbcType=DECIMAL},
+      </if>
+      <if test="taxCompany != null" >
+        tax_company = #{taxCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="isProtect != null" >
+        is_protect = #{isProtect,jdbcType=CHAR},
+      </if>
+      <if test="costProtect != null" >
+        cost_protect = #{costProtect,jdbcType=DECIMAL},
+      </if>
+      <if test="costPayment != null" >
+        cost_payment = #{costPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="currency != null" >
+        currency = #{currency,jdbcType=VARCHAR},
+      </if>
+      <if test="curRate != null" >
+        cur_rate = #{curRate,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreU != null" >
+        score_u = #{scoreU,jdbcType=DECIMAL},
+      </if>
+      <if test="scoreG != null" >
+        score_g = #{scoreG,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="pmtGoods != null" >
+        pmt_goods = #{pmtGoods,jdbcType=DECIMAL},
+      </if>
+      <if test="pmtOrder != null" >
+        pmt_order = #{pmtOrder,jdbcType=DECIMAL},
+      </if>
+      <if test="payed != null" >
+        payed = #{payed,jdbcType=DECIMAL},
+      </if>
+      <if test="disabled != null" >
+        disabled = #{disabled,jdbcType=CHAR},
+      </if>
+      <if test="markType != null" >
+        mark_type = #{markType,jdbcType=VARCHAR},
+      </if>
+      <if test="costFreight != null" >
+        cost_freight = #{costFreight,jdbcType=DECIMAL},
+      </if>
+      <if test="extend != null" >
+        extend = #{extend,jdbcType=VARCHAR},
+      </if>
+      <if test="orderRefer != null" >
+        order_refer = #{orderRefer,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=CHAR},
+      </if>
+      <if test="confirmTime != null" >
+        confirm_time = #{confirmTime,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="commentsCount != null" >
+        comments_count = #{commentsCount,jdbcType=INTEGER},
+      </if>
+      <if test="refundStatus != null" >
+        refund_status = #{refundStatus,jdbcType=CHAR},
+      </if>
+      <if test="actId != null" >
+        act_id = #{actId,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="isExtend != null" >
+        is_extend = #{isExtend,jdbcType=CHAR},
+      </if>
+      <if test="orderKind != null" >
+        order_kind = #{orderKind,jdbcType=CHAR},
+      </if>
+      <if test="jdorderno != null" >
+        jdorderno = #{jdorderno,jdbcType=BIGINT},
+      </if>
+      <if test="jdporderno != null" >
+        jdporderno = #{jdporderno,jdbcType=BIGINT},
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status = #{invoiceStatus,jdbcType=CHAR},
+      </if>
+      <if test="jdorderstate != null" >
+        jdorderstate = #{jdorderstate,jdbcType=CHAR},
+      </if>
+      <if test="orderLegalman != null" >
+        order_legalman = #{orderLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLegalman != null" >
+        invoice_legalman = #{invoiceLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="tostr != null" >
+        tostr = #{tostr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="shipAddr != null" >
+        ship_addr = #{shipAddr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="markText != null" >
+        mark_text = #{markText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="addon != null" >
+        addon = #{addon,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ruoyi.system.domain.OrdersWithBLOBs" >
+    update sdb_b2c_orders
+    set total_amount = #{totalAmount,jdbcType=DECIMAL},
+      discount_value = #{discountValue,jdbcType=DECIMAL},
+      final_amount = #{finalAmount,jdbcType=DECIMAL},
+      pay_status = #{payStatus,jdbcType=CHAR},
+      ship_status = #{shipStatus,jdbcType=CHAR},
+      is_delivery = #{isDelivery,jdbcType=CHAR},
+      createtime = #{createtime,jdbcType=INTEGER},
+      last_modified = #{lastModified,jdbcType=INTEGER},
+      payment = #{payment,jdbcType=VARCHAR},
+      shipping_id = #{shippingId,jdbcType=INTEGER},
+      shipping = #{shipping,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      confirm = #{confirm,jdbcType=CHAR},
+      ship_area = #{shipArea,jdbcType=VARCHAR},
+      ship_name = #{shipName,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      itemnum = #{itemnum,jdbcType=DECIMAL},
+      ip = #{ip,jdbcType=VARCHAR},
+      ship_zip = #{shipZip,jdbcType=VARCHAR},
+      ship_tel = #{shipTel,jdbcType=VARCHAR},
+      ship_email = #{shipEmail,jdbcType=VARCHAR},
+      ship_time = #{shipTime,jdbcType=VARCHAR},
+      ship_mobile = #{shipMobile,jdbcType=VARCHAR},
+      cost_item = #{costItem,jdbcType=DECIMAL},
+      is_tax = #{isTax,jdbcType=CHAR},
+      cost_tax = #{costTax,jdbcType=DECIMAL},
+      tax_company = #{taxCompany,jdbcType=VARCHAR},
+      is_protect = #{isProtect,jdbcType=CHAR},
+      cost_protect = #{costProtect,jdbcType=DECIMAL},
+      cost_payment = #{costPayment,jdbcType=DECIMAL},
+      currency = #{currency,jdbcType=VARCHAR},
+      cur_rate = #{curRate,jdbcType=DECIMAL},
+      score_u = #{scoreU,jdbcType=DECIMAL},
+      score_g = #{scoreG,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      pmt_goods = #{pmtGoods,jdbcType=DECIMAL},
+      pmt_order = #{pmtOrder,jdbcType=DECIMAL},
+      payed = #{payed,jdbcType=DECIMAL},
+      disabled = #{disabled,jdbcType=CHAR},
+      mark_type = #{markType,jdbcType=VARCHAR},
+      cost_freight = #{costFreight,jdbcType=DECIMAL},
+      extend = #{extend,jdbcType=VARCHAR},
+      order_refer = #{orderRefer,jdbcType=VARCHAR},
+      source = #{source,jdbcType=CHAR},
+      confirm_time = #{confirmTime,jdbcType=INTEGER},
+      store_id = #{storeId,jdbcType=BIGINT},
+      comments_count = #{commentsCount,jdbcType=INTEGER},
+      refund_status = #{refundStatus,jdbcType=CHAR},
+      act_id = #{actId,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      is_extend = #{isExtend,jdbcType=CHAR},
+      order_kind = #{orderKind,jdbcType=CHAR},
+      jdorderno = #{jdorderno,jdbcType=BIGINT},
+      jdporderno = #{jdporderno,jdbcType=BIGINT},
+      invoice_status = #{invoiceStatus,jdbcType=CHAR},
+      jdorderstate = #{jdorderstate,jdbcType=CHAR},
+      order_legalman = #{orderLegalman,jdbcType=INTEGER},
+      invoice_legalman = #{invoiceLegalman,jdbcType=INTEGER},
+      tostr = #{tostr,jdbcType=LONGVARCHAR},
+      ship_addr = #{shipAddr,jdbcType=LONGVARCHAR},
+      memo = #{memo,jdbcType=LONGVARCHAR},
+      mark_text = #{markText,jdbcType=LONGVARCHAR},
+      addon = #{addon,jdbcType=LONGVARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Orders" >
+    update sdb_b2c_orders
+    set total_amount = #{totalAmount,jdbcType=DECIMAL},
+      discount_value = #{discountValue,jdbcType=DECIMAL},
+      final_amount = #{finalAmount,jdbcType=DECIMAL},
+      pay_status = #{payStatus,jdbcType=CHAR},
+      ship_status = #{shipStatus,jdbcType=CHAR},
+      is_delivery = #{isDelivery,jdbcType=CHAR},
+      createtime = #{createtime,jdbcType=INTEGER},
+      last_modified = #{lastModified,jdbcType=INTEGER},
+      payment = #{payment,jdbcType=VARCHAR},
+      shipping_id = #{shippingId,jdbcType=INTEGER},
+      shipping = #{shipping,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      confirm = #{confirm,jdbcType=CHAR},
+      ship_area = #{shipArea,jdbcType=VARCHAR},
+      ship_name = #{shipName,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=DECIMAL},
+      itemnum = #{itemnum,jdbcType=DECIMAL},
+      ip = #{ip,jdbcType=VARCHAR},
+      ship_zip = #{shipZip,jdbcType=VARCHAR},
+      ship_tel = #{shipTel,jdbcType=VARCHAR},
+      ship_email = #{shipEmail,jdbcType=VARCHAR},
+      ship_time = #{shipTime,jdbcType=VARCHAR},
+      ship_mobile = #{shipMobile,jdbcType=VARCHAR},
+      cost_item = #{costItem,jdbcType=DECIMAL},
+      is_tax = #{isTax,jdbcType=CHAR},
+      cost_tax = #{costTax,jdbcType=DECIMAL},
+      tax_company = #{taxCompany,jdbcType=VARCHAR},
+      is_protect = #{isProtect,jdbcType=CHAR},
+      cost_protect = #{costProtect,jdbcType=DECIMAL},
+      cost_payment = #{costPayment,jdbcType=DECIMAL},
+      currency = #{currency,jdbcType=VARCHAR},
+      cur_rate = #{curRate,jdbcType=DECIMAL},
+      score_u = #{scoreU,jdbcType=DECIMAL},
+      score_g = #{scoreG,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      pmt_goods = #{pmtGoods,jdbcType=DECIMAL},
+      pmt_order = #{pmtOrder,jdbcType=DECIMAL},
+      payed = #{payed,jdbcType=DECIMAL},
+      disabled = #{disabled,jdbcType=CHAR},
+      mark_type = #{markType,jdbcType=VARCHAR},
+      cost_freight = #{costFreight,jdbcType=DECIMAL},
+      extend = #{extend,jdbcType=VARCHAR},
+      order_refer = #{orderRefer,jdbcType=VARCHAR},
+      source = #{source,jdbcType=CHAR},
+      confirm_time = #{confirmTime,jdbcType=INTEGER},
+      store_id = #{storeId,jdbcType=BIGINT},
+      comments_count = #{commentsCount,jdbcType=INTEGER},
+      refund_status = #{refundStatus,jdbcType=CHAR},
+      act_id = #{actId,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      is_extend = #{isExtend,jdbcType=CHAR},
+      order_kind = #{orderKind,jdbcType=CHAR},
+      jdorderno = #{jdorderno,jdbcType=BIGINT},
+      jdporderno = #{jdporderno,jdbcType=BIGINT},
+      invoice_status = #{invoiceStatus,jdbcType=CHAR},
+      jdorderstate = #{jdorderstate,jdbcType=CHAR},
+      order_legalman = #{orderLegalman,jdbcType=INTEGER},
+      invoice_legalman = #{invoiceLegalman,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <select id="getValidOrderSum" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT SUM(o.final_amount) as validmoney
+    FROM sdb_b2c_orders o
+    WHERE o.`status`='finish'
+    AND o.disabled ='false'
+    AND o.confirm_time &lt;&gt; ''
+    AND o.store_id = #{store_id}
+    AND FROM_UNIXTIME(o.confirm_time, '%Y-%m-%d') &lt;= #{startTime}
+  </select>
+  <select id="getEmployeePayMoney" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT SUM(o.payed) as employeepaymoney
+    FROM sdb_b2c_orders o
+    WHERE o.`status` != 'dead'
+    AND o.disabled ='false'
+    AND FROM_UNIXTIME(o.confirm_time, '%Y-%m-%d') &lt;= #{startTime}
+  </select>
+  <select id="gatDifferenceOrderList" resultType="com.ruoyi.system.domain.DifferenceOrderList" parameterType="java.util.Map">
+    SELECT bc.configname as storename,
+        case tn when 't1' then orderid else '' end as order_id, case tn when 't1' then ordermoney else '' end as payed,
+        case tn when 't2' then orderid else '' end as other_order_id, case tn when 't2' then ordermoney else '' end as other_payed
+    FROM (
+        SELECT order_id as orderid, payed as ordermoney,'t1' as tn
+		FROM hrfi_sdb_b2c_orders
+    <!--FROM sdb_b2c_orders-->
+        WHERE store_id = #{id}
+        AND disabled ='false'
+    <!--AND FROM_UNIXTIME(mtime, '%Y-%m-%d') &lt;= #{startTime}-->
+
+        UNION ALL
+
+        SELECT orderid, ordermoney,'t2' as tn
+		FROM hrfi_storeorders
+		where supplierid = #{id}
+        <!--AND date &lt;= #{startTime}-->
+    ) tbl
+    INNER JOIN hrfi_balancewarning_config bc on bc.supplierid = #{id}
+    GROUP BY orderid, ordermoney
+    HAVING count(*) = 1
+    ORDER BY order_id DESC, other_order_id DESC
+  </select>
+</mapper>

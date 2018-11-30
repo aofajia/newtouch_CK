@@ -4,55 +4,43 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-
+    <input id="id" name="id" type="hidden"/>
 	<div class="container-div">
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
                 <ul>
                     <li>
-                        <label for="employee_paymoney" style="font-size:17px;">员工消费总金额：</label><label id="employee_paymoney"  style="font-size:17px;"></label>
-                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;</label>
-                        <label for="employee_residuemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;员工剩余账户总金额：</label><label id="employee_residuemoney"  style="font-size:17px;"></label>
-                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;</label><label id="adju_card_code"></label>
-                        <label for="employee_leavemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;离职提现额度：</label><label id="employee_leavemoney" style="font-size:17px;"></label>
-                        <label style="font-size:17px;">&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;</label><label id="adju_asset_name"></label>
-                        <label for="mall_rechargemoney" style="font-size:17px;">&nbsp;&nbsp;&nbsp;商城充值总金额：</label><label id="mall_rechargemoney" style="font-size:17px;"></label>
+                        <label style="font-size:17px;">员工消费总金额：</label><label id="employee_paymoney"  style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;+&nbsp;</label>
+                        <label style="font-size:17px;">&nbsp;员工剩余账户总金额：</label><label id="employee_residuemoney"  style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;+&nbsp;</label><label id="adju_card_code"></label>
+                        <label style="font-size:17px;">&nbsp;离职提现额度：</label><label id="employee_leavemoney" style="font-size:17px;"></label>
+                        <label style="font-size:17px;">&nbsp;=&nbsp;</label><label id="adju_asset_name"></label>
+                        <label style="font-size:17px;">&nbsp;弹性福利总额：</label><label id="mall_rechargemoney" style="font-size:17px;"></label>
                     </li>
                 </ul>
-                <div class="select-list">
-                    <ul>
-                        <li class="select-time">
-                            <label>对账截至日期：</label>
-                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]" style="display:none"/>
-                            <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-                            <label>（当日之前）</label>
-                        </li>
-                        <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="chinking()"><i class="fa fa-search"></i>&nbsp;对账</a>
-                        </li>
-                    </ul>
+                <form id="role-form">
+                    <div class="select-list">
+                        <ul>
+                            <li class="select-time">
+                                <label>对账截至日期：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]" style="display:none"/>
+                                <label>（当日之前）</label>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="chinking()"><i class="fa fa-search"></i>&nbsp;对账</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+                <div id="storechecking" class="select-list">
+
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			</div>
 
             <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:role:export">
+                <a class="btn btn-warning" onclick="exportDifferenceOrderList()">
                     <i class="fa fa-download"></i> 导出
                 </a>
             </div>
@@ -67,10 +55,18 @@
 
         function chinking()
         {
-            var endTime = $('#endTime').val();
-            if(endTime == "")
+            var myDate = new Date();
+            var str = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
+            var startTime = $('#startTime').val();
+            if (Date.parse(str) == Date.parse(startTime))
+            {
+                alert("对账截至日期不可选择当前日期");
+                return;
+            }
+            if(startTime == "")
             {
                 alert("请选择对账截至日期");
+                return;
             }
             $.ajax(
             {
@@ -79,11 +75,60 @@
                 dataType : "JSON",
                 data :
                 {
-                    "endTime" : endTime
+                    "startTime" : startTime
                 },
                 success : function(msg)
                 {
+                    if(msg.msg == "成功")
+                    {
+                        $("#employee_paymoney").html("￥"+msg.data.employee_paymoney);
+                        $("#employee_residuemoney").html("￥"+msg.data.employee_residuemoney);
+                        $("#employee_leavemoney").html("￥"+msg.data.employee_leavemoney);
+                        $("#mall_rechargemoney").html("￥"+msg.data.mall_rechargemoney);
+                    }
+                    else
+                    {
+                        alert("获取数据失败", "error");
+                    }
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
+            $('#storechecking').html('');
+            $.ajax(
+            {
+                type : "POST",
+                url : "/fi/orderchecking/storechecking",
+                dataType : "JSON",
+                data :
+                {
+                    "startTime" : startTime
+                },
+                success : function(msg)
+                {
+                    var str = "";
+                    var data = msg;
 
+                    for (i in data) {
+                        str += 
+                            "<ul>" +
+                                "<li>" +
+                                    "<label style=\"font-size:17px;\">" + data[i].shop_name + 
+                                    "：有效订单总金额：￥  </label> <label style=\"font-size:17px;\">"+data[i].validmoney+"</label>" +
+                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;供应商账户余额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storebalance+"</label>" +
+                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商充值总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].rechargemoney+"</label>";
+
+                        if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
+                        {
+                            str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].store_id+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
+                        }
+                        str += 
+                                "</li>" +
+                            "</ul>";
+                    }
+                    document.getElementById("storechecking").innerHTML = str;
                 },
                 error:function()
                 {
@@ -92,12 +137,47 @@
             });
         }
 
-		var prefix = ctx + "fi/orderchecking";
+        function chinkingOrders(id)
+        {
+            var startTime = $('#startTime').val();
+            $("#id").val(id);
+            $('#bootstrap-table').bootstrapTable('refresh',
+            {
+                url: "/fi/orderchecking/list",
+                query:
+                {
+                    id : id,
+                    startTime : startTime
+                }
+            });
+        }
 
+        function exportDifferenceOrderList()
+        {
+            var id = $("#id").val();
+            var startTime = $('#startTime').val();
+            var query =
+            {
+                "id" : id,
+                "startTime" : startTime
+            };
+            $.modal.loading("正在导出数据，请稍后...");
+            $.post("/fi/orderchecking/export", query, function(result) {
+                if (result.code == web_status.SUCCESS) {
+                    window.location.href = ctx + "common/download?fileName=" + result.msg + "&delete=" + true;
+                } else {
+                    $.modal.alertError(result.msg);
+                }
+                $.modal.closeLoading();
+            });
+        }
+
+		var prefix = ctx + "fi/orderchecking";
         var options = {
             url: prefix + "/list",
+            exportUrl: prefix + "/export",
             method: 'post',
-            sortName: "order_id",
+            sortName: '',
             modalName: "订单对账",
             search: false,
             showExport: false,
@@ -106,7 +186,7 @@
                 checkbox: false
             },
             {
-                field: 'store',
+                field: 'storename',
                 title: '供应商'
             },
             {
@@ -114,15 +194,15 @@
                 title: '商城订单号'
             },
             {
-                field: 'final_amount',
-                title: '订单总额'
+                field: 'payed',
+                title: '商城订单金额'
             },
             {
                 field: 'other_order_id',
                 title: '第三方订单号'
             },
             {
-                field: 'other_final_amount',
+                field: 'other_payed',
                 title: '第三方订单金额'
             }
             ]

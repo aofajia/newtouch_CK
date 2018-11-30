@@ -124,4 +124,10 @@
           AND br.companyid = #{companyid}
       </if>
   </select>
+  <select id="selectRechargeSumByStore" parameterType="RechargeLog" resultType="java.util.Map">
+    SELECT SUM(br.rechargemoney) as rechargemoney
+    FROM hrfi_balancewarning_rechargelog br
+    WHERE br.supplierid = #{store_id}
+    AND DATE_FORMAT(br.commitdate,'%Y-%m-%d') &lt;= #{startTime}
+  </select>
 </mapper>

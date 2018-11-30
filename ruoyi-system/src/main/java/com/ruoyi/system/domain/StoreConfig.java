@@ -14,13 +14,13 @@ public class StoreConfig
 
     private String monthlymoney;
 
+    private String paymethod;
+
     public String getStore_id() {
         return store_id;
     }
 
-    public void setStore_id(String store_id) {
-        this.store_id = store_id;
-    }
+    public void setStore_id(String store_id) { this.store_id = store_id; }
 
     public String getShop_name() {
         return shop_name;
@@ -37,4 +37,8 @@ public class StoreConfig
     public void setMonthlymoney(String monthlymoney) {
         this.monthlymoney = monthlymoney;
     }
+
+    public String getPaymethod() { return paymethod; }
+
+    public void setPaymethod(String paymethod) { this.paymethod = paymethod; }
 }

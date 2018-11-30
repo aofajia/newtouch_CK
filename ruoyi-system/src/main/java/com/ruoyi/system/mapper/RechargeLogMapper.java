@@ -4,6 +4,7 @@ import com.ruoyi.system.domain.RechargeLog;
 import com.ruoyi.system.domain.SysRole;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RechargeLogMapper {
     int deleteByPrimaryKey(String id);
@@ -19,4 +20,6 @@ public interface RechargeLogMapper {
     int updateByPrimaryKey(RechargeLog record);
 
     public List<RechargeLog> selectRoleList(RechargeLog record);
+
+    Map selectRechargeSumByStore(Map map);
 }
