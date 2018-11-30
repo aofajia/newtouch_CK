@@ -5,6 +5,7 @@
 <head th:include="include :: header"></head>
 <body class="gray-bg">
     <input id="id" name="id" type="hidden"/>
+    <input id="mainid" name="mainid" type="hidden"/>
 	<div class="container-div">
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
@@ -15,7 +16,7 @@
                         <label style="font-size:17px;">&nbsp;员工剩余账户总金额：</label><label id="employee_residuemoney"  style="font-size:17px;"></label>
                         <label style="font-size:17px;">&nbsp;+&nbsp;</label><label id="adju_card_code"></label>
                         <label style="font-size:17px;">&nbsp;离职提现额度：</label><label id="employee_leavemoney" style="font-size:17px;"></label>
-                        <label style="font-size:17px;">&nbsp;=&nbsp;</label><label id="adju_asset_name"></label>
+                        <label id="intflag" style="font-size:17px;">&nbsp;=&nbsp;</label><label id="adju_asset_name"></label>
                         <label style="font-size:17px;">&nbsp;弹性福利总额：</label><label id="mall_rechargemoney" style="font-size:17px;"></label>
                     </li>
                 </ul>
@@ -26,10 +27,11 @@
                                 <label>对账截至日期：</label>
                                 <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginTime]"/>
                                 <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]" style="display:none"/>
-                                <label>（当日之前）</label>
+                                <label>（可对账日期：当日0点前）</label>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="chinking()"><i class="fa fa-search"></i>&nbsp;对账</a>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="getchinkinginfo()"><i class="fa fa-search"></i>&nbsp;查看对账信息</a>
                             </li>
                         </ul>
                     </div>
@@ -53,8 +55,151 @@
 	<div th:include="include :: footer"></div>
 	<script th:inline="javascript">
 
+        function getchinkinginfo()
+        {
+            $('#storechecking').html('');
+            var myDate = new Date();
+            var str = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
+            var startTime = $('#startTime').val();
+            if (Date.parse(str) == Date.parse(startTime))
+            {
+                alert("对账信息查看日期不可选择当前日期");
+                return;
+            }
+            if(startTime == "")
+            {
+                alert("请选择对账信息查看日期");
+                return;
+            }
+            $.ajax(
+                {
+                    type : "POST",
+                    url : "/fi/orderchecking/getchinkinginfo",
+                    dataType : "JSON",
+                    data :
+                        {
+                            "startTime" : startTime
+                        },
+                    success : function(msg)
+                    {
+                        if(msg.msg == "成功")
+                        {
+                            if(msg.data == null)
+                            {
+                                $("#employee_paymoney").html("￥"+0.00);
+                                $("#employee_residuemoney").html("￥"+0.00);
+                                $("#employee_leavemoney").html("￥"+0.00);
+                                $("#mall_rechargemoney").html("￥"+0.00);
+                                alert("所选日期暂无对账内容");
+                            }
+                            else
+                            {
+                                //添加商城恒等式数据
+                                $("#employee_paymoney").html("￥"+msg.data.mall.paymoney);
+                                $("#employee_residuemoney").html("￥"+msg.data.mall.residuemoney);
+                                $("#employee_leavemoney").html("￥"+msg.data.mall.leavemoney);
+                                $("#mall_rechargemoney").html("￥"+msg.data.mall.welfaremoney);
+                                $("#mainid").val(msg.data.mall.mianid);
+                                console.log(msg);
+                                console.log(msg.data.mall.mianid);
+
+                                var flag = "";
+                                switch (msg.data.checkingstatus)
+                                {
+                                    case -1:
+                                        flag = "<";
+                                        break;
+                                    case 0:
+                                        flag = "=";
+                                        break;
+                                    case 1:
+                                        flag = ">";
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                $("#intflag").html("&nbsp;"+flag+"&nbsp;");
+
+
+                                //添加供应商恒等式数据
+                                var str = "";
+                                var data = msg.data.store;
+
+                                for (i in data) 
+                                {
+                                    if(data[i].paymethod == "precharge")
+                                    {
+                                        //预充值类供应商恒等式
+                                        str +=
+                                            "<ul>" +
+                                            "<li>" +
+                                            "<label style=\"font-size:17px;\">" + data[i].suppliername +
+                                            "：有效订单总金额：￥  </label> <label style=\"font-size:17px;\">"+data[i].validmoney+"</label>" +
+                                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;+&nbsp;&nbsp供应商账户余额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storebalance+"</label>" +
+                                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商充值总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].rechargemoney+"</label>";
+
+                                        if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
+                                        {
+                                            str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].supplierid+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
+                                        }
+                                        str +=
+                                            "</li>" +
+                                        "</ul>";
+                                    }
+                                    else if(data[i].paymethod == "monthly")
+                                    {
+                                        //预充值类供应商恒等式
+                                        str +=
+                                            "<ul>" +
+                                            "<li>" +
+                                            "<label style=\"font-size:17px;\">" + data[i].suppliername +
+                                            "：有效订单总金额：￥  </label> <label style=\"font-size:17px;\">"+data[i].validmoney+"</label>" +
+                                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商订单总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storeordersmoney+"</label>";
+
+                                        if(Number(data[i].validmoney) != Number(data[i].storeordersmoney))
+                                        {
+                                            str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].supplierid+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
+                                        }
+                                        str +=
+                                            "</li>" +
+                                            "</ul>";
+                                    }
+                                }
+                                document.getElementById("storechecking").innerHTML = str;
+
+                                $('#bootstrap-table').bootstrapTable('refresh',
+                                {
+                                    url: "/fi/orderchecking/list",
+                                    query:
+                                        {
+                                            id : $("#id").val(),
+                                            startTime : startTime,
+                                            mainid : msg.data.mall.mianid,
+                                            flag : "0"
+                                        }
+                                });
+                            }
+                        }
+                        else
+                        {
+                            $("#employee_paymoney").html("￥"+0.00);
+                            $("#employee_residuemoney").html("￥"+0.00);
+                            $("#employee_leavemoney").html("￥"+0.00);
+                            $("#mall_rechargemoney").html("￥"+0.00);
+                            $('#bootstrap-table').bootstrapTable('refresh', {});
+                            alert(msg.data.message);
+                        }
+                    },
+                    error:function()
+                    {
+                        alert("获取数据失败", "error");
+                    }
+                });
+        }
+
         function chinking()
         {
+            $("#mainid").val("");
             var myDate = new Date();
             var str = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
             var startTime = $('#startTime').val();
@@ -73,6 +218,7 @@
                 type : "POST",
                 url : "/fi/orderchecking/chinking",
                 dataType : "JSON",
+                async: false,
                 data :
                 {
                     "startTime" : startTime
@@ -81,14 +227,27 @@
                 {
                     if(msg.msg == "成功")
                     {
-                        $("#employee_paymoney").html("￥"+msg.data.employee_paymoney);
-                        $("#employee_residuemoney").html("￥"+msg.data.employee_residuemoney);
-                        $("#employee_leavemoney").html("￥"+msg.data.employee_leavemoney);
-                        $("#mall_rechargemoney").html("￥"+msg.data.mall_rechargemoney);
+                        if(msg.data == null)
+                        {
+                            $("#employee_paymoney").html("￥"+0.00);
+                            $("#employee_residuemoney").html("￥"+0.00);
+                            $("#employee_leavemoney").html("￥"+0.00);
+                            $("#mall_rechargemoney").html("￥"+0.00);
+                            alert("所选日期暂无对账内容");
+                        }
+                        else
+                        {
+                            $("#employee_paymoney").html("￥" + msg.data.employee_paymoney);
+                            $("#employee_residuemoney").html("￥" + msg.data.employee_residuemoney);
+                            $("#employee_leavemoney").html("￥" + msg.data.employee_leavemoney);
+                            $("#mall_rechargemoney").html("￥" + msg.data.mall_rechargemoney);
+                            $("#intflag").html("&nbsp;" + msg.data.flag + "&nbsp;");
+                            $("#mainid").val(msg.data.mainid);
+                        }
                     }
                     else
                     {
-                        alert("获取数据失败", "error");
+                        alert("所选日期缺失对账所需数据，暂无法显示对账信息。");
                     }
                 },
                 error:function()
@@ -97,57 +256,63 @@
                 }
             });
             $('#storechecking').html('');
-            $.ajax(
+            var mainid = $("#mainid").val();
+            if(mainid != "")
             {
-                type : "POST",
-                url : "/fi/orderchecking/storechecking",
-                dataType : "JSON",
-                data :
+                $.ajax(
                 {
-                    "startTime" : startTime
-                },
-                success : function(msg)
-                {
-                    var str = "";
-                    var data = msg;
+                    type : "POST",
+                    url : "/fi/orderchecking/storechecking",
+                    dataType : "JSON",
+                    data :
+                    {
+                        "startTime" : startTime,
+                        "mainid" : mainid
+                    },
+                    success : function(msg)
+                    {
+                        var str = "";
+                        var data = msg;
 
-                    for (i in data) {
-                        str += 
-                            "<ul>" +
-                                "<li>" +
-                                    "<label style=\"font-size:17px;\">" + data[i].shop_name + 
-                                    "：有效订单总金额：￥  </label> <label style=\"font-size:17px;\">"+data[i].validmoney+"</label>" +
-                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;供应商账户余额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storebalance+"</label>" +
-                            "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商充值总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].rechargemoney+"</label>";
+                        for (i in data) {
+                            str += 
+                                "<ul>" +
+                                    "<li>" +
+                                        "<label style=\"font-size:17px;\">" + data[i].shop_name + 
+                                        "：有效订单总金额：￥  </label> <label style=\"font-size:17px;\">"+data[i].validmoney+"</label>" +
+                                "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;供应商账户余额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storebalance+"</label>" +
+                                "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商充值总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].rechargemoney+"</label>";
 
-                        if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
-                        {
-                            str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].store_id+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
+                            if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
+                            {
+                                str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].store_id+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
+                            }
+                            str += 
+                                    "</li>" +
+                                "</ul>";
                         }
-                        str += 
-                                "</li>" +
-                            "</ul>";
+                        document.getElementById("storechecking").innerHTML = str;
+                    },
+                    error:function()
+                    {
+                        alert("获取数据失败", "error");
                     }
-                    document.getElementById("storechecking").innerHTML = str;
-                },
-                error:function()
-                {
-                    alert("获取数据失败", "error");
-                }
-            });
+                });
+            }
         }
 
         function chinkingOrders(id)
         {
             var startTime = $('#startTime').val();
-            $("#id").val(id);
+            var mainid = $("#mainid").val();
             $('#bootstrap-table').bootstrapTable('refresh',
             {
                 url: "/fi/orderchecking/list",
                 query:
                 {
                     id : id,
-                    startTime : startTime
+                    startTime : startTime,
+                    mainid : mainid
                 }
             });
         }
@@ -156,10 +321,13 @@
         {
             var id = $("#id").val();
             var startTime = $('#startTime').val();
+            var mainid = $("#mainid").val();
+            console.log(mainid);
             var query =
             {
                 "id" : id,
-                "startTime" : startTime
+                "startTime" : startTime,
+                "mainid" : mainid
             };
             $.modal.loading("正在导出数据，请稍后...");
             $.post("/fi/orderchecking/export", query, function(result) {

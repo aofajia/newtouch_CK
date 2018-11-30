@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.system.domain.BalanceRecord;
 import com.ruoyi.system.domain.StoreConfig;
 import com.ruoyi.system.domain.Storemanger;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public interface ISynStoreDataService
      *
      * @return
      */
-    public int sumMemberadvance();
+    public int sumMemberadvance(Logger syn_storedata_logger);
+    /**
+     * 自动订单对账功能
+     *
+     * @return
+     */
+    public void orderChecking(Logger syn_storedata_logger);
 
 }

@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.system.service.ISynStoreDataService;
 import com.ruoyi.system.tool.HttpClientUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +21,15 @@ import java.util.Map;
 @Component("SynSotreData")
 public class SynStoreData
 {
-
+    //记录日志
+    private static final Logger syn_storedata_logger = LoggerFactory.getLogger("syn-storedata");
     @Autowired
     private ISynStoreDataService synStoreDataService;
 
     public void sumMemberadvance()
     {
         //每日零时统计所有用户余额
-        int i = synStoreDataService.sumMemberadvance();
+        int i = synStoreDataService.sumMemberadvance(syn_storedata_logger);
     }
 
     public void getStoreAdvance()
@@ -51,6 +54,12 @@ public class SynStoreData
         HttpClientUtil httpUtil=new HttpClientUtil();
         String str=httpUtil.doPost(url,paramMap,"UTF-8");
         JSONObject result = JSONObject.parseObject(str);
+    }
+
+    public void orderChecking()
+    {
+        //定时对账功能 在所有数据同步完成之后
+        synStoreDataService.orderChecking(syn_storedata_logger);
     }
 
 }

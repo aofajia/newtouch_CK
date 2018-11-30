@@ -885,10 +885,14 @@
   </select>
   <select id="gatDifferenceOrderList" resultType="com.ruoyi.system.domain.DifferenceOrderList" parameterType="java.util.Map">
     SELECT bc.configname as storename,
+        <if test="samelist != null" >
+          bo.order_legalman,bo.invoice_legalman,
+        </if>
         case tn when 't1' then orderid else '' end as order_id, case tn when 't1' then ordermoney else '' end as payed,
-        case tn when 't2' then orderid else '' end as other_order_id, case tn when 't2' then ordermoney else '' end as other_payed
+        case tn when 't2' then orderid else '' end as other_order_id, case tn when 't2' then ordermoney else '' end as other_payed,
+        tn,tbl.store_id,tbl.createtime
     FROM (
-        SELECT order_id as orderid, payed as ordermoney,'t1' as tn
+        SELECT order_id as orderid, payed as ordermoney,'t1' as tn, store_id,createtime
 		FROM hrfi_sdb_b2c_orders
     <!--FROM sdb_b2c_orders-->
         WHERE store_id = #{id}
@@ -897,14 +901,30 @@
 
         UNION ALL
 
-        SELECT orderid, ordermoney,'t2' as tn
+        SELECT orderid, ordermoney,'t2' as tn, supplierid as store_id,'' as createtime
 		FROM hrfi_storeorders
 		where supplierid = #{id}
         <!--AND date &lt;= #{startTime}-->
     ) tbl
     INNER JOIN hrfi_balancewarning_config bc on bc.supplierid = #{id}
-    GROUP BY orderid, ordermoney
-    HAVING count(*) = 1
-    ORDER BY order_id DESC, other_order_id DESC
+    <if test="samelist != null" >
+      INNER JOIN hrfi_sdb_b2c_orders bo on bo.order_id = tbl.orderid
+    </if>
+    <if test="orderid != null and ordermoney != null">
+      GROUP BY orderid, ordermoney
+    </if>
+    <if test="orderid != null and ordermoney == null">
+      GROUP BY orderid
+    </if>
+    <if test="ordermoney != null and orderid == null">
+      GROUP BY ordermoney
+    </if>
+    HAVING count(*) = #{intcount}
+    <if test="differ == null">
+      ORDER BY order_id DESC, other_order_id DESC
+    </if>
+    <if test="differ != null">
+      ORDER BY other_order_id DESC,order_id DESC
+    </if>
   </select>
 </mapper>

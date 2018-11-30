@@ -1,6 +1,9 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.CheckingLog;
+import com.ruoyi.system.domain.CheckingMall;
+
+import java.util.List;
 
 public interface CheckingLogMapper {
     int deleteByPrimaryKey(String id);
@@ -14,4 +17,6 @@ public interface CheckingLogMapper {
     int updateByPrimaryKeySelective(CheckingLog record);
 
     int updateByPrimaryKey(CheckingLog record);
+
+    List<CheckingLog> selectByMainID(String mainid);
 }

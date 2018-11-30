@@ -14,6 +14,8 @@ public class DifferenceOrderList
     @Excel(name = "供应商")
     private String storename;
 
+    private String store_id;
+
     @Excel(name = "商城订单号")
     private String order_id;
 
@@ -25,6 +27,14 @@ public class DifferenceOrderList
 
     @Excel(name = "第三方订单金额")
     private String other_payed;
+
+    private String tn;
+
+    private String order_legalman;
+
+    private String invoice_legalman;
+
+    private String createtime;
 
     public String getStorename() {
         return storename;
@@ -64,6 +74,46 @@ public class DifferenceOrderList
 
     public void setOther_payed(String other_payed) {
         this.other_payed = other_payed;
+    }
+
+    public String getStore_id() {
+        return store_id;
+    }
+
+    public void setStore_id(String store_id) {
+        this.store_id = store_id;
+    }
+
+    public String getTn() {
+        return tn;
+    }
+
+    public void setTn(String tn) {
+        this.tn = tn;
+    }
+
+    public String getOrder_legalman() {
+        return order_legalman;
+    }
+
+    public void setOrder_legalman(String order_legalman) {
+        this.order_legalman = order_legalman;
+    }
+
+    public String getInvoice_legalman() {
+        return invoice_legalman;
+    }
+
+    public void setInvoice_legalman(String invoice_legalman) {
+        this.invoice_legalman = invoice_legalman;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
     }
 
     @Override

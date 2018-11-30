@@ -4,6 +4,7 @@ import com.ruoyi.system.domain.BWConfig;
 import com.ruoyi.system.domain.StoreConfig;
 import com.ruoyi.system.domain.Storemanger;
 import com.ruoyi.system.mapper.RechargeLogMapper;
+import com.ruoyi.system.tool.HRFIExctption;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,18 +36,32 @@ public interface IOrderCheckingService
      * @return 员工消费总金额、员工剩余账户总金额、离职提现额度、商城充值总金额MAP
 
      */
-    public Map chinkingMemberAdvance(String startTime);
+    public Map chinkingMemberAdvance(String startTime, int intflag);
     /**
      * 查询供应商
      *
      * @return 供应商对账数据
      */
-    public List storeChecking(String startTime);
+    public List<Map> storeChecking(String startTime, String mainid);
     /**
      * 查询差异订单
      *
      * @return 差异订单列表
      */
-    public List gatDifferenceOrderList(String id,String startTime);
+    public List gatDifferenceOrderList(String id,String startTime, String mainid);
 
+    /**
+     * 查询过往对账信息
+     *
+     * @return MAP 商城恒等式(mall:恒等式) 供应商恒等式(多个供应商为store:List(恒等式对象))
+
+     */
+    public Map getchinkinginfo(String startTime) throws HRFIExctption;
+
+    /**
+     * 查询差异订单
+     *
+     * @return 差异订单列表
+     */
+    public List getchinkingList(String mainid);
 }
