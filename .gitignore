@@ -32,6 +32,9 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+application.yml
+generatorConfig.xml
+
 
 ######################################################################
 # Others

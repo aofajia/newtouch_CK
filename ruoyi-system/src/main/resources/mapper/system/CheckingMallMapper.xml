@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.CheckingMallMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.CheckingMall" >
+    <id column="detailid" property="detailid" jdbcType="VARCHAR" />
+    <result column="mianid" property="mianid" jdbcType="VARCHAR" />
+    <result column="checkingdate" property="checkingdate" jdbcType="VARCHAR" />
+    <result column="checkingstatus" property="checkingstatus" jdbcType="INTEGER" />
+    <result column="paymoney" property="paymoney" jdbcType="DECIMAL" />
+    <result column="residuemoney" property="residuemoney" jdbcType="DECIMAL" />
+    <result column="leavemoney" property="leavemoney" jdbcType="DECIMAL" />
+    <result column="welfaremoney" property="welfaremoney" jdbcType="DECIMAL" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="cancel_flag" property="cancelFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    detailid, mianid, checkingdate, checkingstatus, paymoney, residuemoney, leavemoney, 
+    welfaremoney, created_time, update_time, cancel_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hrfi_checkingmall_log
+    where detailid = #{detailid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hrfi_checkingmall_log
+    where detailid = #{detailid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.CheckingMall" >
+    insert into hrfi_checkingmall_log (detailid, mianid, checkingdate, 
+      checkingstatus, paymoney, residuemoney, 
+      leavemoney, welfaremoney, created_time, 
+      update_time, cancel_flag)
+    values (#{detailid,jdbcType=VARCHAR}, #{mianid,jdbcType=VARCHAR}, #{checkingdate,jdbcType=VARCHAR}, 
+      #{checkingstatus,jdbcType=INTEGER}, #{paymoney,jdbcType=DECIMAL}, #{residuemoney,jdbcType=DECIMAL}, 
+      #{leavemoney,jdbcType=DECIMAL}, #{welfaremoney,jdbcType=DECIMAL}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.CheckingMall" >
+    insert into hrfi_checkingmall_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="detailid != null" >
+        detailid,
+      </if>
+      <if test="mianid != null" >
+        mianid,
+      </if>
+      <if test="checkingdate != null" >
+        checkingdate,
+      </if>
+      <if test="checkingstatus != null" >
+        checkingstatus,
+      </if>
+      <if test="paymoney != null" >
+        paymoney,
+      </if>
+      <if test="residuemoney != null" >
+        residuemoney,
+      </if>
+      <if test="leavemoney != null" >
+        leavemoney,
+      </if>
+      <if test="welfaremoney != null" >
+        welfaremoney,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="detailid != null" >
+        #{detailid,jdbcType=VARCHAR},
+      </if>
+      <if test="mianid != null" >
+        #{mianid,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingdate != null" >
+        #{checkingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingstatus != null" >
+        #{checkingstatus,jdbcType=INTEGER},
+      </if>
+      <if test="paymoney != null" >
+        #{paymoney,jdbcType=DECIMAL},
+      </if>
+      <if test="residuemoney != null" >
+        #{residuemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="leavemoney != null" >
+        #{leavemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="welfaremoney != null" >
+        #{welfaremoney,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.CheckingMall" >
+    update hrfi_checkingmall_log
+    <set >
+      <if test="mianid != null" >
+        mianid = #{mianid,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingdate != null" >
+        checkingdate = #{checkingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingstatus != null" >
+        checkingstatus = #{checkingstatus,jdbcType=INTEGER},
+      </if>
+      <if test="paymoney != null" >
+        paymoney = #{paymoney,jdbcType=DECIMAL},
+      </if>
+      <if test="residuemoney != null" >
+        residuemoney = #{residuemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="leavemoney != null" >
+        leavemoney = #{leavemoney,jdbcType=DECIMAL},
+      </if>
+      <if test="welfaremoney != null" >
+        welfaremoney = #{welfaremoney,jdbcType=DECIMAL},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag = #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where detailid = #{detailid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.CheckingMall" >
+    update hrfi_checkingmall_log
+    set mianid = #{mianid,jdbcType=VARCHAR},
+      checkingdate = #{checkingdate,jdbcType=VARCHAR},
+      checkingstatus = #{checkingstatus,jdbcType=INTEGER},
+      paymoney = #{paymoney,jdbcType=DECIMAL},
+      residuemoney = #{residuemoney,jdbcType=DECIMAL},
+      leavemoney = #{leavemoney,jdbcType=DECIMAL},
+      welfaremoney = #{welfaremoney,jdbcType=DECIMAL},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      cancel_flag = #{cancelFlag,jdbcType=INTEGER}
+    where detailid = #{detailid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByMainID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+      from hrfi_checkingmall_log cml
+      WHERE cml.mianid = #{mainid}
+  </select>
+</mapper>

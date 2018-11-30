@@ -60,7 +60,21 @@
             <pattern>${log.pattern}</pattern>
         </encoder>
     </appender>
-	
+
+	<!-- 数据同步日志输出  -->
+    <appender name="syn-storedata" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.path}/syn-storedata.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${log.path}/syn-storedata.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 日志最大的历史 60天 -->
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
 	<!-- 显示形成的sql、使用的参数、结果集 -->
 	<!--
 		<logger name="java.sql" level="debug" />
@@ -83,4 +97,9 @@
     <logger name="sys-user" level="info">
         <appender-ref ref="sys-user"/>
     </logger>
-</configuration> 
+
+	<!--系统用户操作日志-->
+    <logger name="syn-storedata" level="info">
+        <appender-ref ref="syn-storedata"/>
+    </logger>
+</configuration>
