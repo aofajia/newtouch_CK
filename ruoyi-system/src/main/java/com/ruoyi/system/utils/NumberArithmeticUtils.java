@@ -1,6 +1,8 @@
 package com.ruoyi.system.utils;
 
 
+import com.ruoyi.common.utils.Md5Utils;
+import com.ruoyi.system.domain.EmployeeExample;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
@@ -14,10 +16,12 @@ import com.google.common.base.Optional;
 import com.ruoyi.system.domain.Employee;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import sun.security.provider.MD5;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -228,33 +232,54 @@ public class NumberArithmeticUtils {
 
 
 
-        public static JSONArray ProLogList2Json(List<Employee> list) {
+        public static JSONArray ProLogList2Json(List<EmployeeExample> list) {
             JSONArray json = new JSONArray();
-            for (Employee pLog : list) {
-                JSONObject jo = new JSONObject();
-                jo.put("employeeNo", pLog.getEmployeeno());
-                jo.put("phoneNumber", pLog.getPhonenumber());
-                jo.put("name", pLog.getName());
-                jo.put("deptName",pLog.getDeptid());
-                json.put(jo);
-            }
-            System.out.println(json);
+                for (EmployeeExample pLog : list) {
+                    JSONObject jo = new JSONObject();
+                    jo.put("employeeNo", pLog.getEmployeeno());
+                    jo.put("phoneNumber", pLog.getPhonenumber());
+                    jo.put("name", "CK");
+                    jo.put("deptName","EB7");
+                    json.put(jo);
+                }
             return json;
         }
 
 
+    public static JSONObject ProLogJson(List<EmployeeExample> list) {
+        JSONObject jo = new JSONObject();
+        for (EmployeeExample pLog : list) {
+            jo.put("employeeNo", pLog.getEmployeeno());
+            jo.put("phoneNumber", pLog.getPhonenumber());
+            jo.put("name", "CK");
+            jo.put("deptName","EB7");
+        }
+        return jo;
+    }
+
+
+
     public static void main(String[] args) throws IOException {
-        List<Employee> list = new ArrayList<>();
-        Employee employee = new Employee();
-        employee.setPhonenumber("17680142326");
-        employee.setName("张三丰");
-        employee.setEmployeeno("111111");
-        employee.setDeptid("武当派");
-        list.add(employee);
-        ////String requestBody = "[{\"employeeno\":\"111111\",\"phonenumber\":\"17680142326\",\"name\":\"张三丰\",\"deptname\":\"武当派\",\"status\":\"\"}]";
-        //System.out.println(list.toString());
-        String result = sendPost("http://test.third-party.newtouch.com/elemp/ntpmp-api/batch-employee",null, "utf-8", "application/json",ProLogList2Json(list).toString());
-        System.out.println(result);
+        List<EmployeeExample> examples = new ArrayList<>();
+        EmployeeExample example = new EmployeeExample();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(System.currentTimeMillis());
+        stringBuffer.append(ProLogList2Json(examples).toString());
+        stringBuffer.append("ac063f15ccff416b9a2278318920926f");
+        String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+        example.setEmployeeno("05919");
+        example.setName("金丽萍");
+        example.setDeptName("EB4");
+        example.setPhonenumber("13501811943");
+        ProLogList2Json(examples).toString();
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("appId","newtouchmall");
+        paramMap.put("timestamp",System.currentTimeMillis());
+        paramMap.put("sign",md5);
+
+
+
+
     }
 
 }

@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.system.domain.Employee;
+import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
 import com.ruoyi.system.domain.OpenTicketParms;
 import com.ruoyi.system.service.OpenTicketService;
@@ -282,8 +283,40 @@ public class HRController extends BaseController {
     @ResponseBody
     public TableDataInfo openCardDataList(){
         startPage();
-        List<Employee> list = openTicketService.openCardDataList();
+        List<EmployeeExample> list = openTicketService.openCardDataList();
         return getDataTable(list);
+    }
+
+
+    /**
+     *  供应商开卡数据显示
+     */
+    @RequestMapping("/openCardDataListById")
+    @ResponseBody
+    public TableDataInfo openCardDataListById(@RequestParam("id")String id){
+        startPage();
+        List<EmployeeExample> list = openTicketService.openCardDataListById(id);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 员工开卡
+     */
+    @RequestMapping("/employeeOpenCard")
+    @ResponseBody
+    public AjaxResult employeeOpenCard(@RequestParam(name = "data", required = false) String data) {
+        try {
+            if (!StringUtils.isEmpty(data)) {
+                JSONArray arrayList = JSONArray.parseArray(data);
+                //转换为目标对象list
+                List<Employee> list = JSONObject.parseArray(arrayList.toJSONString(), Employee.class);
+                openTicketService.openCard(list);
+            }
+        } catch (Exception e) {
+            logger.debug("开卡失败！" + e.getMessage());
+        }
+        return AjaxResult.success();
     }
 
     public static void main(String[] args) {

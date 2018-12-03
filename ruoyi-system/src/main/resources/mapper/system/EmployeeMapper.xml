@@ -85,18 +85,74 @@
   </insert>
 
   <!-- 供应商开卡分页信息显示 -->
-  <select id="openCardDataList" resultType="com.ruoyi.system.domain.Employee">
-      SELECT
-      employeeNo AS employeeno,
-      phoneNumber AS phonenumber,
-      NAME AS NAME,
-      `status` AS `status`,
-      supplier AS supplier,
-      gender AS gender,
-      email AS email,
-      company_id AS companyId,
-      deptID AS deptid
-  FROM
-      hrfi_opencard
+  <select id="openCardDataList" resultType="com.ruoyi.system.domain.EmployeeExample">
+        SELECT
+        employeeNo AS employeeno,
+        phoneNumber AS phonenumber,
+        s.`name` AS NAME,
+        s.`status` AS `status`,
+        gender AS gender,
+        email AS email,
+        s.company_id AS companyId,
+        deptID AS deptid,
+        c.`name` AS companyName,
+        o.mean AS statusName,
+      d.`name` AS deptName
+    FROM
+        hrfi_opencard s
+    LEFT JOIN hrfi_company c ON s.company_id = c.id
+    LEFT JOIN hrfi_opencard_status o ON s.`status` = o.`status`
+    LEFT JOIN hrfi_department d on s.company_id = d.company_id and s.deptID = d.id
+    ORDER BY o.`status` DESC
   </select>
+
+  <!-- 供应商开卡分页信息显示根据员工id查询-->
+  <select id="openCardDataListById" resultType="com.ruoyi.system.domain.EmployeeExample">
+    SELECT
+    employeeNo AS employeeno,
+    phoneNumber AS phonenumber,
+    s.`name` AS NAME,
+    s.`status` AS `status`,
+    gender AS gender,
+    email AS email,
+    s.company_id AS companyId,
+    deptID AS deptid,
+    c.`name` AS companyName,
+    o.mean AS statusName,
+    d.`name` AS deptName
+    FROM
+    hrfi_opencard s
+    LEFT JOIN hrfi_company c ON s.company_id = c.id
+    LEFT JOIN hrfi_opencard_status o ON s.`status` = o.`status`
+    LEFT JOIN hrfi_department d on s.company_id = d.company_id and s.deptID = d.id
+    where s.employeeNo = #{id}
+  </select>
+
+
+  <!-- 饿了么开卡数据 -->
+  <select id="openCardData" resultType="com.ruoyi.system.domain.EmployeeExample">
+          SELECT
+          employeeNo AS employeeno,
+          phoneNumber AS phonenumber,
+          s.`name` AS NAME,
+          d.`name` AS deptName
+      FROM
+          hrfi_opencard s
+      LEFT JOIN hrfi_company c ON s.company_id = c.id
+      LEFT JOIN hrfi_opencard_status o ON s.`status` = o.`status`
+      LEFT JOIN hrfi_department d ON s.company_id = d.company_id
+      AND s.deptID = d.id
+      where s.employeeNo in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <update id="updateByEmpoloyeeId">
+      update hrfi_opencard
+      set `status` =  1
+      where employeeNo = #{id}
+  </update>
+
 </mapper>

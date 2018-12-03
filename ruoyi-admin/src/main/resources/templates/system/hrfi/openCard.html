@@ -7,17 +7,19 @@
 
 <div class="container-div">
     <div class="row">
-        <!--<div class="col-sm-12 search-collapse">-->
-            <!--<form id="role-form">-->
-                <!--<div class="select-list">-->
-
-                <!--</div>-->
-            <!--</form>-->
-        <!--</div>-->
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                   <input type="text" id="id" style="width: 200px"/>
+                    <a style="margin-top: 5px;" class="btn btn-primary btn-rounded btn-sm" onclick="searchByEmployId()"><i
+                            class="fa fa-search"></i>搜索</a>
+                </div>
+            </form>
+        </div>
 
         <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-            <a class="btn btn-primary btn-rounded btn-sm">
-                <i class="fa fa-plus"></i> 开卡
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="openCard()">
+                <i class=""></i> 开卡
             </a>
         </div>
 
@@ -28,6 +30,50 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
+
+
+    //搜索
+    function searchByEmployId() {
+         var id = $("#id").val();
+         if(id == null || id == ''){
+             alert("请输入员工编号！");
+             return;
+         }
+        var options = $('#bootstrap-table').bootstrapTable('refresh', {
+            url: "/system/hr/openCardDataListById",
+            query:
+                {
+                   id:id
+                }
+        });
+    }
+    
+    function openCard() {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        if (data == null || data == ''){
+            alert("请选择一人或多人开卡！");
+            return;
+        }
+        console.log(data);
+        $.ajax(
+            {
+                type : "POST",
+                url : "/system/hr/employeeOpenCard",
+                dataType : "JSON",
+                data : {
+                    data : JSON.stringify(data)
+                },
+                success : function(msg)
+                {
+                    $("#bootstrap-table").bootstrapTable('refresh');
+                    alert("开卡成功！");
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
+    }
 
     var prefix = ctx + "system/hr";
     $(function() {
@@ -51,15 +97,15 @@
                     title: '员工姓名',
                 },
                 {
-                    field: 'companyId',
+                    field: 'companyName',
                     title: '公司名称',
                 },
                 {
-                    field: 'deptid',
+                    field: 'deptName',
                     title: '部门名称',
                 },
                 {
-                    field: 'status',
+                    field: 'statusName',
                     title: '状态',
                 },
                 {

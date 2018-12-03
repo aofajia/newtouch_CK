@@ -1,7 +1,9 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.base.AjaxResult;
+import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.system.domain.Employee;
+import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
 import com.ruoyi.system.mapper.EmployeeMapper;
 import com.ruoyi.system.mapper.OpenTicketMapper;
@@ -15,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -172,14 +172,53 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     }
 
     @Override
-    public List<Employee> openCardDataList() {
-        List<Employee> list = new ArrayList<>();
+    public List<EmployeeExample> openCardDataList() {
+        List<EmployeeExample> list = new ArrayList<>();
         try {
             list = employeeMapper.openCardDataList();
-        }catch (Exception e){
-            logger.debug("查询供应商分页信息失败！"+e.getMessage());
+        } catch (Exception e) {
+            logger.debug("查询供应商分页信息失败！" + e.getMessage());
         }
         return list;
+    }
+
+    @Override
+    public AjaxResult openCard(List<Employee> list) {
+        List<String> sum = new ArrayList<>();
+        try {
+            if (list != null) {
+                for (Employee employee : list) {
+                    sum.add(employee.getEmployeeno());
+                    List<EmployeeExample> examples = employeeMapper.openCardData(sum);
+                    //调用地址
+                    String result = NumberArithmeticUtils.sendPost("http://third-party.newtouch.com/elemp/ntpmp-api/batch-employee",params(examples), "utf-8", "application/json",NumberArithmeticUtils.ProLogList2Json(examples).toString());
+                    JSONObject jsonObject = JSON.parseObject(result);
+                    //解析数据
+                    String data = jsonObject.getString("result");
+                    JSONObject objectCode = JSON.parseObject(data);
+                    //解析返回值
+                    String code = objectCode.getString("code");
+                    //如果为200表示成功
+                    if (code.equals("200")){
+                        logger.debug(employee.getEmployeeno()+"开卡成功！");
+                    }else{
+                        logger.debug("开卡失败");
+                    }
+                    //修改状态
+                    employeeMapper.updateByEmpoloyeeId(employee.getEmployeeno());
+
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("开卡失败！" + e.getMessage());
+            return AjaxResult.error(e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public List<EmployeeExample> openCardDataListById(String id) {
+        return employeeMapper.openCardDataListById(id);
     }
 
 
@@ -207,6 +246,24 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         Integer number = Integer.parseInt(num);
         card = (number % 2 == 0) ? "女" : "男";
         return card;
+    }
+
+
+    /**
+     *  参数配置
+     */
+    private Map<String, Object> params(List<EmployeeExample> list){
+        Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+        StringBuffer stringBuffer = new StringBuffer();
+        long time = System.currentTimeMillis();
+        stringBuffer.append(time);
+        stringBuffer.append(NumberArithmeticUtils.ProLogList2Json(list).toString());
+        stringBuffer.append("ac063f15ccff416b9a2278318920926f");
+        String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+        paramMap.put("appId","newtouchmall");
+        paramMap.put("timestamp",time);
+        paramMap.put("sign",md5.toUpperCase());
+        return paramMap;
     }
 
 

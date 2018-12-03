@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.system.domain.Employee;
+import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
 
 import java.util.List;
@@ -47,5 +48,17 @@ public interface OpenTicketService {
     /**
      *  供应商分页数据显示
      */
-    public List<Employee> openCardDataList();
+    public List<EmployeeExample> openCardDataList();
+
+
+    /**
+     *  开卡
+     */
+    public AjaxResult openCard(List<Employee> list);
+
+
+    /**
+     *  开卡查询
+     */
+    public List<EmployeeExample> openCardDataListById(String id);
 }
