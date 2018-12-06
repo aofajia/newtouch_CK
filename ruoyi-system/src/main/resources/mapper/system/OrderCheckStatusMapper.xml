@@ -9,6 +9,7 @@
     <result column="store_id" property="storeId" jdbcType="BIGINT" />
     <result column="createtime" property="createtime" jdbcType="INTEGER" />
     <result column="payed" property="payed" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="CHAR" />
     <result column="checkingstatus" property="checkingstatus" jdbcType="INTEGER" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -16,7 +17,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_legalman, invoice_legalman, final_amount, store_id, createtime, payed, 
-    checkingstatus, created_time, update_time, cancel_flag
+    status, checkingstatus, created_time, update_time, cancel_flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -31,12 +32,14 @@
   <insert id="insert" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
     insert into hrfi_openticket (order_id, order_legalman, invoice_legalman, 
       final_amount, store_id, createtime, 
-      payed, checkingstatus, created_time, 
-      update_time, cancel_flag)
+      payed, status, checkingstatus, 
+      created_time, update_time, cancel_flag
+      )
     values (#{orderId,jdbcType=BIGINT}, #{orderLegalman,jdbcType=INTEGER}, #{invoiceLegalman,jdbcType=INTEGER}, 
       #{finalAmount,jdbcType=DECIMAL}, #{storeId,jdbcType=BIGINT}, #{createtime,jdbcType=INTEGER}, 
-      #{payed,jdbcType=DECIMAL}, #{checkingstatus,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER})
+      #{payed,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{checkingstatus,jdbcType=INTEGER}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
     insert into hrfi_openticket
@@ -61,6 +64,9 @@
       </if>
       <if test="payed != null" >
         payed,
+      </if>
+      <if test="status != null" >
+        status,
       </if>
       <if test="checkingstatus != null" >
         checkingstatus,
@@ -97,6 +103,9 @@
       <if test="payed != null" >
         #{payed,jdbcType=DECIMAL},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
       <if test="checkingstatus != null" >
         #{checkingstatus,jdbcType=INTEGER},
       </if>
@@ -132,6 +141,9 @@
       <if test="payed != null" >
         payed = #{payed,jdbcType=DECIMAL},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
       <if test="checkingstatus != null" >
         checkingstatus = #{checkingstatus,jdbcType=INTEGER},
       </if>
@@ -155,6 +167,7 @@
       store_id = #{storeId,jdbcType=BIGINT},
       createtime = #{createtime,jdbcType=INTEGER},
       payed = #{payed,jdbcType=DECIMAL},
+      status = #{status,jdbcType=CHAR},
       checkingstatus = #{checkingstatus,jdbcType=INTEGER},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

@@ -18,6 +18,8 @@ public class OrderCheckStatus {
 
     private BigDecimal payed;
 
+    private String status;
+
     private Integer checkingstatus;
 
     private Date createdTime;
@@ -80,6 +82,14 @@ public class OrderCheckStatus {
 
     public void setPayed(BigDecimal payed) {
         this.payed = payed;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 
     public Integer getCheckingstatus() {

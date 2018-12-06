@@ -1,6 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IOrderCheckingService;
@@ -90,19 +89,25 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
         //员工剩余账户总金额
         paramMap.put("supplierid","Mall");
         List<BalanceRecord> balanceRecords = balanceRecordMapper.selectBySupplierId(paramMap);
-        BalanceRecord balanceRecord = balanceRecords.get(0);
+        BalanceRecord balanceRecord = new BalanceRecord();
+        if(balanceRecords.size() != 0)
+        {
+            balanceRecord = balanceRecords.get(0);
+        }
+        else
+        {
+            balanceRecord.setBalancemoney(new BigDecimal("0.00"));
+        }
         BigDecimal employeeresiduemoney = balanceRecord.getBalancemoney();
         paramMap.remove("supplierid");
 
         //申请提现额度
-        String url = "http://59.80.30.153:4090/方法名";
+        String url = "http://59.80.30.153:4090/HR/getForwardInfo";
         HttpClientUtil httpUtil=new HttpClientUtil();
+        paramMap.put("startDate","2018-06-01");
+        paramMap.put("endDate",startTime);
         String str=httpUtil.doPost(url,paramMap,"UTF-8");
-        JSONObject result = JSONObject.parseObject(str);
-        String offjobmoney = "999.99";
-        BigDecimal bleavemoney = new BigDecimal("999.990");
-//        String offjobmoney = result.getString("");
-//        BigDecimal bleavemoney = new BigDecimal(offjobmoney);
+        BigDecimal bleavemoney = new BigDecimal(str);
 
         //每月充值
         paramMap.put("memo","每月充值");
@@ -164,6 +169,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
         List<StoreConfig> storeConfigs = selectStoreConfigList();
         for (int i = 0; i < storeConfigs.size() ; i++)
         {
+
             //获取配置供应商信息
             StoreConfig storeConfig = storeConfigs.get(i);
             String store_id = storeConfig.getStore_id();
@@ -172,6 +178,14 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             Map<String, Object> paramMap = new HashMap();
             paramMap.put("store_id",store_id);
             paramMap.put("startTime",startTime);
+            if("104".equals(store_id))
+            {
+                continue;
+            }
+            else
+            {
+                shop_name = "欧飞";
+            }
 
             //插入供应商恒等式记录表
             CheckingStore checkingStore = new CheckingStore();
@@ -195,9 +209,19 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 responseMap.put("validmoney",validmoney);
 
                 //获取当前时间供应商余额记录表中的余额(定时任务 从供应商接口获取)
-                String storebalance = "999.99";
-                BigDecimal balance = new BigDecimal(storebalance);
-                responseMap.put("storebalance",storebalance);
+                paramMap.put("supplierid",store_id);
+                List<BalanceRecord> balanceRecords = balanceRecordMapper.selectBySupplierId(paramMap);
+                BalanceRecord balanceRecord = new BalanceRecord();
+                if(balanceRecords.size() != 0)
+                {
+                    balanceRecord = balanceRecords.get(0);
+                }
+                else
+                {
+                    balanceRecord.setBalancemoney(new BigDecimal("0.00"));
+                }
+                BigDecimal balance = balanceRecord.getBalancemoney();
+                responseMap.put("storebalance",balance);
 
                 //从供应商充值记录表中获取 对应供应商累计充值总金额值总金额
                 Map rechargeSum = rechargeLogMapper.selectRechargeSumByStore(paramMap);
@@ -281,6 +305,8 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
     @Override
     public List gatDifferenceOrderList(String id, String startTime, String mainid)
     {
+        List<StoreConfig> storeConfigs = bwConfigMapper.selectStoreConfigAll();
+
         Map<String, Object> paramMap = new HashMap();
         paramMap.put("id",id);
         paramMap.put("startTime",startTime);
@@ -300,7 +326,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
         calendar.add(Calendar.DAY_OF_MONTH, -6);
         date = calendar.getTime();
         String before6Time = sdf.format(date);
-        paramMap.put("before7Time",before6Time);
+        paramMap.put("before6Time",before6Time);
 
         //订单数据交集 插入到hrfi_openticket订单对账状态记录表 checkingstatus状态 0对账正确
         paramMap.put("orderid","orderid");
@@ -316,6 +342,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             orderCheckStatus.setOrderLegalman(Integer.parseInt(sameList.get(i).getOrder_legalman()));
             orderCheckStatus.setInvoiceLegalman(Integer.parseInt(sameList.get(i).getInvoice_legalman()));
             orderCheckStatus.setFinalAmount(new BigDecimal(sameList.get(i).getPayed()));
+            orderCheckStatus.setStatus(sameList.get(i).getStatus());
             orderCheckStatus.setStoreId(Long.parseLong(sameList.get(i).getStore_id()));
             orderCheckStatus.setCreatetime(Integer.parseInt(sameList.get(i).getCreatetime()));
             orderCheckStatus.setCheckingstatus(0);
@@ -330,18 +357,64 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             }
         }
 
-        //订单数据差集 checkingstatus状态 1商城订单丢失 2供应商订单丢失
+
+        //完全不相同订单(包含订单相同 金额不同)
+        paramMap.remove("samelist");
+        paramMap.replace("intcount",1);
+        paramMap.put("differ","differ");
+        List<DifferenceOrderList> differList = ordersMapper.gatDifferenceOrderList(paramMap);
+
+        //订单数据差集(订单不相同) checkingstatus状态 1商城订单丢失 2供应商订单丢失
         paramMap.remove("ordermoney");
+        List<DifferenceOrderList> outList = ordersMapper.gatDifferenceOrderList(paramMap);
+
+        List<Integer> indexList = new ArrayList<>();
+        //删除所有订单不相同 求订单相同 金额不同订单
+        for (int i = 0; i < outList.size(); i++)
+        {
+            DifferenceOrderList differenceOrderList = outList.get(i);
+            if("t1".equals(outList.get(i).getTn()))
+            {
+                String order_id = differenceOrderList.getOrder_id();
+                for (int j = 0; j < differList.size(); j++)
+                {
+                    if(differList.get(j).getOrder_id().equals(order_id))
+                    {
+                        indexList.add(j);
+                    }
+                }
+            }
+            else if("t2".equals(outList.get(i).getTn()))
+            {
+                String other_order_id = differenceOrderList.getOther_order_id();
+                for (int j = 0; j < differList.size(); j++)
+                {
+                    if(differList.get(j).getOther_order_id().equals(other_order_id))
+                    {
+                        indexList.add(j);
+                    }
+                }
+            }
+        }
+        for (int i = indexList.size()-1; i >= 0; i--)
+        {
+            int index = indexList.get(i);
+            differList.remove(index);
+        }
+
+
+        //订单数据差集 checkingstatus状态 1商城订单丢失 2供应商订单丢失
+        /*paramMap.remove("ordermoney");
         paramMap.remove("samelist");
         paramMap.replace("intcount",1);
         List<DifferenceOrderList> outList = ordersMapper.gatDifferenceOrderList(paramMap);
-
+*/
         //订单数据 订单号相同 金额不同数据 checkingstatus状3
-        paramMap.remove("orderid");
-        paramMap.put("ordermoney","ordermoney");
-        paramMap.put("differ","differ");
-        List<DifferenceOrderList> differList = ordersMapper.gatDifferenceOrderList(paramMap);
-        List<Integer> indexList = new ArrayList<>();
+//        paramMap.remove("orderid");
+//        paramMap.put("ordermoney","ordermoney");
+//        paramMap.put("differ","differ");
+//        List<DifferenceOrderList> differList = ordersMapper.gatDifferenceOrderList(paramMap);
+        indexList.clear();
         Map<String, Object> removeMapInfo = new LinkedHashMap<String, Object>();
         for (int i = 0; i < differList.size(); i++)
         {
@@ -365,6 +438,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
 
         Date nowdate = new Date();
         List<DifferenceOrderList> exceptionList = differList;
+        Collections.reverse(outList);
         exceptionList.addAll(outList);
         for (int i = 0; i < exceptionList.size(); i++)
         {
@@ -394,6 +468,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 //商城有 第三方缺失
                 orderCheckStatus.setOrderId(Long.parseLong(order_id));
                 orderCheckStatus.setFinalAmount(new BigDecimal(payed));
+                orderCheckStatus.setStatus(differenceOrderList.getStatus());
                 orderCheckStatus.setCreatetime(Integer.parseInt(exceptionList.get(i).getCreatetime()));
                 orderCheckStatus.setCheckingstatus(2);
 
@@ -419,6 +494,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 //订单数据 订单号相同 金额不同数据
                 orderCheckStatus.setOrderId(Long.parseLong(order_id));
                 orderCheckStatus.setFinalAmount(new BigDecimal(payed));
+                orderCheckStatus.setStatus(differenceOrderList.getStatus());
                 orderCheckStatus.setCreatetime(Integer.parseInt(exceptionList.get(i).getCreatetime()));
                 orderCheckStatus.setCheckingstatus(3);
 

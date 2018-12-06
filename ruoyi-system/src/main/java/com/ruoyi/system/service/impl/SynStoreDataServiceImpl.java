@@ -1,15 +1,23 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.system.domain.*;
+import com.ruoyi.common.utils.Md5Utils;
+import com.ruoyi.system.domain.BalanceRecord;
+import com.ruoyi.system.domain.StoreConfig;
+import com.ruoyi.system.domain.StoreOrders;
 import com.ruoyi.system.mapper.*;
-import com.ruoyi.system.service.IBalanceWarningService;
 import com.ruoyi.system.service.IOrderCheckingService;
 import com.ruoyi.system.service.ISynStoreDataService;
+import com.ruoyi.system.tool.XMLUtil;
+import com.ruoyi.system.utils.NumberArithmeticUtils;
+import com.ruoyi.system.utils.Request;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -30,9 +38,13 @@ public class SynStoreDataServiceImpl implements ISynStoreDataService
     private CheckingMallMapper checkingMallMapper;
     @Autowired
     private CheckingStoreMapper checkingStoreMapper;
+    @Autowired
+    private BWConfigMapper bwConfigMapper;
+    @Autowired
+    private StoreOrdersMapper storeOrdersMapper;
 
     @Override
-    public int sumMemberadvance(Logger syn_storedata_logger)
+    public int sumMemberadvance(Logger syn_storedata_logger)  throws Exception
     {
         BalanceRecord balanceRecord = membersMapper.sumMemberadvance();
         balanceRecord.setId(UUID.randomUUID().toString().toUpperCase());
@@ -57,7 +69,7 @@ public class SynStoreDataServiceImpl implements ISynStoreDataService
     }
 
     @Override
-    public void orderChecking(Logger syn_storedata_logger)
+    public void orderChecking(Logger syn_storedata_logger)  throws Exception
     {
         // 打印信息到日志
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -69,6 +81,7 @@ public class SynStoreDataServiceImpl implements ISynStoreDataService
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         date = calendar.getTime();
         String startTime = sdf.format(date);
+//        String startTime = "2018-11-26";
         syn_storedata_logger.info(sdf1.format(new Date())+"自动对账开始，对账截至日期为："+startTime);
 
         //调用商城恒等式对账方法
@@ -140,5 +153,220 @@ public class SynStoreDataServiceImpl implements ISynStoreDataService
         }
 
         syn_storedata_logger.info(sdf1.format(new Date())+"自动对账结束");
+    }
+
+    @Override
+    public void getStoreAdvance(Logger syn_storedata_logger) throws Exception
+    {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        Date date=new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        date = calendar.getTime();
+        String startTime = sdf.format(date);
+
+        syn_storedata_logger.info(sdf1.format(new Date())+"供应商预存款获取开始，对账截至日期为："+startTime);
+
+        List<StoreConfig> storeConfigs = bwConfigMapper.selectStoreConfigAll();
+        for (int i = 0; i < storeConfigs.size() ; i++)
+        {
+
+            StoreConfig storeConfig = storeConfigs.get(i);
+            String store_id = storeConfig.getStore_id();
+            String shop_name = storeConfig.getShop_name();
+            String paymethod = storeConfig.getPaymethod();
+
+            if("precharge".equals(paymethod))
+            {
+                //预充值供应商
+                syn_storedata_logger.info("供应商："+shop_name+"获取余额。");
+
+                BalanceRecord balanceRecord = new BalanceRecord();
+                balanceRecord.setId(UUID.randomUUID().toString().toUpperCase());
+                if("103".equals(store_id))
+                {
+                    balanceRecord.setSupplierid(store_id);
+                    balanceRecord.setSuppliername("欧飞");
+                    balanceRecord.setDate(startTime);
+                    balanceRecord.setCommitdate(new Date());
+
+                    String url = "http://third-party.newtouch.com/oufeimp/ntpmp-api/query-user-info";
+
+                    Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+                    StringBuffer stringBuffer = new StringBuffer();
+                    long time = System.currentTimeMillis();
+                    stringBuffer.append(time);
+                    JSONObject jo = new JSONObject();
+                    jo.put("appId", "newtouchmall");
+                    stringBuffer.append(jo.toString());
+                    stringBuffer.append("ac063f15ccff416b9a2278318920926f");
+                    String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+                    paramMap.put("appId","newtouchmall");
+                    paramMap.put("timestamp",time);
+                    paramMap.put("sign",md5.toUpperCase());
+                    try
+                    {
+                        String xml = NumberArithmeticUtils.sendPost(url,paramMap, "utf-8", "application/json",jo.toString());
+                        Request req = (Request) XMLUtil.convertXmlStrToObject(Request.class, xml);
+                        if("1".equals(req.getRetcode()))
+                        {
+                            String totalBalance = req.getTotalBalance();
+                            BigDecimal balancemoney = new BigDecimal(totalBalance);
+
+                            syn_storedata_logger.info("供应商："+shop_name+"获取余额值为："+balancemoney);
+
+                            balanceRecord.setBalancemoney(balancemoney);
+                            balanceRecordMapper.insertSelective(balanceRecord);
+                        }
+                        else
+                        {
+                            syn_storedata_logger.info("供应商："+shop_name+"获取余额失败，错误描述："+req.getErr_msg());
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        syn_storedata_logger.info("供应商："+shop_name+"获取余额失败，报错原因："+e.toString());
+                        e.printStackTrace();
+                    }
+                }
+                else if("102".equals("store_id"))
+                {
+                    //京东
+                }
+            }
+        }
+        syn_storedata_logger.info(sdf1.format(new Date())+"供应商预存款获取结束，对账截至日期为："+startTime);
+    }
+
+    @Override
+    public void getStoreOrders(Logger syn_storedata_logger) throws Exception
+    {
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2=new SimpleDateFormat("yyyyMMdd");
+        Date date=new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        date = calendar.getTime();
+        String startTime = sdf.format(date);
+        String endTime = sdf2.format(date);
+
+        syn_storedata_logger.info(sdf1.format(new Date())+"供应商订单同步功能获取开始，对账截至日期为："+startTime);
+
+        List<StoreConfig> storeConfigs = bwConfigMapper.selectStoreConfigAll();
+        for (int i = 0; i < storeConfigs.size() ; i++)
+        {
+            StoreConfig storeConfig = storeConfigs.get(i);
+            String store_id = storeConfig.getStore_id();
+            String shop_name = storeConfig.getShop_name();
+            String paymethod = storeConfig.getPaymethod();
+
+            if("102".equals(store_id))
+            {
+
+            }
+            else if("103".equals(store_id))
+            {
+                //获取欧飞订单
+                String url = "http://third-party.newtouch.com/oufeimp/ntpmp-api/query-bill";
+
+                Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+                StringBuffer stringBuffer = new StringBuffer();
+                long time = System.currentTimeMillis();
+                stringBuffer.append(time);
+                JSONObject jo =  new JSONObject(new LinkedHashMap());
+                jo.put("appId", "newtouchmall");
+                jo.put("starttime", "20181110"); //根据情况 修改获取起始时间
+                jo.put("endtime", endTime);
+                jo.put("cardid", "");
+                jo.put("orderstat", "4");
+                jo.put("classtype", "0");
+//                JSONArray json = new JSONArray();
+//                json.put(jo);
+                stringBuffer.append(jo.toString());
+                stringBuffer.append("ac063f15ccff416b9a2278318920926f");
+                String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+                paramMap.put("appId","newtouchmall");
+                paramMap.put("timestamp",time);
+                paramMap.put("sign",md5.toUpperCase());
+                String dataList = NumberArithmeticUtils.sendPost(url,paramMap, "utf-8", "application/json",jo.toString());
+                syn_storedata_logger.info("调用欧飞查询订单明细接口完成，获取信息："+dataList);
+                if(!"CP流水号".equals(dataList.substring(0,5)))
+                {
+                    syn_storedata_logger.info("调用欧飞查询订单明细接口错误，错误信息："+dataList);
+                }
+                else
+                {
+                    String[] line = dataList.split("\n");
+                    for (int j = 1; j < line.length-1 ; j++)
+                    {
+                        String[] info = line[j].split("\\|");
+                        String liushuihao = info[0];//CP流水号
+                        String dingdanhao = info[1].substring(12);//SP订单号
+                        String shangpinbianhao = info[2];//商品编号
+                        String shangpingshuliang = info[3];//商品数量
+                        String chongzhizhanghao = info[4];//充值账号
+                        String dingdanjine = info[5];//订单金额
+                        String dingdanshijian = info[6];//订单时间
+                        Date utilDate = sdf1.parse(dingdanshijian);
+                        Date date1 = new java.sql.Date(utilDate.getTime());
+                        String dingdanzhuangtai = info[7];//订单状态
+
+                        StoreOrders storeOrders = new StoreOrders();
+                        storeOrders.setOrderid(dingdanhao);
+                        storeOrders.setOrdermoney(new BigDecimal(dingdanjine));
+                        storeOrders.setSupplierid("103");
+                        storeOrders.setSuppliername("欧飞订单");
+                        storeOrders.setDate(date1);
+                        storeOrders.setCommitdate(new Date());
+                        StoreOrders ifnull = storeOrdersMapper.selectByPrimaryKey(dingdanhao);
+                        if(ifnull == null)
+                        {
+                            storeOrdersMapper.insertSelective(storeOrders);
+                        }
+                        else
+                        {
+                            storeOrdersMapper.updateByPrimaryKeySelective(storeOrders);
+                        }
+                    }
+                }
+            }
+            else if("106".equals(store_id))
+            {
+                //获取携程订单
+                String url = "third-party.newtouch.com/ctripmp/ntpmp-api/get-order-settlement";
+
+                Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+                StringBuffer stringBuffer = new StringBuffer();
+                long time = System.currentTimeMillis();
+                stringBuffer.append(time);
+                JSONObject jo = new JSONObject();
+                jo.put("appId", "newtouchmall");
+                jo.put("dateFrom", "20181120");
+                jo.put("dateTo", "20181203");
+                jo.put("productType", "1");
+                JSONArray json = new JSONArray();
+                json.put(jo);
+                stringBuffer.append(jo.toString());
+                stringBuffer.append("ac063f15ccff416b9a2278318920926f");
+                String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+                paramMap.put("appId","newtouchmall");
+                paramMap.put("timestamp",time);
+                paramMap.put("sign",md5.toUpperCase());
+                String xml = NumberArithmeticUtils.sendPost(url,paramMap, "utf-8", "application/json",jo.toString());
+                String[] split = xml.split("\n");
+                for (int j = 1; j < split.length-1 ; j++)
+                {
+                    System.out.println("第"+j+"行数据："+split[j]);
+                }
+            }
+        }
+
+        syn_storedata_logger.info(sdf1.format(new Date())+"供应商订单同步功能获取结束，对账截至日期为："+startTime);
     }
 }

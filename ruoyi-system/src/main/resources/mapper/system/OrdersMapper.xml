@@ -874,6 +874,9 @@
     AND o.disabled ='false'
     AND o.confirm_time &lt;&gt; ''
     AND o.store_id = #{store_id}
+    <if test="store_id == '103'" >
+      OR o.store_id = '104'
+    </if>
     AND FROM_UNIXTIME(o.confirm_time, '%Y-%m-%d') &lt;= #{startTime}
   </select>
   <select id="getEmployeePayMoney" resultType="java.util.Map" parameterType="java.util.Map">
@@ -890,34 +893,50 @@
         </if>
         case tn when 't1' then orderid else '' end as order_id, case tn when 't1' then ordermoney else '' end as payed,
         case tn when 't2' then orderid else '' end as other_order_id, case tn when 't2' then ordermoney else '' end as other_payed,
-        tn,tbl.store_id,tbl.createtime
+        tn,tbl.store_id,tbl.createtime,tbl.`status`
     FROM (
-        SELECT order_id as orderid, payed as ordermoney,'t1' as tn, store_id,createtime
-		FROM hrfi_sdb_b2c_orders
-    <!--FROM sdb_b2c_orders-->
-        WHERE store_id = #{id}
+        SELECT order_id as orderid, payed as ordermoney,'t1' as tn, store_id,createtime,`status`
+    <!--FROM hrfi_sdb_b2c_orders-->
+        FROM sdb_b2c_orders
+        WHERE 1 = 1
+        <if test="id != '103'" >
+          AND store_id = #{id}
+        </if>
+        <if test="id == '103'" >
+          AND (store_id = #{id} OR store_id = '104')
+        </if>
+        AND FROM_UNIXTIME(createtime, '%Y-%m-%d') >='2018-11-30'
         AND disabled ='false'
+        AND order_id not in
+        (
+            SELECT ho.order_id FROM hrfi_openticket ho
+            WHERE ho.checkingstatus = '0'
+            AND FROM_UNIXTIME(ho.createtime, '%Y-%m-%d') &lt;= #{before6Time}
+        )
     <!--AND FROM_UNIXTIME(mtime, '%Y-%m-%d') &lt;= #{startTime}-->
 
         UNION ALL
 
-        SELECT orderid, ordermoney,'t2' as tn, supplierid as store_id,'' as createtime
+        SELECT orderid, ordermoney,'t2' as tn, supplierid as store_id,'' as createtime,'' as 'status'
 		FROM hrfi_storeorders
 		where supplierid = #{id}
+        AND orderid not in
+        (
+            SELECT ho.order_id as orderid FROM hrfi_openticket ho
+            WHERE ho.checkingstatus = '0'
+            AND FROM_UNIXTIME(ho.createtime, '%Y-%m-%d') &lt;= #{before6Time}
+        )
         <!--AND date &lt;= #{startTime}-->
     ) tbl
     INNER JOIN hrfi_balancewarning_config bc on bc.supplierid = #{id}
     <if test="samelist != null" >
-      INNER JOIN hrfi_sdb_b2c_orders bo on bo.order_id = tbl.orderid
+      INNER JOIN sdb_b2c_orders bo on bo.order_id = tbl.orderid
     </if>
     <if test="orderid != null and ordermoney != null">
       GROUP BY orderid, ordermoney
     </if>
     <if test="orderid != null and ordermoney == null">
       GROUP BY orderid
-    </if>
-    <if test="ordermoney != null and orderid == null">
-      GROUP BY ordermoney
     </if>
     HAVING count(*) = #{intcount}
     <if test="differ == null">

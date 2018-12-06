@@ -4,26 +4,32 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class StoreOrders {
-    private String id;
+    private String orderid;
+
+    private BigDecimal ordermoney;
 
     private String supplierid;
 
     private String suppliername;
 
-    private String orderid;
-
-    private BigDecimal ordermoney;
-
     private Date date;
 
     private Date commitdate;
 
-    public String getId() {
-        return id;
+    public String getOrderid() {
+        return orderid;
     }
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+    public void setOrderid(String orderid) {
+        this.orderid = orderid == null ? null : orderid.trim();
+    }
+
+    public BigDecimal getOrdermoney() {
+        return ordermoney;
+    }
+
+    public void setOrdermoney(BigDecimal ordermoney) {
+        this.ordermoney = ordermoney;
     }
 
     public String getSupplierid() {
@@ -40,22 +46,6 @@ public class StoreOrders {
 
     public void setSuppliername(String suppliername) {
         this.suppliername = suppliername == null ? null : suppliername.trim();
-    }
-
-    public String getOrderid() {
-        return orderid;
-    }
-
-    public void setOrderid(String orderid) {
-        this.orderid = orderid == null ? null : orderid.trim();
-    }
-
-    public BigDecimal getOrdermoney() {
-        return ordermoney;
-    }
-
-    public void setOrdermoney(BigDecimal ordermoney) {
-        this.ordermoney = ordermoney;
     }
 
     public Date getDate() {

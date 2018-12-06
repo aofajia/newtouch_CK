@@ -4,9 +4,6 @@ import com.ruoyi.common.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class DifferenceOrderList
 {
     private static final long serialVersionUID = 1L;
@@ -35,6 +32,8 @@ public class DifferenceOrderList
     private String invoice_legalman;
 
     private String createtime;
+
+    private String status;
 
     public String getStorename() {
         return storename;
@@ -114,6 +113,14 @@ public class DifferenceOrderList
 
     public void setCreatetime(String createtime) {
         this.createtime = createtime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
