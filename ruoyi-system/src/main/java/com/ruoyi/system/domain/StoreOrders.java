@@ -12,6 +12,8 @@ public class StoreOrders {
 
     private String suppliername;
 
+    private String status;
+
     private Date date;
 
     private Date commitdate;
@@ -46,6 +48,14 @@ public class StoreOrders {
 
     public void setSuppliername(String suppliername) {
         this.suppliername = suppliername == null ? null : suppliername.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 
     public Date getDate() {

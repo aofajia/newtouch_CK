@@ -35,6 +35,8 @@ public class DifferenceOrderList
 
     private String status;
 
+    private String other_status;
+
     public String getStorename() {
         return storename;
     }
@@ -121,6 +123,14 @@ public class DifferenceOrderList
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getOther_status() {
+        return other_status;
+    }
+
+    public void setOther_status(String other_status) {
+        this.other_status = other_status;
     }
 
     @Override

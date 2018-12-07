@@ -422,12 +422,21 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             {
                 indexList.add(i);
                 removeMapInfo.put(differList.get(i).getOther_order_id(),differList.get(i).getOther_payed());
+                removeMapInfo.put(differList.get(i).getOther_order_id()+"_status",differList.get(i).getOther_status());
             }
             else
             {
                 String order_id = differList.get(i).getOrder_id();
                 differList.get(i).setOther_order_id(order_id);
                 differList.get(i).setOther_payed(removeMapInfo.get(order_id).toString());
+                differList.get(i).setOther_status(removeMapInfo.get(order_id+"_status").toString());
+                if("103".equals(differList.get(i).getStore_id()) || "104".equals(differList.get(i).getStore_id()))
+                {
+                    if ("dead".equals(differList.get(i).getStatus()) && "9".equals(differList.get(i).getOther_status()))
+                    {
+                        indexList.add(i);
+                    }
+                }
             }
         }
         for (int i = indexList.size()-1; i >= 0; i--)

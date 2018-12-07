@@ -150,10 +150,10 @@
                                             "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;+&nbsp;&nbsp供应商账户余额：￥ </label> <label style=\"font-size:17px;\">"+data[i].storebalance+"</label>" +
                                             "<label style=\"font-size:17px;\">" +  "&nbsp;&nbsp;=&nbsp;&nbsp;供应商充值总额：￥ </label> <label style=\"font-size:17px;\">"+data[i].rechargemoney+"</label>";
 
-                                        if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
+                                        /*if(Number(data[i].validmoney) + Number(data[i].storebalance) != Number(data[i].rechargemoney))
                                         {
                                             str += "<a class=\"btn btn-primary btn-rounded btn-sm\" onclick=\"chinkingOrders("  +data[i].supplierid+  ")\"><i class=\"fa fa-search\"></i>&nbsp;订单异常查询</a>";
-                                        }
+                                        }*/
                                         str +=
                                             "</li>" +
                                         "</ul>";

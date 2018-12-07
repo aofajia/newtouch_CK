@@ -34,6 +34,6 @@ public interface ISynStoreDataService
      *
      * @return
      */
-    public void getStoreOrders(Logger syn_storedata_logger) throws Exception;
+    public void getStoreOrders(Logger syn_storedata_logger,int num) throws Exception;
 
 }

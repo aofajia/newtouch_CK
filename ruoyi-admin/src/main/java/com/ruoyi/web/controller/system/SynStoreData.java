@@ -139,7 +139,8 @@ public class SynStoreData
         //调用接口获取数据
         try
         {
-            synStoreDataService.getStoreOrders(syn_storedata_logger);
+            int getflag = 3;
+            synStoreDataService.getStoreOrders(syn_storedata_logger,getflag);
         }
         catch (Exception e)
         {

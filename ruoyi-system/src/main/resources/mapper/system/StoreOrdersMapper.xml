@@ -6,11 +6,12 @@
     <result column="ordermoney" property="ordermoney" jdbcType="DECIMAL" />
     <result column="supplierid" property="supplierid" jdbcType="VARCHAR" />
     <result column="suppliername" property="suppliername" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="TIMESTAMP" />
     <result column="commitdate" property="commitdate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    orderid, ordermoney, supplierid, suppliername, date, commitdate
+    orderid, ordermoney, supplierid, suppliername, status, date, commitdate
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -24,11 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.ruoyi.system.domain.StoreOrders" >
     insert into hrfi_storeorders (orderid, ordermoney, supplierid, 
-      suppliername, date, commitdate
-      )
+      suppliername, status, date, 
+      commitdate)
     values (#{orderid,jdbcType=VARCHAR}, #{ordermoney,jdbcType=DECIMAL}, #{supplierid,jdbcType=VARCHAR}, 
-      #{suppliername,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{commitdate,jdbcType=TIMESTAMP}
-      )
+      #{suppliername,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, 
+      #{commitdate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.StoreOrders" >
     insert into hrfi_storeorders
@@ -44,6 +45,9 @@
       </if>
       <if test="suppliername != null" >
         suppliername,
+      </if>
+      <if test="status != null" >
+        status,
       </if>
       <if test="date != null" >
         date,
@@ -65,6 +69,9 @@
       <if test="suppliername != null" >
         #{suppliername,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
       <if test="date != null" >
         #{date,jdbcType=TIMESTAMP},
       </if>
@@ -85,6 +92,9 @@
       <if test="suppliername != null" >
         suppliername = #{suppliername,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
       <if test="date != null" >
         date = #{date,jdbcType=TIMESTAMP},
       </if>
@@ -99,6 +109,7 @@
     set ordermoney = #{ordermoney,jdbcType=DECIMAL},
       supplierid = #{supplierid,jdbcType=VARCHAR},
       suppliername = #{suppliername,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
       date = #{date,jdbcType=TIMESTAMP},
       commitdate = #{commitdate,jdbcType=TIMESTAMP}
     where orderid = #{orderid,jdbcType=VARCHAR}

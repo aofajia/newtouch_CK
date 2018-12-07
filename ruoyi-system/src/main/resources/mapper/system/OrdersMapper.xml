@@ -893,7 +893,8 @@
         </if>
         case tn when 't1' then orderid else '' end as order_id, case tn when 't1' then ordermoney else '' end as payed,
         case tn when 't2' then orderid else '' end as other_order_id, case tn when 't2' then ordermoney else '' end as other_payed,
-        tn,tbl.store_id,tbl.createtime,tbl.`status`
+    case tn when 't1' then tbl.`status` else '' end as `status`, case tn when 't2' then tbl.`status` else '' end as other_status,
+        tn,tbl.store_id,tbl.createtime
     FROM (
         SELECT order_id as orderid, payed as ordermoney,'t1' as tn, store_id,createtime,`status`
     <!--FROM hrfi_sdb_b2c_orders-->
@@ -917,7 +918,7 @@
 
         UNION ALL
 
-        SELECT orderid, ordermoney,'t2' as tn, supplierid as store_id,'' as createtime,'' as 'status'
+        SELECT orderid, ordermoney,'t2' as tn, supplierid as store_id,'' as createtime,`status`
 		FROM hrfi_storeorders
 		where supplierid = #{id}
         AND orderid not in
@@ -926,7 +927,7 @@
             WHERE ho.checkingstatus = '0'
             AND FROM_UNIXTIME(ho.createtime, '%Y-%m-%d') &lt;= #{before6Time}
         )
-        <!--AND date &lt;= #{startTime}-->
+        AND DATE_FORMAT(date,'%Y-%m-%d') &lt;= #{startTime}
     ) tbl
     INNER JOIN hrfi_balancewarning_config bc on bc.supplierid = #{id}
     <if test="samelist != null" >
