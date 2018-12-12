@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.json.JSON;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IBalanceWarningService;
@@ -53,6 +54,30 @@ public class BalanceWarningController extends BaseController
     public String home()
     {
         return  prefix+"/balancewarning";
+    }
+    //    public String home()
+//    {
+//        return  prefix+"/setstore";
+//    }
+
+    @PostMapping("/test")
+    @ResponseBody
+    public List<User> GetUsers()
+    {
+        List<User> users = new ArrayList<>();
+        users.add(new User("1","张三","12","19920809","FUCK1","x"));
+        users.add(new User("2","李四","13","19920810","FUCK2","x"));
+        users.add(new User("3","王五","14","19920811","FUCK3","x"));
+
+        return users;
+    }
+    @PostMapping("/Edit")
+    @ResponseBody
+    public Result Edit(User user)
+    {
+        //反序列化之后更新
+
+        return Result.success();
     }
 
     @PostMapping("/list")

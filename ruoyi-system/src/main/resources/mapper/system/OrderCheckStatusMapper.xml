@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.OrderCheckStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.OrderCheckStatus" >
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_legalman" property="orderLegalman" jdbcType="INTEGER" />
+    <result column="invoice_legalman" property="invoiceLegalman" jdbcType="INTEGER" />
+    <result column="final_amount" property="finalAmount" jdbcType="DECIMAL" />
+    <result column="store_id" property="storeId" jdbcType="BIGINT" />
+    <result column="createtime" property="createtime" jdbcType="INTEGER" />
+    <result column="payed" property="payed" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="checkingstatus" property="checkingstatus" jdbcType="INTEGER" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="cancel_flag" property="cancelFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, order_legalman, invoice_legalman, final_amount, store_id, createtime, payed, 
+    status, checkingstatus, created_time, update_time, cancel_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from hrfi_openticket
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from hrfi_openticket
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
+    insert into hrfi_openticket (order_id, order_legalman, invoice_legalman, 
+      final_amount, store_id, createtime, 
+      payed, status, checkingstatus, 
+      created_time, update_time, cancel_flag
+      )
+    values (#{orderId,jdbcType=BIGINT}, #{orderLegalman,jdbcType=INTEGER}, #{invoiceLegalman,jdbcType=INTEGER}, 
+      #{finalAmount,jdbcType=DECIMAL}, #{storeId,jdbcType=BIGINT}, #{createtime,jdbcType=INTEGER}, 
+      #{payed,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{checkingstatus,jdbcType=INTEGER}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
+    insert into hrfi_openticket
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderLegalman != null" >
+        order_legalman,
+      </if>
+      <if test="invoiceLegalman != null" >
+        invoice_legalman,
+      </if>
+      <if test="finalAmount != null" >
+        final_amount,
+      </if>
+      <if test="storeId != null" >
+        store_id,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="payed != null" >
+        payed,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="checkingstatus != null" >
+        checkingstatus,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderLegalman != null" >
+        #{orderLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLegalman != null" >
+        #{invoiceLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="finalAmount != null" >
+        #{finalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="storeId != null" >
+        #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="payed != null" >
+        #{payed,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="checkingstatus != null" >
+        #{checkingstatus,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
+    update hrfi_openticket
+    <set >
+      <if test="orderLegalman != null" >
+        order_legalman = #{orderLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLegalman != null" >
+        invoice_legalman = #{invoiceLegalman,jdbcType=INTEGER},
+      </if>
+      <if test="finalAmount != null" >
+        final_amount = #{finalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="storeId != null" >
+        store_id = #{storeId,jdbcType=BIGINT},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="payed != null" >
+        payed = #{payed,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="checkingstatus != null" >
+        checkingstatus = #{checkingstatus,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag = #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
+    update hrfi_openticket
+    set order_legalman = #{orderLegalman,jdbcType=INTEGER},
+      invoice_legalman = #{invoiceLegalman,jdbcType=INTEGER},
+      final_amount = #{finalAmount,jdbcType=DECIMAL},
+      store_id = #{storeId,jdbcType=BIGINT},
+      createtime = #{createtime,jdbcType=INTEGER},
+      payed = #{payed,jdbcType=DECIMAL},
+      status = #{status,jdbcType=CHAR},
+      checkingstatus = #{checkingstatus,jdbcType=INTEGER},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      cancel_flag = #{cancelFlag,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>

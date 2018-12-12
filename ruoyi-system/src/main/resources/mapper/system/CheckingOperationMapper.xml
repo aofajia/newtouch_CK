@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.CheckingOperationMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.CheckingOperation" >
+    <id column="mainid" property="mainid" jdbcType="VARCHAR" />
+    <result column="checkingdate" property="checkingdate" jdbcType="VARCHAR" />
+    <result column="checkingtype" property="checkingtype" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="cancel_flag" property="cancelFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mainid, checkingdate, checkingtype, created_time, update_time, cancel_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hrfi_checkingoperation_log
+    where mainid = #{mainid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from hrfi_checkingoperation_log
+    where mainid = #{mainid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ruoyi.system.domain.CheckingOperation" >
+    insert into hrfi_checkingoperation_log (mainid, checkingdate, checkingtype, 
+      created_time, update_time, cancel_flag
+      )
+    values (#{mainid,jdbcType=VARCHAR}, #{checkingdate,jdbcType=VARCHAR}, #{checkingtype,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.CheckingOperation" >
+    insert into hrfi_checkingoperation_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mainid != null" >
+        mainid,
+      </if>
+      <if test="checkingdate != null" >
+        checkingdate,
+      </if>
+      <if test="checkingtype != null" >
+        checkingtype,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mainid != null" >
+        #{mainid,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingdate != null" >
+        #{checkingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingtype != null" >
+        #{checkingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.CheckingOperation" >
+    update hrfi_checkingoperation_log
+    <set >
+      <if test="checkingdate != null" >
+        checkingdate = #{checkingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="checkingtype != null" >
+        checkingtype = #{checkingtype,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cancelFlag != null" >
+        cancel_flag = #{cancelFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where mainid = #{mainid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.CheckingOperation" >
+    update hrfi_checkingoperation_log
+    set checkingdate = #{checkingdate,jdbcType=VARCHAR},
+      checkingtype = #{checkingtype,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      cancel_flag = #{cancelFlag,jdbcType=INTEGER}
+    where mainid = #{mainid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByStartTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+      from hrfi_checkingoperation_log col
+      where col.checkingdate = #{startTime}
+      ORDER BY col.created_time DESC
+  </select>
+</mapper>

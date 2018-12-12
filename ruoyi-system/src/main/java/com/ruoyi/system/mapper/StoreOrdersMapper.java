@@ -3,13 +3,13 @@ package com.ruoyi.system.mapper;
 import com.ruoyi.system.domain.StoreOrders;
 
 public interface StoreOrdersMapper {
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(String orderid);
 
     int insert(StoreOrders record);
 
     int insertSelective(StoreOrders record);
 
-    StoreOrders selectByPrimaryKey(String id);
+    StoreOrders selectByPrimaryKey(String orderid);
 
     int updateByPrimaryKeySelective(StoreOrders record);
 

@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.config.Global;
-import com.ruoyi.common.utils.StringUtils;
 
 /**
  * Excel相关处理
@@ -479,5 +478,60 @@ public class ExcelUtil<T>
             desc.getParentFile().mkdirs();
         }
         return downloadPath;
+    }
+
+
+    /**
+     * 导出Excel
+     * @param sheetName sheet名称
+     * @param title 标题
+     * @param
+     * @param wb HSSFWorkbook对象
+     * @return
+     */
+    public static HSSFWorkbook getHSSFWorkbook(String sheetName,String []title, HSSFWorkbook wb){
+
+        // 第一步，创建一个HSSFWorkbook，对应一个Excel文件
+        if(wb == null){
+            wb = new HSSFWorkbook();
+        }
+
+        // 第二步，在workbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet(sheetName);
+
+        //设置行高，行宽
+        sheet.setColumnWidth(0, 150*30);
+        sheet.setColumnWidth(1, 80*30);
+        sheet.setColumnWidth(2, 150*30);
+        sheet.setColumnWidth(3, 150*30);
+        sheet.setColumnWidth(4, 80*30);
+        sheet.setColumnWidth(5, 80*30);
+        sheet.setColumnWidth(6, 80*30);
+        sheet.setColumnWidth(7, 80*30);
+
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制
+        HSSFRow row = sheet.createRow(0);
+
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        //声明列对象
+        HSSFCell cell = null;
+
+        //创建标题
+        for(int i=0;i<title.length;i++){
+            cell = row.createCell(i);
+            cell.setCellValue(title[i]);
+            cell.setCellStyle(style);
+        }
+
+        //创建内容
+        //for(int i=0;i<values.length;i++){
+        //    row = sheet.createRow(i + 1);
+        //    for(int j=0;j<values[i].length;j++){
+        //        //将内容按顺序赋给对应的列对象
+        //        row.createCell(j).setCellValue(values[i][j]);
+        //    }
+        //}
+        return wb;
     }
 }

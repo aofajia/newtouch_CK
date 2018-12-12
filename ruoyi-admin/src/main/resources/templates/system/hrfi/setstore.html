@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header">
+	<link href="~/Content/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+
+	<script src="~/Content/bootstrap3-editable/js/bootstrap-editable.js"></script>
+	<script src="~/Content/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+</head>
+<body class="gray-bg">
+
+<div class="container-div">
+	<div class="row">
+
+		<div class="col-sm-12 select-table table-striped">
+			<table id="tb_user" data-mobile-responsive="true"></table>
+		</div>
+
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+
+    $(function () {
+        $("#tb_user").bootstrapTable({
+            toolbar: "#toolbar",
+            idField: "Id",
+            pagination: true,
+            showRefresh: true,
+            search: true,
+            method: 'post',
+            clickToSelect: true,
+            queryParams: function (param) {
+                return {};
+            },
+            url: "/fi/balancewarning/test",
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '主键',
+                    visible: false
+                },{
+                field: "username",
+                title: "用户名",
+                    formatter: function (value, row, index) {
+                        return "<a href=\"#\" name=\"username\" data-type=\"text\" data-pk=\""+row.Id+"\" data-title=\"用户名\">" + value + "</a>";
+                    }
+            }, {
+                field: "age",
+                title: "年龄"
+            }, {
+                field: "birthday",
+                title: "生日"
+            },
+                {
+                    field: "deptname",
+                    title: "部门"
+                }, {
+                    field: "hodd",
+                    title: "爱好"
+                }],
+            onClickRow: function (row, $element) {
+                curRow = row;
+            },
+            onLoadSuccess: function (aa, bb, cc) {
+                $("#tb_user a").editable({
+                    url: function (params) {
+                        var sName = $(this).attr("name");
+                        curRow[sName] = params.value;
+                        $.ajax({
+                            type: 'POST',
+                            url: "/Editable/Edit",
+                            data: curRow,
+                            dataType: 'JSON',
+                            success: function (data, textStatus, jqXHR) {
+                                alert('保存成功！');
+                            },
+                            error: function () { alert("error");}
+                        });
+                    },
+                    type: 'text'
+                });
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

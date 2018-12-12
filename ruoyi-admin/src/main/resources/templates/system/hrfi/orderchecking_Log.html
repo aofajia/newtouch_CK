@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="container-div">
+<div class="row">
+<div class="col-sm-12 search-collapse">
+    <form class="form-horizontal m" id="form-balancewarning-recharge" th:object="${recharge}">
+        <input id="id" name="id" type="hidden" th:field="*{id}"/>
+        <input id="supplier" name="supplier" type="hidden" th:field="*{supplierid}"/>
+        <input id="configname" name="configname" type="hidden" th:field="*{configname}"/>
+        <li>
+            <label>所属法人体：</label>
+            <select id="companyid" name="companyid" class="{required:true}">
+                <option value="">请选择....</option>
+            </select>
+            <label>充值金额：</label>
+            <input id="rechargeMoney" type="text" style="display:inline;" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)" title="提示: 请输入充值金额" placeholder="提示: 请输入充值金额">
+            <button class="btn btn-primary btn-rounded btn-sm" id="recharge">充值</button>
+        </li>
+        <li>
+            <label>供应商名称：</label>
+            <select id="supplierid" name="supplierid" style="width:210px;">
+                <option value="">请选择....</option>
+            </select>
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+        </li>
+    </form>
+</div>
+    <div class="col-sm-12 select-table table-striped">
+        <table id="bootstrap-table" data-mobile-responsive="true"></table>
+    </div>
+</div>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+
+    var prefix = ctx + "fi/orderchecking";
+    var options = {
+        url: prefix + "/getcheckinglog",
+        method: 'post',
+        // sortName: "configtype",
+        modalName: "对账记录记录",
+        showFooter:true,
+        queryParams: queryParams, //参数
+        search: false,
+        showExport: false,
+        columns: [
+        {
+            checkbox: false
+        },
+        {
+            field: 'id',
+            title: '主键',
+            visible: false
+        },
+        {
+            field: 'checkingdate',
+            title: '对账截至日期'
+        },
+        {
+            field: 'checkingstatus',
+            title: '对账标志位'
+        },
+        {
+            field: 'supplierid',
+            title: '供应商ID'
+        },
+        {
+            field: 'suppliername',
+            title: '供应商名称'
+        },
+        {
+            title: '开票',
+            align: 'center',
+            formatter: function(value, row, index) {
+                var actions = [];
+                // actions.push('<a class="btn btn-success btn-xs" href="#" onclick="editOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\')"><i class="fa fa-edit"></i>编辑</a> ');
+                // actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="rechargeOpen(\'' + row.id + '\'+\',\'+\''+row.configtype +'\'+\',\'+\''+row.paymethod+'\')"><i class="fa fa-edit"></i>充值</a> ');
+                // actions.push('<a class="btn btn-danger btn-xs " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                // return actions.join('');
+            }
+        }
+        ]
+    };
+    $.table.init(options);
+
+    function queryParams(params)
+    {  //配置参数
+        var temp =
+        {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            supplierid: $('#supplierid option:selected').val(),
+            companyid: $('#companyid option:selected').val()
+        };
+        return temp;
+    }
+</script>
+</body>
+</html>
