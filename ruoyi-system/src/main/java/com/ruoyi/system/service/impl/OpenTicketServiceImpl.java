@@ -7,8 +7,10 @@ import com.ruoyi.common.utils.ReadExcel;
 import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
+import com.ruoyi.system.domain.Welfare;
 import com.ruoyi.system.mapper.EmployeeMapper;
 import com.ruoyi.system.mapper.OpenTicketMapper;
+import com.ruoyi.system.mapper.WelfareMapper;
 import com.ruoyi.system.service.OpenTicketService;
 import com.ruoyi.system.utils.NumberArithmeticUtils;
 import org.slf4j.Logger;
@@ -52,6 +54,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private OpenTicketMapper openTicketMapper;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private WelfareMapper welfareMapper;
 
     public static void main(String[] args) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
@@ -343,6 +347,7 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         }
     }
 
+    @Transactional
     @Override
     public AjaxResult exportData(String address) {
         try {
@@ -360,12 +365,22 @@ public class OpenTicketServiceImpl implements OpenTicketService {
             //获得Excel表格的内容
 
             //这里由于xls合并了单元格需要对索引特殊处理
+            Welfare welfare = null;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             for (int i = 1; i <= map.size() - 1; i++) {
                 String s = map.get(i);
                 String[] sData = s.split("-");
                 //获取每个单元格的数据
                 if (sData[0].indexOf(".") >= 0){
-                    System.out.println(sData[0].substring(0,sData[0].length()-2));
+                    welfare = new Welfare();
+                    welfare.setId(sData[0].substring(0,sData[0].length()-2));
+                    welfare.setName(sData[1]);
+                    welfare.setDate(df.format(new Date()));
+                    welfare.setCompany(sData[2]);
+                    welfare.setDept(sData[3]);
+                    welfare.setWelfare(sData[4]);
+                    welfare.setUuid(welfareMapper.uuid());
+                    welfareMapper.insertSelective(welfare);
                 }
             }
 
