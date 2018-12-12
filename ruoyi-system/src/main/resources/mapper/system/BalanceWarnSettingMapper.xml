@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.BalanceWarnSettingMapper">
+    <resultMap id="SdbBusinessMap" type="com.ruoyi.system.domain.SdbBusinessStoremanger">
+        <id column="store_id" property="storeId" javaType="LONG"></id>
+        <result column="shop_name" property="shopName" javaType="VARCHAR"></result>
+        <result column="account_id" property="accountId" javaType="VARCHAR"></result>
+        <result column="store_idcardname" property="storeIdcardname" javaType="VARCHAR"></result>
+        <result column="store_idcard" property="storeIdcard" javaType="VARCHAR"></result>
+        <result column="store_name" property="storeName" javaType="VARCHAR"></result>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        storeId,shopName,accountId,storeIdcardname,storeIdcard,storeName
+    </sql>
+    <select id="getDatas" resultMap="SdbBusinessMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from sdb_business_storemanger
+        group by shop_name
+        --where id=#{store_id,jdbcType=LONG}
+    </select>
+
+
+</mapper>
