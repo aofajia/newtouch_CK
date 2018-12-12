@@ -18,6 +18,7 @@
     <result column="startdate" property="startdate" jdbcType="VARCHAR" />
     <result column="enddate" property="enddate" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     logid, id, configtype, configname, supplierid, paymethod, warningmoney, monthlymoney, 
@@ -40,13 +41,13 @@
       warningmoney, monthlymoney, storeaccount, 
       invoicetype, contacts, email, 
       storebalanceurl, startdate, enddate, 
-      createtime)
+      createtime,status)
     values (#{logid,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{configtype,jdbcType=VARCHAR}, 
       #{configname,jdbcType=VARCHAR}, #{supplierid,jdbcType=VARCHAR}, #{paymethod,jdbcType=VARCHAR}, 
       #{warningmoney,jdbcType=DECIMAL}, #{monthlymoney,jdbcType=DECIMAL}, #{storeaccount,jdbcType=VARCHAR}, 
       #{invoicetype,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{storebalanceurl,jdbcType=VARCHAR}, #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, 
-      #{createtime,jdbcType=VARCHAR})
+      #{createtime,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.BWConfigLOG" >
     insert into hrfi_balancewarning_config_log

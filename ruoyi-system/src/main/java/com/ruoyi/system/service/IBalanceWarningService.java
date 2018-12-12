@@ -105,4 +105,27 @@ public interface IBalanceWarningService
      * @return 充值记录信息
      */
     public List<RechargeLog> getRechargeList(RechargeLog rechargeLogMap);
+
+    /**
+     * 查询所有供应商信息
+     * @return
+     */
+    public List<SdbBusinessStoremanger> getSupplierInfo();
+
+    /**
+     * 保存所有供应商数据
+     */
+    public void insertSupplierInfo(BalanceWarningConfig config);
+
+    /**
+     * 查询预警余额配置表中是否有数据
+     * @return
+     */
+    public int selectSupplierInfo();
+
+    /**
+     * 跟新商城供应商和负责人状态
+     * @param bwConfig
+     */
+    int updateBWByStatus(BWConfig bwConfig);
 }

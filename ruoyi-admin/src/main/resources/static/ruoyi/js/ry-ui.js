@@ -63,8 +63,8 @@
                 if (res.code == 0) {
                     return { rows: res.rows, total: res.total };
                 } else {
-                	$.modal.alertWarning(res.msg);
-                	return { rows: [], total: 0 };
+                    $.modal.alertWarning(res.msg);
+                    return { rows: [], total: 0 };
                 }
             },
             // 搜索

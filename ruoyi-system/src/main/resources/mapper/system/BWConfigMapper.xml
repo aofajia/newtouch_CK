@@ -16,10 +16,11 @@
     <result column="storebalanceurl" property="storebalanceurl" jdbcType="VARCHAR" />
     <result column="startdate" property="startdate" jdbcType="VARCHAR" />
     <result column="enddate" property="enddate" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, configtype, configname, supplierid, paymethod, warningmoney, monthlymoney, storeaccount, 
-    invoicetype, contacts, email, storebalanceurl, startdate, enddate
+    invoicetype, contacts, email, storebalanceurl, startdate, enddate,status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -36,12 +37,12 @@
       supplierid, paymethod, warningmoney, 
       monthlymoney, storeaccount, invoicetype, 
       contacts, email, storebalanceurl, 
-      startdate, enddate)
+      startdate, enddate,status)
     values (#{id,jdbcType=VARCHAR}, #{configtype,jdbcType=VARCHAR}, #{configname,jdbcType=VARCHAR}, 
       #{supplierid,jdbcType=VARCHAR}, #{paymethod,jdbcType=VARCHAR}, #{warningmoney,jdbcType=DECIMAL}, 
       #{monthlymoney,jdbcType=DECIMAL}, #{storeaccount,jdbcType=VARCHAR}, #{invoicetype,jdbcType=VARCHAR}, 
       #{contacts,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{storebalanceurl,jdbcType=VARCHAR}, 
-      #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR})
+      #{startdate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.BWConfig" >
     insert into hrfi_balancewarning_config
@@ -176,6 +177,9 @@
       <if test="enddate != null" >
         enddate = #{enddate,jdbcType=VARCHAR},
       </if>
+      <if test="status !=null">
+        status = #{status,jdbcType=VARCHAR}
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -193,7 +197,8 @@
       email = #{email,jdbcType=VARCHAR},
       storebalanceurl = #{storebalanceurl,jdbcType=VARCHAR},
       startdate = #{startdate,jdbcType=VARCHAR},
-      enddate = #{enddate,jdbcType=VARCHAR}
+      enddate = #{enddate,jdbcType=VARCHAR},
+      status=#{status,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="checkConfigName" resultType="java.util.Map" parameterType="java.lang.String">
@@ -221,4 +226,14 @@
     INNER JOIN sdb_business_storemanger bs ON bs.store_id = bc.supplierid
     WHERE bc.configtype = '0001'
   </select>
+
+  <update id="updateStatus" parameterType="com.ruoyi.system.domain.BWConfig">
+    update hrfi_balancewarning_config
+    <set>
+      <if test="status!=null ">
+        status=#{status,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
 </mapper>

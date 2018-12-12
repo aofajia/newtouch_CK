@@ -1,5 +1,6 @@
 package com.ruoyi.system.mapper;
 
+import com.ruoyi.system.domain.BalanceWarningConfig;
 import com.ruoyi.system.domain.SdbBusinessStoremanger;
 
 import java.util.List;
@@ -17,6 +18,24 @@ public interface BalanceWarnSettingMapper {
      * 得到所有的供应商数据
      * @return
      */
-    List<SdbBusinessStoremanger> getDatas();
+    List<SdbBusinessStoremanger> getSupplierInfo();
+
+    /**
+     * 保存所有供应商数据
+     */
+    void insertSupplierInfo(BalanceWarningConfig config);
+
+    /**
+     * 查询预警余额配置表中是否有数据
+     * @return
+     */
+    int selectSupplierInfo();
+
+    /**
+     * 跟新status
+     * @param id
+     * @return
+     */
+    int updateBWByStatus(String id,String status);
 
 }

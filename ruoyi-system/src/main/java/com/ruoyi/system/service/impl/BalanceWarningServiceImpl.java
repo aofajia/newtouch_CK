@@ -24,6 +24,8 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     private CompanyMapper companyMapper;
     @Autowired
     private RechargeLogMapper rechargeLogMapper;
+    @Autowired
+    private BalanceWarnSettingMapper balanceWarnSettingMapper;
 
     @Override
     public List<BWConfigtype> selectConfigTypeAll()
@@ -49,6 +51,7 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     {
         configMap.setId(UUID.randomUUID().toString().toUpperCase());
         configMap.setConfigtype("0001");
+        configMap.setStatus("1");
         String configName = configMap.getConfigname();
         Map map = bwConfigMapper.checkConfigName(configName);
         String count = map.get("COUNT(0)").toString();
@@ -78,6 +81,7 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     {
         configMap.setId(UUID.randomUUID().toString().toUpperCase());
         configMap.setConfigtype("0002");
+        configMap.setStatus("1");
         String configName = configMap.getConfigname();
         Map map = bwConfigMapper.checkConfigName(configName);
         String count = map.get("COUNT(0)").toString();
@@ -215,5 +219,40 @@ public class BalanceWarningServiceImpl implements IBalanceWarningService
     {
         List<RechargeLog> rechargeLogs = rechargeLogMapper.selectRoleList(rechargeLogMap);
         return rechargeLogs;
+    }
+
+    @Override
+    public List<SdbBusinessStoremanger> getSupplierInfo() {
+        List<SdbBusinessStoremanger> list=balanceWarnSettingMapper.getSupplierInfo();
+        return list;
+    }
+
+    @Override
+    public void insertSupplierInfo(BalanceWarningConfig config) {
+        balanceWarnSettingMapper.insertSupplierInfo(config);
+    }
+
+
+    @Override
+    public int selectSupplierInfo() {
+        int count=balanceWarnSettingMapper.selectSupplierInfo();
+        return count;
+    }
+
+    @Override
+    public int updateBWByStatus(BWConfig bwConfig){
+
+        int i=bwConfigMapper.updateByPrimaryKeySelective(bwConfig);
+        /*insert into bwconfiglog*/
+        BWConfig bwConfigNew=bwConfigMapper.selectByPrimaryKey(bwConfig.getId());
+        BWConfigLOG bwConfigLOG=new BWConfigLOG(bwConfigNew);
+        bwConfigLOG.setLogid(UUID.randomUUID().toString().toUpperCase());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date nowdate = new Date();
+        String createtime = sdf.format(nowdate);
+        bwConfigLOG.setCreatetime(createtime);
+        bwConfigLOGMapper.insert(bwConfigLOG);
+
+        return i;
     }
 }

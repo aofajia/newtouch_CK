@@ -3,6 +3,7 @@ package com.ruoyi.system.domain;
 import java.math.BigDecimal;
 
 public class BWConfig {
+
     private String id;
 
     private String configtype;
@@ -30,6 +31,8 @@ public class BWConfig {
     private String startdate;
 
     private String enddate;
+
+    private String status;
 
     public String getId() {
         return id;
@@ -142,4 +145,10 @@ public class BWConfig {
     public void setEnddate(String enddate) {
         this.enddate = enddate == null ? null : enddate.trim();
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {  this.status = status==null?null:status.trim(); }
 }

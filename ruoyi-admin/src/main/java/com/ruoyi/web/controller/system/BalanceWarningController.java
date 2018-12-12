@@ -33,14 +33,13 @@ import static com.ruoyi.web.controller.tool.ResultCode.SPECIFIED_STOREMONTHLYMON
 
 /**
  * 余额预警
- * 
+ *
  * @author
  */
 @Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequestMapping("/fi/balancewarning")
-public class BalanceWarningController extends BaseController
-{
+public class BalanceWarningController extends BaseController {
 
     private String prefix = "system/hrfi";
 
@@ -48,12 +47,17 @@ public class BalanceWarningController extends BaseController
     private IBalanceWarningService balanceWarningService;
 
     //纪录日志
-//    Logger logger = LoggerFactory.getLogger(BalanceWarningController.class);
+    Logger logger = LoggerFactory.getLogger(BalanceWarningController.class);
 
     @RequestMapping("/home")
-    public String home()
-    {
-        return  prefix+"/balancewarning";
+    public String home() {
+        logger.info("初始化配置余额预警！");
+        int count = balanceWarningService.selectSupplierInfo();
+        if (0 == count) {
+            return prefix + "/balancewarning_setting";
+        } else {
+            return prefix + "/balancewarning";
+        }
     }
     //    public String home()
 //    {
@@ -82,8 +86,7 @@ public class BalanceWarningController extends BaseController
 
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list()
-    {
+    public TableDataInfo list() {
         startPage();
         List<BWConfig> bwConfigs = balanceWarningService.selectConfigAll();
         return getDataTable(bwConfigs);
@@ -91,16 +94,14 @@ public class BalanceWarningController extends BaseController
 
     @PostMapping("/config_type")
     @ResponseBody
-    public List<BWConfigtype> configtypeList()
-    {
+    public List<BWConfigtype> configtypeList() {
         startPage();
         List<BWConfigtype> configtypes = balanceWarningService.selectConfigTypeAll();
         return configtypes;
     }
 
     @GetMapping("/addstore")
-    public String addstore()
-    {
+    public String addstore() {
         return prefix + "/balancewarning_add_store";
     }
 
@@ -111,8 +112,7 @@ public class BalanceWarningController extends BaseController
     @PostMapping("/addstoreconfig")
     @Transactional(rollbackFor = Exception.class)
     @ResponseBody
-    public AjaxResult addStoreConfig(BWConfig configMap)
-    {
+    public AjaxResult addStoreConfig(BWConfig configMap) {
         int i = balanceWarningService.addStoreConfig(configMap);
         return toAjax(i);
     }
@@ -124,16 +124,14 @@ public class BalanceWarningController extends BaseController
     @PostMapping("/addmanageconfig")
     @Transactional(rollbackFor = Exception.class)
     @ResponseBody
-    public AjaxResult addMangeConfig(BWConfig configMap)
-    {
+    public AjaxResult addMangeConfig(BWConfig configMap) {
         int i = balanceWarningService.addMangeConfig(configMap);
         return toAjax(i);
     }
 
     @PostMapping("/checkstorename")
     @ResponseBody
-    public String checkStoreName(String configname)
-    {
+    public String checkStoreName(String configname) {
         startPage();
         //1为已存在  0为不存在
         String intcheck = balanceWarningService.checkStoreName(configname);
@@ -141,14 +139,12 @@ public class BalanceWarningController extends BaseController
     }
 
     @GetMapping("/addmanage")
-    public String addmanage()
-    {
+    public String addmanage() {
         return prefix + "/balancewarning_add_manage";
     }
 
     @GetMapping("/editstore/{roleId}")
-    public String editStore(@PathVariable("roleId") String roleId, ModelMap mmap)
-    {
+    public String editStore(@PathVariable("roleId") String roleId, ModelMap mmap) {
         BWConfig bwConfig = balanceWarningService.selectStoreConfigById(roleId);
         mmap.put("storeConfig", bwConfig);
         return prefix + "/balancewarning_edit_store";
@@ -156,8 +152,7 @@ public class BalanceWarningController extends BaseController
 
     @PostMapping("/getnotextinfo")
     @ResponseBody
-    public BWConfig getNoTextInfo(BWConfig configMap)
-    {
+    public BWConfig getNoTextInfo(BWConfig configMap) {
         String id = configMap.getId();
         BWConfig bwConfig = balanceWarningService.selectStoreConfigById(id);
         return bwConfig;
@@ -170,15 +165,13 @@ public class BalanceWarningController extends BaseController
     @PostMapping("/editstoreconfig")
     @Transactional(rollbackFor = Exception.class)
     @ResponseBody
-    public AjaxResult editStoreConfig(BWConfig configMap)
-    {
+    public AjaxResult editStoreConfig(BWConfig configMap) {
         int i = balanceWarningService.updateStoreConfig(configMap);
         return toAjax(i);
     }
 
     @GetMapping("/editmanage/{roleId}")
-    public String editManage(@PathVariable("roleId") String roleId, ModelMap mmap)
-    {
+    public String editManage(@PathVariable("roleId") String roleId, ModelMap mmap) {
         BWConfig bwConfig = balanceWarningService.selectManageConfigById(roleId);
         mmap.put("manageConfig", bwConfig);
         return prefix + "/balancewarning_edit_manage";
@@ -191,30 +184,24 @@ public class BalanceWarningController extends BaseController
     @PostMapping("/editmanageconfig")
     @Transactional(rollbackFor = Exception.class)
     @ResponseBody
-    public AjaxResult editMangeConfig(BWConfig configMap)
-    {
+    public AjaxResult editMangeConfig(BWConfig configMap) {
         int i = balanceWarningService.updateManageConfig(configMap);
         return toAjax(i);
     }
 
     @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
-        try
-        {
+    public AjaxResult remove(String ids) {
+        try {
             int i = balanceWarningService.deleteConfigByIds(ids);
             return toAjax(i);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return error(e.getMessage());
         }
     }
 
     @GetMapping("/recharge/{roleId}")
-    public String recharge(@PathVariable("roleId") String roleId, ModelMap mmap)
-    {
+    public String recharge(@PathVariable("roleId") String roleId, ModelMap mmap) {
         BWConfig bwConfig = balanceWarningService.selectManageConfigById(roleId);
         mmap.put("recharge", bwConfig);
         return prefix + "/balancewarning_recharge.html";
@@ -222,8 +209,7 @@ public class BalanceWarningController extends BaseController
 
     @PostMapping("/companylist")
     @ResponseBody
-    public List<Company> companyList()
-    {
+    public List<Company> companyList() {
         startPage();
         List<Company> companies = balanceWarningService.companyList();
         return companies;
@@ -236,14 +222,11 @@ public class BalanceWarningController extends BaseController
     @PostMapping("/saverecharge")
     @Transactional(rollbackFor = Exception.class)
     @ResponseBody
-    public AjaxResult saveRecharge(RechargeLog rechargeLogMap)
-    {
-        if("".equals(rechargeLogMap.getId()))
-        {
+    public AjaxResult saveRecharge(RechargeLog rechargeLogMap) {
+        if ("".equals(rechargeLogMap.getId())) {
             rechargeLogMap.setId(UUID.randomUUID().toString().toUpperCase());
         }
-        if(rechargeLogMap.getCommitdate() == null)
-        {
+        if (rechargeLogMap.getCommitdate() == null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date nowdate = new Date();
             String commitdate = sdf.format(nowdate);
@@ -255,10 +238,61 @@ public class BalanceWarningController extends BaseController
 
     @PostMapping("/rechargelist")
     @ResponseBody
-    public TableDataInfo rechargelist(RechargeLog rechargeLogMap)
-    {
+    public TableDataInfo rechargelist(RechargeLog rechargeLogMap) {
         startPage();
         List<RechargeLog> list = balanceWarningService.getRechargeList(rechargeLogMap);
         return getDataTable(list);
     }
+
+    @RequestMapping("/getSupplierInfo")
+    @ResponseBody
+    public List<SdbBusinessStoremanger> getSupplierInfo() {
+        List<SdbBusinessStoremanger> list = balanceWarningService.getSupplierInfo();
+        return list;
+    }
+
+    /**
+     * 批量新增供应商
+     * @param config
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @RequestMapping("/saveSupplier")
+    public String insertSupplierIinfo(BWConfig config) {
+        logger.info("save supplierInfo");
+        int i = balanceWarningService.addStoreConfig(config);
+        logger.info("success！");
+        return prefix + "/balancewarning";
+    }
+
+    /**
+     * 查询供应商条数
+     * @return
+     */
+    public int selectSupplierInfo() {
+        int count = balanceWarningService.selectSupplierInfo();
+        return count;
+    }
+
+    @PostMapping("/suspended")
+    @Transactional(rollbackFor = Exception.class)
+    @ResponseBody
+    public AjaxResult updateBalanceByStatus(String id,String status){
+        int i=0;
+        BWConfig bwConfig=new BWConfig();
+        try {
+            bwConfig.setId(id);
+            bwConfig.setStatus(status);
+            i = balanceWarningService.updateBWByStatus(bwConfig);
+        } catch (Exception e) {
+            error(e.getMessage());
+        }
+        return toAjax(i);
+    }
+
+
+
+
+
+
 }

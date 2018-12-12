@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ruoyi.system.mapper.BalanceWarnSettingMapper">
-    <resultMap id="SdbBusinessMap" type="com.ruoyi.system.domain.SdbBusinessStoremanger">
-        <id column="store_id" property="storeId" javaType="LONG"></id>
-        <result column="shop_name" property="shopName" javaType="VARCHAR"></result>
-        <result column="account_id" property="accountId" javaType="VARCHAR"></result>
-        <result column="store_idcardname" property="storeIdcardname" javaType="VARCHAR"></result>
-        <result column="store_idcard" property="storeIdcard" javaType="VARCHAR"></result>
-        <result column="store_name" property="storeName" javaType="VARCHAR"></result>
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.SdbBusinessStoremanger">
+        <id column="store_id" property="storeId" jdbcType="BIGINT" />
+        <result column="shop_name" property="shopName" jdbcType="VARCHAR"/>
+        <result column="account_id" property="accountId" jdbcType="INTEGER"/>
+        <result column="store_idcardname" property="storeIdcardname" jdbcType="VARCHAR"/>
+        <result column="store_idcard" property="storeIdcard" jdbcType="VARCHAR"/>
+        <result column="store_name" property="storeName" jdbcType="VARCHAR"/>
     </resultMap>
 
+
     <sql id="Base_Column_List">
-        storeId,shopName,accountId,storeIdcardname,storeIdcard,storeName
+        store_id,shop_name,account_id,store_idcardname,store_idcard,store_name
     </sql>
-    <select id="getDatas" resultMap="SdbBusinessMap" >
+    <select id="getSupplierInfo" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List"/>
         from sdb_business_storemanger
         group by shop_name
-        --where id=#{store_id,jdbcType=LONG}
+
     </select>
+
+    <insert id="insertSupplierInfo" parameterType="com.ruoyi.system.domain.BalanceWarningConfig">
+        insert into hrfi_balancewarning_config(id,configtype,configname,supplierid,paymethod,
+            warningmoney,monthlymoney,storeaccount,invoicetype,contacts,email,storebalanceurl,
+            startdate,enddate
+        )
+        values(#{id,jdbcType=VARCHAR},#{configtype,jdbcType=VARCHAR},#{configname,jdbcType=VARCHAR},
+          #{supplierid,jdbcType=VARCHAR},#{paymethod,jdbcType=VARCHAR},#{warningmoney,jdbcType=DECIMAL},
+          #{monthlymoney,jdbcType=DECIMAL},#{storeaccount,jdbcType=VARCHAR},#{invoicetype,jdbcType=VARCHAR},
+          #{contacts,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{storebalanceurl,jdbcType=VARCHAR},
+          #{startdate,jdbcType=VARCHAR},#{enddate,jdbcType=VARCHAR}
+        )
+
+
+    </insert>
+
+    <select id="selectSupplierInfo" resultType="java.lang.Integer">
+        select count(*) from hrfi_balancewarning_config;
+    </select>
+
+    <update id="updateBWByStatus" parameterType="java.lang.String">
+        update  hrfi_balancewarning_config set status=#{status,jdbcType=VARCHAR}
+        where id=#{id,jdbcType=VARCHAR};
+    </update>
+
 
 
 </mapper>

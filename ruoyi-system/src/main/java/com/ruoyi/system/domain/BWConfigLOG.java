@@ -35,6 +35,8 @@ public class BWConfigLOG {
 
     private String createtime;
 
+    private String status;
+
     public String getLogid() {
         return logid;
     }
@@ -163,6 +165,14 @@ public class BWConfigLOG {
         this.createtime = createtime == null ? null : createtime.trim();
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status==null?null:status.trim();
+    }
+
     public BWConfigLOG(String id)
     {
         this.id = id;
@@ -183,5 +193,6 @@ public class BWConfigLOG {
         this.storebalanceurl = bwConfig.getStorebalanceurl();
         this.startdate = bwConfig.getStartdate();
         this.enddate = bwConfig.getEnddate();
+        this.status=bwConfig.getStatus();
     }
 }
