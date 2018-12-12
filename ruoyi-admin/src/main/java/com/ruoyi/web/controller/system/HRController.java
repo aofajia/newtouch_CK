@@ -7,11 +7,11 @@ import com.ruoyi.common.utils.ReadExcel;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
 import com.ruoyi.system.domain.OpenTicketParms;
 import com.ruoyi.system.service.OpenTicketService;
+import com.ruoyi.system.utils.NumberArithmeticUtils;
 import com.ruoyi.web.controller.tool.RedisUtils;
 import com.ruoyi.web.core.base.BaseController;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -26,9 +26,10 @@ import redis.clients.jedis.Jedis;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 
 
 /**
@@ -47,6 +48,16 @@ public class HRController extends BaseController {
     //跳转前缀
     private String prefix = "system/hrfi";
 
+
+    public static void main(String[] args) {
+        String test = "10001.0";
+        if (test.indexOf(".") >= 0){
+            System.out.println(test.substring(0,test.length()-2));
+        }
+
+    }
+
+
     /**
      * 跳转Hr首页
      */
@@ -63,7 +74,6 @@ public class HRController extends BaseController {
         return prefix + "/openticketflow";
     }
 
-
     /**
      * 跳转修改界面
      */
@@ -72,7 +82,6 @@ public class HRController extends BaseController {
         return prefix + "/editOrders";
     }
 
-
     /**
      * 跳转开票历史记录页面
      */
@@ -80,7 +89,6 @@ public class HRController extends BaseController {
     public String openTicketRecord() {
         return prefix + "/openticketrecord";
     }
-
 
     /**
      * 跳转到开卡界面
@@ -97,13 +105,13 @@ public class HRController extends BaseController {
      */
     @RequestMapping(value = "/export")
     @ResponseBody
-    public void export(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public AjaxResult export(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //excel标题
-        String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "饭贴", "期间", "福利", "工会费"};
+        String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费"};
         //excel文件名
-        String fileName = "福利信息汇总" + System.currentTimeMillis() + ".xls";
+        String fileName = "welfare" + System.currentTimeMillis() + ".xls";
         //sheet名
-        String sheetName = "福利信息汇总";
+        String sheetName = "welfare";
         //创建HSSFWorkbook
         HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, null);
         //响应到客户端
@@ -115,9 +123,10 @@ public class HRController extends BaseController {
             os.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return AjaxResult.error();
         }
+        return AjaxResult.success();
     }
-
 
     //发送响应流方法
     public void setResponseHeader(HttpServletResponse response, String fileName) {
@@ -137,7 +146,6 @@ public class HRController extends BaseController {
         }
     }
 
-
     /**
      * 开票界面数据
      */
@@ -148,7 +156,6 @@ public class HRController extends BaseController {
         List<OpenTicketInfoCollect> list = openTicketService.list(supplier, startDate, endDate);
         return getDataTable(list);
     }
-
 
     /**
      * 开票界面数据
@@ -188,7 +195,6 @@ public class HRController extends BaseController {
         return AjaxResult.success();
     }
 
-
     /**
      * 查询开票抬头
      */
@@ -198,7 +204,6 @@ public class HRController extends BaseController {
         List<OpenTicketInfoCollect> list = openTicketService.selectInvoice();
         return list;
     }
-
 
     /**
      * 数据同步
@@ -234,54 +239,27 @@ public class HRController extends BaseController {
         return AjaxResult.success();
     }
 
-
     @RequestMapping("/exportData")
     @ResponseBody
-    public AjaxResult exportData(@RequestParam(name = "address", required = false) String address) {
-        try {
-            String data = address.replaceAll("/", "//");
-            // 对读取Excel表格标题测试
-            InputStream is = new FileInputStream(address);
-            ReadExcel excelReader = new ReadExcel();
-            String[] title = excelReader.readExcelTitle(is);
-            System.out.println("获得Excel表格的标题:");
-            for (String s : title) {
-                System.out.print(s + " ");
-            }
-            // 对读取Excel表格内容测试
-            InputStream is2 = new FileInputStream(address);
-            Map<Integer, String> map = excelReader.readExcelContent(is2);
-            System.out.println("获得Excel表格的内容:");
-            //这里由于xls合并了单元格需要对索引特殊处理
-            for (int i = 1; i <= map.size() - 1; i++) {
-                System.out.println(map.get(i));
-                String s = map.get(i);
-                String[] sdata = s.split("-");
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("未找到指定路径的文件!");
-            e.printStackTrace();
-        }
-        return AjaxResult.success();
+    public AjaxResult exportData(@RequestParam(name = "address", required = false) String address) throws IOException {
+        return openTicketService.exportData(address);
     }
 
-
     /**
-     *  供应商开卡数据同步
+     * 供应商开卡数据同步
      */
     @RequestMapping("/openCardDataWith")
     @ResponseBody
-    public AjaxResult openCardDataWith(){
+    public AjaxResult openCardDataWith() {
         return openTicketService.getOpenCardInfo();
     }
 
-
     /**
-     *  供应商开卡数据显示
+     * 供应商开卡数据显示
      */
     @RequestMapping("/openCardDataList")
     @ResponseBody
-    public TableDataInfo openCardDataList(){
+    public TableDataInfo openCardDataList() {
         startPage();
         List<EmployeeExample> list = openTicketService.openCardDataList();
         return getDataTable(list);
@@ -289,19 +267,20 @@ public class HRController extends BaseController {
 
 
     /**
-     *  供应商开卡数据显示
+     * 供应商开卡数据显示
      */
     @RequestMapping("/openCardDataListById")
     @ResponseBody
-    public TableDataInfo openCardDataListById(@RequestParam("id")String id){
+    public TableDataInfo openCardDataListById(@RequestParam("id") String id) {
         startPage();
         List<EmployeeExample> list = openTicketService.openCardDataListById(id);
         return getDataTable(list);
     }
 
+    ;
 
     /**
-     * 员工开卡
+     * 饿了么员工开卡
      */
     @RequestMapping("/employeeOpenCard")
     @ResponseBody
@@ -310,21 +289,36 @@ public class HRController extends BaseController {
             if (!StringUtils.isEmpty(data)) {
                 JSONArray arrayList = JSONArray.parseArray(data);
                 //转换为目标对象list
-                List<Employee> list = JSONObject.parseArray(arrayList.toJSONString(), Employee.class);
-                openTicketService.openCard(list);
+                List<EmployeeExample> list = JSONObject.parseArray(arrayList.toJSONString(), EmployeeExample.class);
+                return openTicketService.openCard(list);
             }
         } catch (Exception e) {
             logger.debug("开卡失败！" + e.getMessage());
+            return AjaxResult.error();
         }
         return AjaxResult.success();
     }
 
-    public static void main(String[] args) {
-        String id = "430481199608204534";
-        System.out.println(id.substring(16,17));
-        Integer number = Integer.parseInt(id.substring(16,17));
-        String check = (number % 2 == 0) ? "这个数字是:偶数" : "这个数字是：奇数";
-        System.out.println(check);
+
+    /**
+     * 饿了么员工删除
+     */
+    @RequestMapping("/employeeDeleteCard")
+    @ResponseBody
+    public AjaxResult employeeDeleteCard(@RequestParam(name = "data", required = false) String data) {
+        try {
+            if (!StringUtils.isEmpty(data)) {
+                JSONArray arrayList = JSONArray.parseArray(data);
+                //转换为目标对象list
+                List<EmployeeExample> list = JSONObject.parseArray(arrayList.toJSONString(), EmployeeExample.class);
+                return openTicketService.deleteByELM(list);
+            }
+        } catch (Exception e) {
+            logger.debug("饿了么删除失败！" + e.getMessage());
+            return AjaxResult.error();
+        }
+        return AjaxResult.success();
     }
+
 
 }

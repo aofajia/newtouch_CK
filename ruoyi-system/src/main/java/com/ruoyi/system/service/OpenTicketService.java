@@ -52,13 +52,37 @@ public interface OpenTicketService {
 
 
     /**
-     *  开卡
+     *  饿了么开卡
      */
-    public AjaxResult openCard(List<Employee> list);
+    public AjaxResult openCard(List<EmployeeExample> list);
 
 
     /**
      *  开卡查询
      */
     public List<EmployeeExample> openCardDataListById(String id);
+
+
+    /**
+     *  饿了么删除
+     */
+    public AjaxResult deleteByELM(List<EmployeeExample> list);
+
+
+    /**
+     *  获取新员工定时任务
+     */
+    public AjaxResult getNewEmployeeTask();
+
+
+    /**
+     *  携程开卡
+     */
+    public AjaxResult openCardByXC(List<EmployeeExample> examples);
+
+
+    /**
+     *  导入数据
+     */
+    public AjaxResult exportData(String address);
 }

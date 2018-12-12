@@ -1,7 +1,8 @@
 package com.ruoyi.system.utils;
 
 
-import com.ruoyi.common.utils.Md5Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.ruoyi.system.domain.EmployeeExample;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -13,28 +14,30 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import com.google.common.base.Optional;
-import com.ruoyi.system.domain.Employee;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import sun.security.provider.MD5;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NumberArithmeticUtils {
 
 
     /**
      * BigDecimal的加法运算封装
-     * @author : shijing
-     * 2017年3月23日下午4:53:21
+     *
      * @param b1
      * @param bn
      * @return
+     * @author : shijing
+     * 2017年3月23日下午4:53:21
      */
     public static BigDecimal safeAdd(BigDecimal b1, BigDecimal... bn) {
         if (null == b1) {
@@ -50,12 +53,13 @@ public class NumberArithmeticUtils {
 
     /**
      * Integer加法运算的封装
+     *
+     * @param b1 第一个数
+     * @param bn 需要加的加法数组
+     * @return
      * @author : shijing
      * 2017年3月23日下午4:54:08
-     * @param b1   第一个数
-     * @param bn   需要加的加法数组
      * @注 ： Optional  是属于com.google.common.base.Optional<T> 下面的class
-     * @return
      */
     public static Integer safeAdd(Integer b1, Integer... bn) {
         if (null == b1) {
@@ -72,11 +76,12 @@ public class NumberArithmeticUtils {
 
     /**
      * 计算金额方法
-     * @author : shijing
-     * 2017年3月23日下午4:53:00
+     *
      * @param b1
      * @param bn
      * @return
+     * @author : shijing
+     * 2017年3月23日下午4:53:00
      */
     public static BigDecimal safeSubtract(BigDecimal b1, BigDecimal... bn) {
         return safeSubtract(true, b1, bn);
@@ -84,12 +89,13 @@ public class NumberArithmeticUtils {
 
     /**
      * BigDecimal的安全减法运算
+     *
+     * @param isZero 减法结果为负数时是否返回0，true是返回0（金额计算时使用），false是返回负数结果
+     * @param b1     被减数
+     * @param bn     需要减的减数数组
+     * @return
      * @author : shijing
      * 2017年3月23日下午4:50:45
-     * @param isZero  减法结果为负数时是否返回0，true是返回0（金额计算时使用），false是返回负数结果
-     * @param b1		   被减数
-     * @param bn        需要减的减数数组
-     * @return
      */
     public static BigDecimal safeSubtract(Boolean isZero, BigDecimal b1, BigDecimal... bn) {
         if (null == b1) {
@@ -106,11 +112,12 @@ public class NumberArithmeticUtils {
 
     /**
      * 整型的减法运算，小于0时返回0
-     * @author : shijing
-     * 2017年3月23日下午4:58:16
+     *
      * @param b1
      * @param bn
      * @return
+     * @author : shijing
+     * 2017年3月23日下午4:58:16
      */
     public static Integer safeSubtract(Integer b1, Integer... bn) {
         if (null == b1) {
@@ -127,25 +134,27 @@ public class NumberArithmeticUtils {
 
     /**
      * 金额除法计算，返回2位小数（具体的返回多少位大家自己看着改吧）
-     * @author : shijing
-     * 2017年3月23日下午5:02:17
+     *
      * @param b1
      * @param b2
      * @return
+     * @author : shijing
+     * 2017年3月23日下午5:02:17
      */
-    public static <T extends Number> BigDecimal safeDivide(T b1, T b2){
+    public static <T extends Number> BigDecimal safeDivide(T b1, T b2) {
         return safeDivide(b1, b2, BigDecimal.ZERO);
     }
 
     /**
      * BigDecimal的除法运算封装，如果除数或者被除数为0，返回默认值
      * 默认返回小数位后2位，用于金额计算
-     * @author : shijing
-     * 2017年3月23日下午4:59:29
+     *
      * @param b1
      * @param b2
      * @param defaultValue
      * @return
+     * @author : shijing
+     * 2017年3月23日下午4:59:29
      */
     public static <T extends Number> BigDecimal safeDivide(T b1, T b2, BigDecimal defaultValue) {
         if (null == b1 || null == b2) {
@@ -160,11 +169,12 @@ public class NumberArithmeticUtils {
 
     /**
      * BigDecimal的乘法运算封装
-     * @author : shijing
-     * 2017年3月23日下午5:01:57
+     *
      * @param b1
      * @param b2
      * @return
+     * @author : shijing
+     * 2017年3月23日下午5:01:57
      */
     public static <T extends Number> BigDecimal safeMultiply(T b1, T b2) {
         if (null == b1 || null == b2) {
@@ -186,7 +196,6 @@ public class NumberArithmeticUtils {
     }
 
 
-
     public static String sendPost(String url, Map<String, Object> params, String charset, String contentType, String requestBody) throws ClientProtocolException, IOException {
 
 
@@ -202,7 +211,7 @@ public class NumberArithmeticUtils {
             }
 
         }
-        String finalUrl=stringBuffer.toString();
+        String finalUrl = stringBuffer.toString();
         if (finalUrl.endsWith("&")) {
             finalUrl = finalUrl.substring(0, finalUrl.lastIndexOf("&"));
         }
@@ -231,53 +240,119 @@ public class NumberArithmeticUtils {
     }
 
 
-
-        public static JSONArray ProLogList2Json(List<EmployeeExample> list) {
-            JSONArray json = new JSONArray();
-                for (EmployeeExample pLog : list) {
-                    JSONObject jo = new JSONObject();
-                    jo.put("employeeNo", pLog.getEmployeeno());
-                    jo.put("phoneNumber", pLog.getPhonenumber());
-                    jo.put("name", "CK");
-                    jo.put("deptName","EB7");
-                    json.put(jo);
-                }
-            return json;
+    public static JSONArray ProLogList2Json(List<EmployeeExample> list) {
+        JSONArray json = new JSONArray();
+        String sex = null;
+        for (EmployeeExample pLog : list) {
+            JSONObject jo = new JSONObject();
+            jo.put("sequence", Integer.parseInt(pLog.getEmployeeno()));
+            jo.put("employeeID", pLog.getEmployeeno());
+            jo.put("mobilePhone", pLog.getPhonenumber());
+            jo.put("name", decodeUnicode(pLog.getName()));
+            if (pLog.getGender().equals("男")) {
+                sex = "M";
+            }
+            if (pLog.getGender().equals("女")) {
+                sex = "F";
+            } else {
+                sex = "M";
+            }
+            jo.put("gender", sex);
+            jo.put("email", pLog.getEmail());
+            jo.put("valid", "A");
+            json.put(jo);
         }
+        return json;
+    }
 
 
-    public static JSONObject ProLogJson(List<EmployeeExample> list) {
+    public static JSONObject ProLogObject(List<EmployeeExample> list) {
+        JSONObject jo = null;
+        for (EmployeeExample pLog : list) {
+            jo = new JSONObject();
+            jo.put("employeeNo", Integer.parseInt(pLog.getEmployeeno()));
+            jo.put("phoneNumber", pLog.getPhonenumber());
+            jo.put("name", decodeUnicode(pLog.getName()));
+            jo.put("deptName", pLog.getDeptName());
+        }
+        return jo;
+    }
+
+    public static JSONObject XCProLogObject(List<EmployeeExample> list) {
         JSONObject jo = new JSONObject();
         for (EmployeeExample pLog : list) {
+            jo.put("sequence", Integer.parseInt(pLog.getEmployeeno()));
             jo.put("employeeNo", pLog.getEmployeeno());
-            jo.put("phoneNumber", pLog.getPhonenumber());
-            jo.put("name", "CK");
-            jo.put("deptName","EB7");
+            jo.put("mobilePhone", pLog.getPhonenumber());
+            jo.put("name", decodeUnicode(pLog.getName()));
+            jo.put("gender", "M");
+            jo.put("email", pLog.getEmail());
         }
         return jo;
     }
 
 
+    public static com.alibaba.fastjson.JSONArray test(List<EmployeeExample> list) {
+        com.alibaba.fastjson.JSONArray jsonArray = new com.alibaba.fastjson.JSONArray();
+        for (EmployeeExample pLog : list) {
+            com.alibaba.fastjson.JSONObject jo = new com.alibaba.fastjson.JSONObject();
+            jo.put("employeeNo", pLog.getEmployeeno());
+            jo.put("phoneNumber", pLog.getPhonenumber());
+            jo.put("name", pLog.getName());
+            jo.put("deptName", pLog.getDeptName());
+            jsonArray.add(jo);
+        }
+        return jsonArray;
+    }
+
+
+    /**
+     * 解码 Unicode \\uXXXX
+     *
+     * @param str
+     * @return
+     */
+    public static String decodeUnicode(String str) {
+        Charset set = Charset.forName("UTF-8");
+        Pattern p = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
+        Matcher m = p.matcher(str);
+        int start = 0;
+        int start2 = 0;
+        StringBuffer sb = new StringBuffer();
+        while (m.find(start)) {
+            start2 = m.start();
+            if (start2 > start) {
+                String seg = str.substring(start, start2);
+                sb.append(seg);
+            }
+            String code = m.group(1);
+            int i = Integer.valueOf(code, 16);
+            byte[] bb = new byte[4];
+            bb[0] = (byte) ((i >> 8) & 0xFF);
+            bb[1] = (byte) (i & 0xFF);
+            ByteBuffer b = ByteBuffer.wrap(bb);
+            sb.append(String.valueOf(set.decode(b)).trim());
+            start = m.end();
+        }
+        start2 = str.length();
+        if (start2 > start) {
+            String seg = str.substring(start, start2);
+            sb.append(seg);
+        }
+        return sb.toString();
+    }
+
 
     public static void main(String[] args) throws IOException {
-        List<EmployeeExample> examples = new ArrayList<>();
         EmployeeExample example = new EmployeeExample();
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(System.currentTimeMillis());
-        stringBuffer.append(ProLogList2Json(examples).toString());
-        stringBuffer.append("ac063f15ccff416b9a2278318920926f");
-        String md5 = Md5Utils.string2MD5(stringBuffer.toString());
-        example.setEmployeeno("05919");
-        example.setName("金丽萍");
-        example.setDeptName("EB4");
-        example.setPhonenumber("13501811943");
-        ProLogList2Json(examples).toString();
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("appId","newtouchmall");
-        paramMap.put("timestamp",System.currentTimeMillis());
-        paramMap.put("sign",md5);
-
-
+        example.setEmployeeno("180925");
+        example.setName("张成辉");
+        example.setDeptName("EB7");
+        example.setPhonenumber("17638564328");
+        List<EmployeeExample> examples = new ArrayList<>();
+        examples.add(example);
+        String result = NumberArithmeticUtils.sendPost("http://test.third-party.newtouch.com/elemp/ntpmp-api/add-employee", null, "utf-8", "application/json", NumberArithmeticUtils.ProLogObject(examples).toString());
+        System.out.println(result);
 
 
     }

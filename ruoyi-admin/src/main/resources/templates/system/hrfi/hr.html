@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      lang="zh">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
@@ -15,8 +15,10 @@
                             月份：<input type="text" name="roleKey"/>
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>
@@ -24,15 +26,13 @@
         </div>
 
         <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-            <a class="btn btn-primary" onclick="exportTemplet()" >
+            <a class="btn btn-primary" onclick="exportTemplet()">
                 <i class="fa fa-download"></i> 导出模板下载
             </a>
-            <a class="btn btn-primary" id="fileImport" >
-                <i class="fa fa-download"></i> 导入
+            <a class="btn btn-primary" id="btnImport" onclick="exports()">
+                <i class="fa fa-download">导入</i>
             </a>
-            <a>
-                <i><input type="file" style="display:none" id="files"></i>
-            </a>
+            <input id="excel_file" type="file" name="filename" accept="xls" size="80"/>
         </div>
 
         <div class="col-sm-12 select-table table-striped">
@@ -43,51 +43,49 @@
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
 
-    //导出模板下载
+    //导出
     function exportTemplet() {
-
         window.location.href="/system/hr/export";
     }
 
-    $("#fileImport").click(function () {
-        $("#files").click();
-        $("#files").onChange(hrOpen());
-    })
 
-
-    function hrOpen() {
-        if($('#files').val() == null || $('#files').val() == '') {
-            alert("请先选择一个文件！");
-            return;
-        }
-        $.ajax(
-            {
-                type : "POST",
-                url : "/system/hr/exportData",
-                dataType : "JSON",
-                data : {
-                    address : $('#files').val()
-                },
-                success : function(msg)
+    //导入
+    function exports() {
+        if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
+            alert("请先选择一个文件!")
+            return
+        } else {
+            $.ajax(
                 {
-                    alert("导入数据成功！");
-                },
-            });
+                    type: "POST",
+                    url: "/system/hr/exportData",
+                    dataType: "JSON",
+                    data: {
+                        address: $("#excel_file").val()
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        if (msg.code == 0) {
+                            $("#bootstrap-table").bootstrapTable('refresh');
+                            alert("导入数据成功！");
+                        } else {
+                            alert("导入数据失败！请您使用IE浏览器进行导入！");
+                        }
+                    },
+                    error: function () {
+                        alert("获取数据失败", "error");
+                    }
+                });
+        }
     }
 
-
+    //table初始化
     var prefix = ctx + "system/newtouch";
-    $(function() {
+    $(function () {
         var options = {
             url: prefix + "/list",
-            createUrl: prefix + "/add",
-            updateUrl: prefix + "/edit/{id}",
-            removeUrl: prefix + "/remove",
-            exportUrl: prefix + "/export",
-            sortName: "roleSort",
-            modalName: "角色",
             search: false,
-            showExport: false,
+            showExport: true,
             columns: [{
                 checkbox: true
             },
@@ -109,21 +107,14 @@
                 },
                 {
                     field: 'rice_money',
-                    title: '饭贴',
-                    align: 'center',
-                },
-                {
-                    field: 'rice_money',
                     title: '期间',
                     align: 'center',
                 },
                 {
                     field: 'welfare_money',
-                    title: '福利',
+                    title: '福利费',
                 },
-                {   field: 'trade_money',
-                    title: '工会费',
-                }]
+            ]
         };
         $.table.init(options);
     });

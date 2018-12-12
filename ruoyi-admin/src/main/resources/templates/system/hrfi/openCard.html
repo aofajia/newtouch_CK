@@ -10,16 +10,30 @@
         <div class="col-sm-12 search-collapse">
             <form id="role-form">
                 <div class="select-list">
-                   <input type="text" id="id" style="width: 200px"/>
-                    <a style="margin-top: 5px;" class="btn btn-primary btn-rounded btn-sm" onclick="searchByEmployId()"><i
-                            class="fa fa-search"></i>搜索</a>
+                    <ul>
+                        <li>
+                            员工编号：<input type="text" id="id"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="searchByEmployId()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                    </ul>
                 </div>
             </form>
         </div>
 
         <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-            <a class="btn btn-primary btn-rounded btn-sm" onclick="openCard()">
-                <i class=""></i> 开卡
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="openCardByElM()">
+                <i class="fa fa-plus"></i> 饿了么开卡
+            </a>
+            <a class="btn btn-primary btn-edit disabled" onclick="updateByELM()">
+                <i class="fa fa-edit"></i> 饿了么更新
+            </a>
+            <a class="btn btn-danger btn-del" onclick="deleteByELM()">
+                <i class="fa fa-remove"></i> 饿了么删除
+            </a>
+            <a class="btn btn-primary btn-rounded btn-sm" onclick="openCardByXC()">
+                <i class="fa fa-plus"></i> 携程开卡
             </a>
         </div>
 
@@ -47,14 +61,72 @@
                 }
         });
     }
+
+    //携程开卡
+    function openCardByXC() {
+        alert("敬请期待！");
+    }
     
-    function openCard() {
+    //饿了么跟新
+    function updateByELM() {
         var data = $("#bootstrap-table").bootstrapTable('getSelections');
         if (data == null || data == ''){
-            alert("请选择一人或多人开卡！");
+            alert("请先选择一名员工！");
             return;
         }
-        console.log(data);
+        if(data.length > 1){
+            alert("请选择一名员工更新！");
+            return;
+        }
+    }
+    
+    //饿了么删除
+    function deleteByELM() {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        if (data == null || data == ''){
+            alert("请先选择一名员工！");
+            return;
+        }
+        if(data.length > 1){
+            alert("请选择一名员工删除！");
+            return;
+        }
+        $.ajax(
+            {
+                type : "POST",
+                url : "/system/hr/employeeDeleteCard",
+                dataType : "JSON",
+                data : {
+                    data : JSON.stringify(data)
+                },
+                success : function(msg)
+                {
+
+                    if(msg.code == 0){
+                        alert("删除成功！");
+                        $("#bootstrap-table").bootstrapTable('refresh');
+                    }else{
+                        alert("删除失败！");
+                    }
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
+    }
+
+    //饿了么开卡
+    function openCardByElM() {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        if (data == null || data == ''){
+            alert("请先选择一名员工！");
+            return;
+        }
+        if(data.length > 1){
+            alert("请选择一名员工开卡！");
+            return;
+        }
         $.ajax(
             {
                 type : "POST",
@@ -65,8 +137,13 @@
                 },
                 success : function(msg)
                 {
-                    $("#bootstrap-table").bootstrapTable('refresh');
-                    alert("开卡成功！");
+                    console.log(msg);
+                    if(msg.code == 0){
+                        $("#bootstrap-table").bootstrapTable('refresh');
+                        alert("饿了么开卡成功！");
+                    }else{
+                        alert("饿了么开卡失败！");
+                    }
                 },
                 error:function()
                 {

@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.EmployeeExample;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface EmployeeMapper {
 
     List<EmployeeExample> openCardDataList();
 
-    List<EmployeeExample> openCardData(List<String> list);
+    List<EmployeeExample> openCardData();
 
-    int updateByEmpoloyeeId(String id);
+    int updateByEmpoloyeeId(@Param("id") String id,@Param("status")Integer status);
 
     List<EmployeeExample> openCardDataListById(String id);
 }
