@@ -28,6 +28,8 @@ public class OrderCheckStatus {
 
     private Integer cancelFlag;
 
+    private String type;
+
     public Long getOrderId() {
         return orderId;
     }
@@ -122,5 +124,13 @@ public class OrderCheckStatus {
 
     public void setCancelFlag(Integer cancelFlag) {
         this.cancelFlag = cancelFlag;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 }

@@ -361,6 +361,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             orderCheckStatus.setStoreId(Long.parseLong(sameList.get(i).getStore_id()));
             orderCheckStatus.setCreatetime(Integer.parseInt(sameList.get(i).getCreatetime()));
             orderCheckStatus.setCheckingstatus(0);
+            orderCheckStatus.setType(sameList.get(i).getType());
             OrderCheckStatus ifnull = orderCheckStatusMapper.selectByPrimaryKey(Long.parseLong(sameList.get(i).getOrder_id()));
             if(ifnull == null)
             {
@@ -495,6 +496,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 orderCheckStatus.setStatus(differenceOrderList.getStatus());
                 orderCheckStatus.setCreatetime(Integer.parseInt(exceptionList.get(i).getCreatetime()));
                 orderCheckStatus.setCheckingstatus(2);
+                orderCheckStatus.setType(differenceOrderList.getType());
 
                 ifnull = orderCheckStatusMapper.selectByPrimaryKey(Long.parseLong(order_id));
 
@@ -521,6 +523,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 orderCheckStatus.setStatus(differenceOrderList.getStatus());
                 orderCheckStatus.setCreatetime(Integer.parseInt(exceptionList.get(i).getCreatetime()));
                 orderCheckStatus.setCheckingstatus(3);
+                orderCheckStatus.setType(differenceOrderList.getType());
 
                 checkingLog.setCheckingstatus(3);
                 ifnull = orderCheckStatusMapper.selectByPrimaryKey(Long.parseLong(order_id));

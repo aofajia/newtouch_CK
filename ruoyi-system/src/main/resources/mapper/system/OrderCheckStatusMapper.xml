@@ -14,10 +14,11 @@
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="cancel_flag" property="cancelFlag" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     order_id, order_legalman, invoice_legalman, final_amount, store_id, createtime, payed, 
-    status, checkingstatus, created_time, update_time, cancel_flag
+    status, checkingstatus, created_time, update_time, cancel_flag, type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -33,13 +34,13 @@
     insert into hrfi_openticket (order_id, order_legalman, invoice_legalman, 
       final_amount, store_id, createtime, 
       payed, status, checkingstatus, 
-      created_time, update_time, cancel_flag
-      )
+      created_time, update_time, cancel_flag, 
+      type)
     values (#{orderId,jdbcType=BIGINT}, #{orderLegalman,jdbcType=INTEGER}, #{invoiceLegalman,jdbcType=INTEGER}, 
       #{finalAmount,jdbcType=DECIMAL}, #{storeId,jdbcType=BIGINT}, #{createtime,jdbcType=INTEGER}, 
       #{payed,jdbcType=DECIMAL}, #{status,jdbcType=CHAR}, #{checkingstatus,jdbcType=INTEGER}, 
-      #{createdTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER}
-      )
+      #{createdTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{cancelFlag,jdbcType=INTEGER}, 
+      #{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.OrderCheckStatus" >
     insert into hrfi_openticket
@@ -80,6 +81,9 @@
       <if test="cancelFlag != null" >
         cancel_flag,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="orderId != null" >
@@ -117,6 +121,9 @@
       </if>
       <if test="cancelFlag != null" >
         #{cancelFlag,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="cancelFlag != null" >
         cancel_flag = #{cancelFlag,jdbcType=INTEGER},
       </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
     </set>
     where order_id = #{orderId,jdbcType=BIGINT}
   </update>
@@ -171,7 +181,8 @@
       checkingstatus = #{checkingstatus,jdbcType=INTEGER},
       created_time = #{createdTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      cancel_flag = #{cancelFlag,jdbcType=INTEGER}
+      cancel_flag = #{cancelFlag,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR}
     where order_id = #{orderId,jdbcType=BIGINT}
   </update>
 </mapper>
