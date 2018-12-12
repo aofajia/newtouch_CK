@@ -914,7 +914,7 @@
             WHERE ho.checkingstatus = '0'
             AND FROM_UNIXTIME(ho.createtime, '%Y-%m-%d') &lt;= #{before6Time}
         )
-    <!--AND FROM_UNIXTIME(mtime, '%Y-%m-%d') &lt;= #{startTime}-->
+        AND FROM_UNIXTIME(createtime, '%Y-%m-%d') &lt;= #{startTime}
 
         UNION ALL
 

@@ -204,7 +204,14 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 //预充值供应商
                 //获取有效订单总金额
                 Map validOrderSum = ordersMapper.getValidOrderSum(paramMap);
-                String validmoney = validOrderSum.get("validmoney").toString();
+                String validmoney = "0.00";
+                if(validOrderSum != null)
+                {
+                    validmoney = validOrderSum.get("validmoney").toString();
+                }
+                else
+                {
+                }
                 BigDecimal valid = new BigDecimal(validmoney);
                 responseMap.put("validmoney",validmoney);
 
@@ -225,7 +232,11 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
 
                 //从供应商充值记录表中获取 对应供应商累计充值总金额值总金额
                 Map rechargeSum = rechargeLogMapper.selectRechargeSumByStore(paramMap);
-                String rechargemoney = rechargeSum.get("rechargemoney").toString();
+                String rechargemoney = "0.00";
+                if(rechargeSum != null)
+                {
+                    rechargemoney = rechargeSum.get("rechargemoney").toString();
+                }
                 BigDecimal recharge = new BigDecimal(rechargemoney);
                 responseMap.put("rechargemoney",rechargemoney);
 
@@ -262,12 +273,16 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
                 //月结
                 //获取有效订单总金额
                 Map validOrderSum = ordersMapper.getValidOrderSum(paramMap);
-                String validmoney = validOrderSum.get("validmoney").toString();
+                String validmoney = "0.00";
+                if(validOrderSum != null)
+                {
+                    validmoney = validOrderSum.get("validmoney").toString();
+                }
                 BigDecimal valid = new BigDecimal(validmoney);
                 responseMap.put("validmoney",validmoney);
 
                 //获取当前时间 供应商订单总额(定时任务 从供应商接口处获取所有订单 并记录表(供应商ID 订单号 订单时间 金额))
-                String storeordersmoney = "123.12";
+                String storeordersmoney = "0.00";
                 BigDecimal rdersmoney = new BigDecimal(storeordersmoney);
                 responseMap.put("storeordersmoney",storeordersmoney);
 
