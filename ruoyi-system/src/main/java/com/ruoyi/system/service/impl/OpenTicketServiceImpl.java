@@ -102,6 +102,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
             if (startDate.equals("0") || endDate.equals("0")) {
                 startDate = null;
                 endDate = null;
+            }if (supplier.equals("0")){
+                supplier = null;
             }
             //获取订单明细信息
             list = openTicketMapper.listOrders(id, supplier, startDate, endDate);

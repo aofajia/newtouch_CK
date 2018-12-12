@@ -60,6 +60,7 @@
             <if test="startDate != null and endDate != null  ">
                 AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
             </if>
+                AND checkingstatus = 0
         </where>
         GROUP BY
         order_legalman
@@ -84,6 +85,7 @@
                 AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
             </if>
                 AND invoice_legalman = #{rise}
+                AND checkingstatus = 0
         </where>
         GROUP BY
         invoice_legalman
@@ -110,6 +112,7 @@
             <if test=" id != null  ">
                 AND order_legalman = #{id}
             </if>
+                AND checkingstatus = 0
         </where>
     </select>
 
@@ -124,6 +127,7 @@
             <if test="startDate != null and endDate != null  ">
                 AND FROM_UNIXTIME(createtime) BETWEEN #{startDate} and #{endDate}
             </if>
+                AND checkingstatus = 0
         </where>
     </select>
 
@@ -135,6 +139,7 @@
             invoice_legalman AS open_ticket_rise
         FROM
             hrfi_openticket
+        where checkingstatus = 0
         GROUP BY
             invoice_legalman
 	</select>
