@@ -66,8 +66,9 @@
                     success: function (msg) {
                         console.log(msg);
                         if (msg.code == 0) {
-                            $("#bootstrap-table").bootstrapTable('refresh');
                             alert("导入数据成功！");
+                            $("#bootstrap-table").bootstrapTable('refresh');
+                            $("#excel_file").val(null)
                         } else {
                             alert("导入数据失败！请您使用IE浏览器进行导入！");
                         }
@@ -80,38 +81,38 @@
     }
 
     //table初始化
-    var prefix = ctx + "system/newtouch";
+    var prefix = ctx + "system/hr"
     $(function () {
         var options = {
-            url: prefix + "/list",
+            url: prefix + "/selectWelfare",
             search: false,
             showExport: true,
             columns: [{
                 checkbox: true
             },
                 {
-                    field: 'employee_id',
+                    field: 'id',
                     title: '员工编号'
                 },
                 {
-                    field: 'employee_name',
+                    field: 'name',
                     title: '员工姓名',
                 },
                 {
-                    field: 'company_name',
+                    field: 'company',
                     title: '公司名称',
                 },
                 {
-                    field: 'department_name',
+                    field: 'dept',
                     title: '部门名称',
                 },
                 {
-                    field: 'rice_money',
+                    field: 'date',
                     title: '期间',
                     align: 'center',
                 },
                 {
-                    field: 'welfare_money',
+                    field: 'welfare',
                     title: '福利费',
                 },
             ]

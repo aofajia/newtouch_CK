@@ -47,6 +47,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private final String ELM_DELETE_CARD = "http://third-party.newtouch.com/elemp/ntpmp-api/delete-employee";
     //获取新员工地址
     private final String NEW_EMPLOYEE = "http://59.80.30.153:4090/HR/getNewEmpoloyeeInfo";
+    //京东开卡
+    private final String JD_OPEN_CARD = "";
     //记录日志
     Logger logger = LoggerFactory.getLogger(OpenTicketServiceImpl.class);
     //注入开票订单表
@@ -319,6 +321,7 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     @Override
     public AjaxResult openCardByXC(List<EmployeeExample> examples) {
         try {
+            examples = employeeMapper.openCardData();
             //调用地址
             Map<String, Object> paramMap1 = new LinkedHashMap<String, Object>();
             paramMap1.put("appId", "newtouchmall");
@@ -387,6 +390,38 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         } catch (FileNotFoundException e) {
             System.out.println("未找到指定路径的文件!");
             e.printStackTrace();
+        }
+        return AjaxResult.success();
+    }
+
+    @Override
+    public List<Welfare> listWelfare() {
+        return welfareMapper.listWelfare();
+    }
+
+    @Override
+    public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list) {
+        try{
+            Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+            paramMap.put("appId","newtouchmall");
+            paramMap.put("settlementId","");//结算单号（一个结算单号可对对应多个第三方申请单号）
+            paramMap.put("invoiceType",1);//发票类型   1普通 2增值税
+            paramMap.put("invoiceOrg","1"); //开票机构id
+            paramMap.put("invoiceDate","1");//期望开票时间
+            paramMap.put("billToParty","1");//收票单位 （填写开票省份）
+            paramMap.put("billToer","吴亿笛");//收票人
+            paramMap.put("billToContact","");//收票人联系方式
+            paramMap.put("billToProvince",0);//收票人地址（省）
+            paramMap.put("billToCity",0);//收票人地址（市）
+            paramMap.put("billToCounty",0);//收票人地址（区）
+            paramMap.put("billToTown",0);//收票人地址（街道）
+            paramMap.put("billToAddress","");//收票人地址（详细地址）
+            paramMap.put("orderAmountCash",new BigDecimal(1));//总金额
+            paramMap.put("invoiceParticulars",list);//开票详情（限制在500个订单之内）
+
+        }catch (Exception e){
+            logger.debug("申请京东发表失败！"+e.getMessage());
+            return AjaxResult.error();
         }
         return AjaxResult.success();
     }

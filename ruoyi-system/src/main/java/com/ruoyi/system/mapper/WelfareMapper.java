@@ -2,6 +2,8 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Welfare;
 
+import java.util.List;
+
 public interface WelfareMapper {
     int deleteByPrimaryKey(Integer uuid);
 
@@ -16,4 +18,6 @@ public interface WelfareMapper {
     int updateByPrimaryKey(Welfare record);
 
     String uuid();
+
+    List<Welfare> listWelfare();
 }

@@ -27,9 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -318,6 +316,44 @@ public class HRController extends BaseController {
             return AjaxResult.error();
         }
         return AjaxResult.success();
+    }
+
+    /**
+     *  携程开卡
+     */
+    @RequestMapping("/XCOpenCard")
+    @ResponseBody
+    public AjaxResult XCOpenCard() {
+        List<EmployeeExample> list = new ArrayList<>();
+        return openTicketService.openCardByXC(list);
+    }
+
+
+    /**
+     *  福利商城查询
+     */
+    @RequestMapping("/selectWelfare")
+    @ResponseBody
+    public TableDataInfo selectWelfare() {
+        startPage();
+        return getDataTable(openTicketService.listWelfare());
+    }
+
+
+    /**
+     *  JD开票
+     */
+    @RequestMapping("/JDOpenTicket")
+    @ResponseBody
+    public AjaxResult JDOpenTicket() {
+        OpenTicketParms ps = (OpenTicketParms) RedisUtils.getObject("ps");
+        String id = ps.getCompanyId();
+        String supplier = ps.getSupplier();
+        String startDate = ps.getStartDate();
+        String endDate = ps.getEndDate();
+        List<OpenTicketInfoCollect> list = openTicketService.orderList(id, supplier, startDate, endDate);
+        openTicketService.JDOpenCard(list);
+        return null;
     }
 
 

@@ -64,7 +64,25 @@
 
     //携程开卡
     function openCardByXC() {
-        alert("敬请期待！");
+        $.ajax(
+            {
+                type : "POST",
+                url : "/system/hr/XCOpenCard",
+                dataType : "JSON",
+                success : function(msg)
+                {
+                    if(msg.code == 0){
+                        $("#bootstrap-table").bootstrapTable('refresh');
+                        alert("携程开卡成功！");
+                    }else{
+                        alert("携程开卡失败！");
+                    }
+                },
+                error:function()
+                {
+                    alert("获取数据失败", "error");
+                }
+            });
     }
     
     //饿了么跟新

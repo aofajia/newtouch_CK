@@ -14,11 +14,11 @@
                         <li>
                             <label style="margin-top: 5px">开票期间:</label>
                         </li>
-                        <li>
+                        <li class="select-time">
                             <input type="text" class="time-input" id="startTime" placeholder="开始时间"
                                    name="params[beginTime]"/>
                         </li>
-                        <li>
+                        <li class="select-time">
                             <input type="text" class="time-input" id="endTime" placeholder="结束时间"
                                    name="params[endTime]"/>
                         </li>
@@ -38,9 +38,9 @@
             <a class="btn btn-primary btn-rounded btn-sm" onclick="applyOpenTicket()">
                 <i class="fa fa-plus"></i> 申请开票
             </a>
-            <a class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()" >
-                <i class=""></i> 同步数据
-            </a>
+            <!--<a class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()" >-->
+                <!--<i class=""></i> 同步数据-->
+            <!--</a>-->
         </div>
 
         <div class="col-sm-12 select-table table-striped">

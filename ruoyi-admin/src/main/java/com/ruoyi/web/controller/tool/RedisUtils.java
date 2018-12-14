@@ -18,7 +18,7 @@ import java.io.ObjectOutputStream;
 public class RedisUtils {
     //RedisConfig.getConnection().host
     //RedisConfig.getConnection().post
-    private static final String IP = "127.0.0.1"; // ip
+    private static final String IP = "192.168.0.6"; // ip
     private static final int PORT = 6379;        // 端口
     private static final String AUTH = "";          // 密码(原始默认是没有密码)
     private static int MAX_ACTIVE = 1024;       // 最大连接数

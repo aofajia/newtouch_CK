@@ -119,4 +119,9 @@
   <select id="uuid" resultType="java.lang.String">
      select uuid()
   </select>
+
+  <!-- 分页信息显示 -->
+  <select id="listWelfare" resultMap="BaseResultMap">
+       select * from hrfi_welfare
+  </select>
 </mapper>

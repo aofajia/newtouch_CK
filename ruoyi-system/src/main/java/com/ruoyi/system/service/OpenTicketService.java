@@ -4,6 +4,7 @@ import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.system.domain.Employee;
 import com.ruoyi.system.domain.EmployeeExample;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
+import com.ruoyi.system.domain.Welfare;
 
 import java.util.List;
 
@@ -85,4 +86,17 @@ public interface OpenTicketService {
      *  导入数据
      */
     public AjaxResult exportData(String address);
+
+
+    /**
+     *  查询福利数据
+     */
+    public List<Welfare> listWelfare();
+
+
+    /**
+     *  京东开票
+     */
+    public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list);
+
 }
