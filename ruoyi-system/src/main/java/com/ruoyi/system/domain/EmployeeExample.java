@@ -1,9 +1,11 @@
 package com.ruoyi.system.domain;
 
+import java.io.Serializable;
+
 /**
  *  员工扩展类
  */
-public class EmployeeExample extends Employee {
+public class EmployeeExample extends Employee implements Serializable {
 
      //对接携程的唯一标识
      Integer sequence;

@@ -64,11 +64,19 @@
 
     //携程开卡
     function openCardByXC() {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        if (data == null || data == ''){
+            alert("请先选择一名员工！");
+            return;
+        }
         $.ajax(
             {
                 type : "POST",
                 url : "/system/hr/XCOpenCard",
                 dataType : "JSON",
+                data : {
+                    data : JSON.stringify(data)
+                },
                 success : function(msg)
                 {
                     if(msg.code == 0){
@@ -182,6 +190,10 @@
                     field: 'employeeno',
                     title: '员工编号',
                     visible: false
+                },
+                {
+                    field: 'gender',
+                    title: '员工编号',
                 },
                 {
                     field: 'employeeno',

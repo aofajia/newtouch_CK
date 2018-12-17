@@ -323,9 +323,19 @@ public class HRController extends BaseController {
      */
     @RequestMapping("/XCOpenCard")
     @ResponseBody
-    public AjaxResult XCOpenCard() {
-        List<EmployeeExample> list = new ArrayList<>();
-        return openTicketService.openCardByXC(list);
+    public AjaxResult XCOpenCard(@RequestParam(name = "data", required = false) String data) {
+        try {
+            if (!StringUtils.isEmpty(data)) {
+                JSONArray arrayList = JSONArray.parseArray(data);
+                //转换为目标对象list
+                List<EmployeeExample> list = JSONObject.parseArray(arrayList.toJSONString(), EmployeeExample.class);
+                return openTicketService.openCardByXC(list);
+            }
+        } catch (Exception e) {
+            logger.debug("开卡失败！" + e.getMessage());
+            return AjaxResult.error();
+        }
+        return AjaxResult.success();
     }
 
 

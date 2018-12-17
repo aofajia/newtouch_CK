@@ -143,7 +143,7 @@
     LEFT JOIN hrfi_opencard_status o ON s.`status` = o.`status`
     LEFT JOIN hrfi_department d ON s.company_id = d.company_id
     AND s.deptID = d.id
-    LIMIT 0,100
+    LIMIT 2000,4000
     </select>
 
     <update id="updateByEmpoloyeeId">

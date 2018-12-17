@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.ReadExcel;
-import com.ruoyi.system.domain.Employee;
-import com.ruoyi.system.domain.EmployeeExample;
-import com.ruoyi.system.domain.OpenTicketInfoCollect;
-import com.ruoyi.system.domain.Welfare;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.EmployeeMapper;
 import com.ruoyi.system.mapper.OpenTicketMapper;
 import com.ruoyi.system.mapper.WelfareMapper;
@@ -322,18 +319,29 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     public AjaxResult openCardByXC(List<EmployeeExample> examples) {
         try {
             examples = employeeMapper.openCardData();
+            List<EmployeeExample> example1 = new ArrayList<>();
+            List<EmployeeExample> exam = new ArrayList<>();
+            for (EmployeeExample e: examples) {
+
+                 if (example1.size() < 2000){
+                     example1.add(e);
+                 }else{
+                     exam.add(e);
+                 }
+            }
+            RedisUtil.setObject("xc",exam);
             //调用地址
             Map<String, Object> paramMap1 = new LinkedHashMap<String, Object>();
             paramMap1.put("appId", "newtouchmall");
-            paramMap1.put("personalInformation", NumberArithmeticUtils.ProLogList2Json(examples));
+            paramMap1.put("personalInformation", NumberArithmeticUtils.ProLogList2Json(example1));
             org.json.JSONObject json = new org.json.JSONObject(paramMap1);
-            String result = NumberArithmeticUtils.sendPost(XC_OPEN_CARD, XCParams(examples), "utf-8", "application/json", json.toString());
+            String result = NumberArithmeticUtils.sendPost(XC_OPEN_CARD, XCParams(example1), "utf-8", "application/json", json.toString());
             JSONObject jsonObject = JSON.parseObject(result);
             //解析数据
             String data = jsonObject.getString("result");
             JSONObject objectCode = JSON.parseObject(data);
             //解析返回值
-            String code = objectCode.getString("code");
+            String code = objectCode.getString("resultCode");
             //如果为200表示成功
             if (code.equals("200")) {
                 //修改状态
