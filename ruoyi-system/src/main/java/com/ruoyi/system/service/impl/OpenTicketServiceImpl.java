@@ -318,32 +318,19 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     @Override
     public AjaxResult openCardByXC(List<EmployeeExample> examples) {
         try {
-            examples = employeeMapper.openCardData();
-            List<EmployeeExample> example1 = new ArrayList<>();
-            List<EmployeeExample> exam = new ArrayList<>();
-            for (EmployeeExample e: examples) {
-
-                 if (example1.size() < 2000){
-                     example1.add(e);
-                 }else{
-                     exam.add(e);
-                 }
-            }
-            RedisUtil.setObject("xc",exam);
-            //调用地址
             Map<String, Object> paramMap1 = new LinkedHashMap<String, Object>();
             paramMap1.put("appId", "newtouchmall");
-            paramMap1.put("personalInformation", NumberArithmeticUtils.ProLogList2Json(example1));
+            paramMap1.put("personalInformation", NumberArithmeticUtils.ProLogList2Json(examples));
             org.json.JSONObject json = new org.json.JSONObject(paramMap1);
-            String result = NumberArithmeticUtils.sendPost(XC_OPEN_CARD, XCParams(example1), "utf-8", "application/json", json.toString());
+            String result = NumberArithmeticUtils.sendPost(XC_OPEN_CARD, XCParams(examples), "utf-8", "application/json", json.toString());
             JSONObject jsonObject = JSON.parseObject(result);
             //解析数据
             String data = jsonObject.getString("result");
             JSONObject objectCode = JSON.parseObject(data);
             //解析返回值
-            String code = objectCode.getString("resultCode");
+            String code = objectCode.getString("result");
             //如果为200表示成功
-            if (code.equals("200")) {
+            if (code.equals("Success")) {
                 //修改状态
                 for (EmployeeExample example : examples) {
                     employeeMapper.updateByEmpoloyeeId(example.getEmployeeno(), 3);
