@@ -50,7 +50,9 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">导入日期：</label>
             <div class="col-sm-8">
-                <input class="form-control" type="text" id="export_date" name="export_date" >
+                <li class="select-time">
+                    <input type="text" class="time-input" id="export_date"/>
+                </li>
             </div>
         </div>
 
@@ -60,68 +62,48 @@
 <script type="text/javascript">
 
 
-    $("#form-store").validate({
-        rules:{
-            id:{
-                required:true,
-                number:true
-            },
-            name:{
-                required:true,
-                number:true
-            },
-            company_name:{
-                required:true,
-                digits:true
-            },
-            dept:{
-                required:true
-            },
-            email:{
-                required:true,
-                email:true
-            },
-            gender:{
-                required:true
-            },
-            phone:{
-                required:true
-            },
-            export_date:{
-                required:true
-            }
-        },
-        messages: {
-            "id": {
-                number: "所填员工编号格式不正确"
-            },
-            "name": {
-                required: "员工姓名必填"
-            },
-            "company_name": {
-                required: "员工姓名必填"
-            },
-            "dept": {
-                required: "员工姓名必填"
-            },
-            "gender": {
-                required: "员工姓名必填"
-            },
-            "phone": {
-                required: "员工姓名必填"
-            },
-            "export_date": {
-                required: "员工姓名必填"
-            },
-            "email": {
-                email: "邮箱格式不正确"
-            },
-        }
-    });
-
     function submitHandler()
     {
-        alert("1111");
+        //员工编号不能为空
+        if($("#id").val() == null || $("#id").val() == ''){
+            alert("员工编号不能为空");
+            return;
+        }
+        //员工姓名不能为空
+        if($("#name").val() == null || $("#name").val() == ''){
+            alert("员工姓名不能为空");
+            return;
+        }
+        //公司名称不能为空
+        if($("#company_name").val() == null || $("#company_name").val() == ''){
+            alert("公司名称不能为空");
+            return;
+        }
+        //部门名称不能为空
+        if($("#dept").val() == null || $("#dept").val() == ''){
+            alert("部门名称不能为空");
+            return;
+        }
+        //性别不能为空
+        if($("#gender").val() == null || $("#gender").val() == ''){
+            alert("性别不能为空");
+            return;
+        }
+        //手机号不能为空
+        if($("#phone").val() == null || $("#phone").val() == ''){
+            alert("手机号不能为空");
+            return;
+        }
+        //邮箱不能为空
+        if($("#email").val() == null || $("#email").val() == ''){
+            alert("邮箱不能为空");
+            return;
+        }
+        //请选择导入日期
+        if($("#export_date").val() == null || $("#export_date").val() == ''){
+            alert("请选择导入日期");
+            return;
+        }
     }
 
     function add()
