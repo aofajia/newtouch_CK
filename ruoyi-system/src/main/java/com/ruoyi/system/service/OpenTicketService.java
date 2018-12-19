@@ -1,11 +1,9 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.base.AjaxResult;
-import com.ruoyi.system.domain.Employee;
-import com.ruoyi.system.domain.EmployeeExample;
-import com.ruoyi.system.domain.OpenTicketInfoCollect;
-import com.ruoyi.system.domain.Welfare;
+import com.ruoyi.system.domain.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface OpenTicketService {
@@ -98,5 +96,18 @@ public interface OpenTicketService {
      *  京东开票
      */
     public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list);
+
+
+    /**
+     *  员工信息导入
+     */
+    public AjaxResult exportDataEmployee(String address, HttpSession session);
+
+
+    /**
+     * 公司员工信息总览
+     */
+    List<HRFI_Employee> employeeList();
+
 
 }

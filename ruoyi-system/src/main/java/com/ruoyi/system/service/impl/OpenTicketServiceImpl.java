@@ -6,6 +6,7 @@ import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.ReadExcel;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.EmployeeMapper;
+import com.ruoyi.system.mapper.HRFI_EmployeeMapper;
 import com.ruoyi.system.mapper.OpenTicketMapper;
 import com.ruoyi.system.mapper.WelfareMapper;
 import com.ruoyi.system.service.OpenTicketService;
@@ -21,12 +22,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import javax.servlet.http.HttpSession;
 
 import static com.ruoyi.common.utils.http.HttpClient.sendPost;
 
@@ -55,6 +59,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private EmployeeMapper employeeMapper;
     @Autowired
     private WelfareMapper welfareMapper;
+    @Autowired
+    private HRFI_EmployeeMapper hrfi_employeeMapper;
 
     public static void main(String[] args) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
@@ -419,6 +425,57 @@ public class OpenTicketServiceImpl implements OpenTicketService {
             return AjaxResult.error();
         }
         return AjaxResult.success();
+    }
+
+    @Transactional
+    @Override
+    public AjaxResult exportDataEmployee(String address, HttpSession session) {
+        try {
+            // 对读取Excel表格标题测试
+            InputStream is = new FileInputStream(address);
+            ReadExcel excelReader = new ReadExcel();
+            // 对读取Excel表格内容测试
+            InputStream is2 = new FileInputStream(address);
+            Map<Integer, String> map = excelReader.readExcelContent(is2);
+            //获得Excel表格的内容
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            DecimalFormat sf = new DecimalFormat("#");
+            //这里由于xls合并了单元格需要对索引特殊处理
+            HRFI_Employee employee = null;
+            //SysUser currentUser = ShiroUtils.getUser();
+            for (int i = 1; i <= map.size() - 1; i++) {
+                String s = map.get(i);
+                String[] sData = s.split("-");
+                //获取每个单元格的数据
+                if (sData[0].indexOf(".") >= 0){
+                    employee = new HRFI_Employee();
+                    employee.setId(sData[0].substring(0,sData[0].length()-2));
+                    employee.setName(sData[1]);
+                    employee.setCompany(sData[2]);
+                    employee.setDept(sData[3]);
+                    employee.setPhone(sf.parse(sData[4]).toString());
+                    employee.setGender(sData[5]);
+                    employee.setEmail(sData[6]);
+                    employee.setEntryDate(df.format(new Date()));
+                    employee.setUpdateDate(session.getId());
+                    employee.setUpdateDate(df.format(new Date()));
+                    hrfi_employeeMapper.insertSelective(employee);
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            logger.debug("导入员工信息数据失败！"+e.getMessage());
+            AjaxResult.error();
+        }catch (ParseException e){
+            logger.debug("类型转换失败！"+e.getMessage());
+            AjaxResult.error();
+        }
+        return AjaxResult.success();
+    }
+
+    @Override
+    public List<HRFI_Employee> employeeList() {
+        return hrfi_employeeMapper.list();
     }
 
     /**

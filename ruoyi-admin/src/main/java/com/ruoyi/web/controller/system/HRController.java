@@ -25,8 +25,11 @@ import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -45,15 +48,6 @@ public class HRController extends BaseController {
     private OpenTicketService openTicketService;
     //跳转前缀
     private String prefix = "system/hrfi";
-
-
-    public static void main(String[] args) {
-        String test = "10001.0";
-        if (test.indexOf(".") >= 0){
-            System.out.println(test.substring(0,test.length()-2));
-        }
-
-    }
 
 
     /**
@@ -97,6 +91,22 @@ public class HRController extends BaseController {
     }
 
     /**
+     *  跳转到员工信息处
+     */
+    @RequestMapping("/employee")
+    public String employee() {
+        return prefix + "/employee";
+    }
+
+    /**
+     * 跳转Hr首页
+     */
+    @RequestMapping("/insertEmployee")
+    public String insertEmployee() {
+        return prefix + "/insert_employee";
+    }
+
+    /**
      * 导出报表
      *
      * @return
@@ -110,6 +120,37 @@ public class HRController extends BaseController {
         String fileName = "welfare" + System.currentTimeMillis() + ".xls";
         //sheet名
         String sheetName = "welfare";
+        //创建HSSFWorkbook
+        HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, null);
+        //响应到客户端
+        try {
+            this.setResponseHeader(response, fileName);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error();
+        }
+        return AjaxResult.success();
+    }
+
+
+    /**
+     * 导出报表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/exportEmployee")
+    @ResponseBody
+    public AjaxResult exportEmployee(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //excel标题
+        String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "手机","性别","邮箱"};
+        //excel文件名
+        String fileName = "Employee" + System.currentTimeMillis() + ".xls";
+        //sheet名
+        String sheetName = "Employee";
         //创建HSSFWorkbook
         HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, null);
         //响应到客户端
@@ -340,6 +381,17 @@ public class HRController extends BaseController {
 
 
     /**
+     *  员工信息管理查询
+     */
+    @RequestMapping("/employeeList")
+    @ResponseBody
+    public TableDataInfo employeeList() {
+        startPage();
+        return getDataTable(openTicketService.employeeList());
+    }
+
+
+    /**
      *  福利商城查询
      */
     @RequestMapping("/selectWelfare")
@@ -365,6 +417,14 @@ public class HRController extends BaseController {
         openTicketService.JDOpenCard(list);
         return null;
     }
+
+
+    @RequestMapping("/exportDataEmployee")
+    @ResponseBody
+    public AjaxResult exportDataEmployee(@RequestParam(name = "address", required = false) String address, HttpSession session) throws IOException {
+        return openTicketService.exportDataEmployee(address,session);
+    }
+
 
 
 }

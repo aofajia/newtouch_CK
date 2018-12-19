@@ -505,9 +505,9 @@ public class ExcelUtil<T>
         sheet.setColumnWidth(2, 150*30);
         sheet.setColumnWidth(3, 150*30);
         sheet.setColumnWidth(4, 80*30);
-        sheet.setColumnWidth(5, 80*30);
-        sheet.setColumnWidth(6, 80*30);
-        sheet.setColumnWidth(7, 80*30);
+        sheet.setColumnWidth(5, 150*30);
+        sheet.setColumnWidth(6, 150*30);
+        sheet.setColumnWidth(7, 150*30);
 
         // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制
         HSSFRow row = sheet.createRow(0);

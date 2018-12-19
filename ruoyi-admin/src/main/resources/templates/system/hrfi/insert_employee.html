@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-store">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">员工编号：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="id" id="id">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">员工姓名：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="name" id="name" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">公司名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="company_name" id="company_name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">部门名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="dept" name="dept">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">性别：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="gender" name="gender">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">手机：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="phone" name="phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">邮箱：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="email" id="email" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">导入日期：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="export_date" name="export_date" >
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+
+
+    $("#form-store").validate({
+        rules:{
+            id:{
+                required:true,
+                number:true
+            },
+            name:{
+                required:true,
+                number:true
+            },
+            company_name:{
+                required:true,
+                digits:true
+            },
+            dept:{
+                required:true
+            },
+            email:{
+                required:true,
+                email:true
+            },
+            gender:{
+                required:true
+            },
+            phone:{
+                required:true
+            },
+            export_date:{
+                required:true
+            }
+        },
+        messages: {
+            "id": {
+                number: "所填员工编号格式不正确"
+            },
+            "name": {
+                required: "员工姓名必填"
+            },
+            "company_name": {
+                required: "员工姓名必填"
+            },
+            "dept": {
+                required: "员工姓名必填"
+            },
+            "gender": {
+                required: "员工姓名必填"
+            },
+            "phone": {
+                required: "员工姓名必填"
+            },
+            "export_date": {
+                required: "员工姓名必填"
+            },
+            "email": {
+                email: "邮箱格式不正确"
+            },
+        }
+    });
+
+    function submitHandler()
+    {
+        alert("1111");
+    }
+
+    function add()
+    {
+        var supplierid = $('#configname option:selected').val();
+        var suppliername = $('#configname option:selected').text();
+        var paymethod = $('#paymethod option:selected').val();
+        var invoicetype = $('#invoicetype option:selected').val();
+        var warningmoney = $('#warningmoney').val();
+        var monthlymoney = $('#monthlymoney').val();
+        var storeaccount = $('#storeaccount').val();
+        var contacts = $('#contacts').val();
+        var email = $('#email').val();
+        var startdate = $('#startTime').val();
+        var enddate = $('#endTime').val();
+        /*var data =
+        {
+            "supplierid" : supplierid,
+            "suppliername" : suppliername,
+            "warningmoney" : warningmoney,
+            "monthlymoney" : monthlymoney,
+            "storeaccount" : storeaccount,
+            "contacts" : contacts,
+            "email" : email,
+            "startdate" : startdate,
+            "enddate" : enddate
+        };
+        console.log(data);*/
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : ctx + "fi/balancewarning/addstoreconfig",
+            // contentType: "application/json; charset=utf-8",
+            dataType : 'json',
+            // data : JSON.stringify(data),
+            data : {
+                "supplierid" : supplierid,
+                "configname" : suppliername,
+                "paymethod" : paymethod,
+                "warningmoney" : warningmoney,
+                "monthlymoney" : monthlymoney,
+                "storeaccount" : storeaccount,
+                "invoicetype" : invoicetype,
+                "contacts" : contacts,
+                "email" : email,
+                "startdate" : startdate,
+                "enddate" : enddate
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.operate.saveSuccess(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>
