@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,10 +49,7 @@ public class HRController extends BaseController {
 
 
     public static void main(String[] args) {
-        String test = "10001.0";
-        if (test.indexOf(".") >= 0){
-            System.out.println(test.substring(0,test.length()-2));
-        }
+
 
     }
 
@@ -365,6 +363,8 @@ public class HRController extends BaseController {
         openTicketService.JDOpenCard(list);
         return null;
     }
+
+
 
 
 }
