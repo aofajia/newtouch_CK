@@ -33,7 +33,7 @@
             <a class="btn btn-primary btn-rounded btn-sm" onclick="insert()">
                 <i class="fa fa-plus"></i> 新增员工
             </a>
-            <a class="btn btn-primary btn-edit disabled" onclick="">
+            <a class="btn btn-primary btn-edit disabled" onclick="update()">
                 <i class="fa fa-edit"></i> 修改员工
             </a>
             <a class="btn btn-danger btn-del disabled" onclick="">
@@ -55,6 +55,35 @@
     function insert(id) {
         var url = "/system/hr/insertEmployee";
         $.modal.open("新增" + "新增员工信息", url);
+    }
+
+    //修改员工
+    function update(id) {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        console.log(data);
+        if (data.length > 1){
+            alert("不能多选！");
+        }
+        $.ajax(
+            {
+                cache : true,
+                type : "POST",
+                url : ctx+"system/hr/storeEmployeeByRedis",
+                dataType : "JSON",
+                data : {
+                    "id" : data[0].id,
+                    "name" : data[0].name,
+                    "company" : data[0].company,
+                    "dept" : data[0].dept,
+                    "gender" : data[0].gender,
+                    "phone" : data[0].phone,
+                    "email" : data[0].email,
+                    "entryDate" : data[0].entryDate,
+                },
+                async : false,
+            });
+        var url = "/system/hr/editEmployee";
+        $.modal.open("修改" + "修改员工信息", url);
     }
 
 

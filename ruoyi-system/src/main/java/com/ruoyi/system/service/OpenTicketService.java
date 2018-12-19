@@ -110,4 +110,15 @@ public interface OpenTicketService {
     List<HRFI_Employee> employeeList();
 
 
+    /**
+     * 员工新增
+     */
+    public AjaxResult addEmployee(HRFI_Employee employee);
+
+    /**
+     * 员工修改
+     */
+    public AjaxResult editEmployee(HRFI_Employee employee);
+
+
 }

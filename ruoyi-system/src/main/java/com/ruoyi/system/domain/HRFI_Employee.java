@@ -1,8 +1,9 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
 
-public class HRFI_Employee {
+import java.io.Serializable;
+
+public class HRFI_Employee implements Serializable{
     private String id;
 
     private String name;

@@ -111,7 +111,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
             if (startDate.equals("0") || endDate.equals("0")) {
                 startDate = null;
                 endDate = null;
-            }if (supplier.equals("0")){
+            }
+            if (supplier.equals("0")) {
                 supplier = null;
             }
             //获取订单明细信息
@@ -218,7 +219,7 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     @Override
     public AjaxResult openCard(List<EmployeeExample> list) {
         try {
-            String result = NumberArithmeticUtils.sendPost(ELM_OPEN_CARD, params(list), "utf-8", "application/json",NumberArithmeticUtils.ProLogObject(list).toString());
+            String result = NumberArithmeticUtils.sendPost(ELM_OPEN_CARD, params(list), "utf-8", "application/json", NumberArithmeticUtils.ProLogObject(list).toString());
             JSONObject jsonObject = JSON.parseObject(result);
             //解析数据
             String data = jsonObject.getString("result");
@@ -375,9 +376,9 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                 String s = map.get(i);
                 String[] sData = s.split("-");
                 //获取每个单元格的数据
-                if (sData[0].indexOf(".") >= 0){
+                if (sData[0].indexOf(".") >= 0) {
                     welfare = new Welfare();
-                    welfare.setId(sData[0].substring(0,sData[0].length()-2));
+                    welfare.setId(sData[0].substring(0, sData[0].length() - 2));
                     welfare.setName(sData[1]);
                     welfare.setDate(df.format(new Date()));
                     welfare.setCompany(sData[2]);
@@ -402,26 +403,26 @@ public class OpenTicketServiceImpl implements OpenTicketService {
 
     @Override
     public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list) {
-        try{
+        try {
             Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
-            paramMap.put("appId","newtouchmall");
-            paramMap.put("settlementId","");//结算单号（一个结算单号可对对应多个第三方申请单号）
-            paramMap.put("invoiceType",1);//发票类型   1普通 2增值税
-            paramMap.put("invoiceOrg","1"); //开票机构id
-            paramMap.put("invoiceDate","1");//期望开票时间
-            paramMap.put("billToParty","1");//收票单位 （填写开票省份）
-            paramMap.put("billToer","吴亿笛");//收票人
-            paramMap.put("billToContact","");//收票人联系方式
-            paramMap.put("billToProvince",0);//收票人地址（省）
-            paramMap.put("billToCity",0);//收票人地址（市）
-            paramMap.put("billToCounty",0);//收票人地址（区）
-            paramMap.put("billToTown",0);//收票人地址（街道）
-            paramMap.put("billToAddress","");//收票人地址（详细地址）
-            paramMap.put("orderAmountCash",new BigDecimal(1));//总金额
-            paramMap.put("invoiceParticulars",list);//开票详情（限制在500个订单之内）
+            paramMap.put("appId", "newtouchmall");
+            paramMap.put("settlementId", "");//结算单号（一个结算单号可对对应多个第三方申请单号）
+            paramMap.put("invoiceType", 1);//发票类型   1普通 2增值税
+            paramMap.put("invoiceOrg", "1"); //开票机构id
+            paramMap.put("invoiceDate", "1");//期望开票时间
+            paramMap.put("billToParty", "1");//收票单位 （填写开票省份）
+            paramMap.put("billToer", "吴亿笛");//收票人
+            paramMap.put("billToContact", "");//收票人联系方式
+            paramMap.put("billToProvince", 0);//收票人地址（省）
+            paramMap.put("billToCity", 0);//收票人地址（市）
+            paramMap.put("billToCounty", 0);//收票人地址（区）
+            paramMap.put("billToTown", 0);//收票人地址（街道）
+            paramMap.put("billToAddress", "");//收票人地址（详细地址）
+            paramMap.put("orderAmountCash", new BigDecimal(1));//总金额
+            paramMap.put("invoiceParticulars", list);//开票详情（限制在500个订单之内）
 
-        }catch (Exception e){
-            logger.debug("申请京东发表失败！"+e.getMessage());
+        } catch (Exception e) {
+            logger.debug("申请京东发表失败！" + e.getMessage());
             return AjaxResult.error();
         }
         return AjaxResult.success();
@@ -447,9 +448,9 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                 String s = map.get(i);
                 String[] sData = s.split("-");
                 //获取每个单元格的数据
-                if (sData[0].indexOf(".") >= 0){
+                if (sData[0].indexOf(".") >= 0) {
                     employee = new HRFI_Employee();
-                    employee.setId(sData[0].substring(0,sData[0].length()-2));
+                    employee.setId(sData[0].substring(0, sData[0].length() - 2));
                     employee.setName(sData[1]);
                     employee.setCompany(sData[2]);
                     employee.setDept(sData[3]);
@@ -464,10 +465,10 @@ public class OpenTicketServiceImpl implements OpenTicketService {
             }
 
         } catch (FileNotFoundException e) {
-            logger.debug("导入员工信息数据失败！"+e.getMessage());
+            logger.debug("导入员工信息数据失败！" + e.getMessage());
             AjaxResult.error();
-        }catch (ParseException e){
-            logger.debug("类型转换失败！"+e.getMessage());
+        } catch (ParseException e) {
+            logger.debug("类型转换失败！" + e.getMessage());
             AjaxResult.error();
         }
         return AjaxResult.success();
@@ -476,6 +477,36 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     @Override
     public List<HRFI_Employee> employeeList() {
         return hrfi_employeeMapper.list();
+    }
+
+    @Override
+    public AjaxResult addEmployee(HRFI_Employee employee) {
+        try {
+            Integer i = hrfi_employeeMapper.insertSelective(employee);
+            if (i > 0) {
+                return AjaxResult.success();
+            } else {
+                return AjaxResult.error();
+            }
+        } catch (Exception e) {
+            logger.debug("新增员工失败" + e.getMessage());
+            return AjaxResult.error();
+        }
+    }
+
+    @Override
+    public AjaxResult editEmployee(HRFI_Employee employee) {
+        try {
+            Integer i = hrfi_employeeMapper.updateByPrimaryKeySelective(employee);
+            if (i > 0) {
+                return AjaxResult.success();
+            } else {
+                return AjaxResult.error();
+            }
+        } catch (Exception e) {
+            logger.debug("新增员工失败" + e.getMessage());
+            return AjaxResult.error();
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.system.domain.EmployeeExample;
+import com.ruoyi.system.domain.HRFI_Employee;
 import com.ruoyi.system.domain.OpenTicketInfoCollect;
 import com.ruoyi.system.domain.OpenTicketParms;
 import com.ruoyi.system.service.OpenTicketService;
@@ -99,12 +100,22 @@ public class HRController extends BaseController {
 	}
 
 	/**
-	 * 跳转Hr首页
+	 * 跳转新增员工界面
 	 */
 	@RequestMapping("/insertEmployee")
 	public String insertEmployee() {
 		return prefix + "/insert_employee";
 	}
+
+
+	/**
+	 * 跳转修改界面
+	 */
+	@RequestMapping("/editEmployee")
+	public String editEmployee() {
+		return prefix + "/edit_employee";
+	}
+
 
 	/**
 	 * 导出报表
@@ -115,7 +126,7 @@ public class HRController extends BaseController {
 	@ResponseBody
 	public AjaxResult export(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//excel标题
-		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费"};
+		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费","福利类型"};
 		//excel文件名
 		String fileName = "welfare" + System.currentTimeMillis() + ".xls";
 		//sheet名
@@ -123,16 +134,7 @@ public class HRController extends BaseController {
 		//创建HSSFWorkbook
 		HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, null);
 		//响应到客户端
-		try {
-			this.setResponseHeader(response, fileName);
-			OutputStream os = response.getOutputStream();
-			wb.write(os);
-			os.flush();
-			os.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return AjaxResult.error();
-		}
+		close(request,response,fileName,wb);
 		return AjaxResult.success();
 	}
 
@@ -154,16 +156,7 @@ public class HRController extends BaseController {
 		//创建HSSFWorkbook
 		HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, null);
 		//响应到客户端
-		try {
-			this.setResponseHeader(response, fileName);
-			OutputStream os = response.getOutputStream();
-			wb.write(os);
-			os.flush();
-			os.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return AjaxResult.error();
-		}
+		close(request,response,fileName,wb);
 		return AjaxResult.success();
 	}
 
@@ -418,13 +411,78 @@ public class HRController extends BaseController {
 		return null;
 	}
 
-
+	/**
+	 * 导入员工信息
+	 */
     @RequestMapping("/exportDataEmployee")
     @ResponseBody
     public AjaxResult exportDataEmployee(@RequestParam(name = "address", required = false) String address, HttpSession session) throws IOException {
         return openTicketService.exportDataEmployee(address,session);
     }
 
+	/**
+	 * 新增员工
+	 */
+	@RequestMapping("/addEmployee")
+	@ResponseBody
+	public AjaxResult addEmployee(HRFI_Employee employee){
+		return openTicketService.addEmployee(employee);
+	}
+
+	/**
+	 * 新增员工
+	 */
+	@RequestMapping("/updateEmployee")
+	@ResponseBody
+	public AjaxResult editEmployee(HRFI_Employee employee){
+		return openTicketService.editEmployee(employee);
+	}
+
+	/**
+	 *  存储员工信息
+	 */
+	@RequestMapping("/storeEmployeeByRedis")
+	public AjaxResult storeEmployeeByRedis(HRFI_Employee employee) {
+		try {
+			Jedis jedis = RedisUtils.getJedis();
+			if (jedis.exists("employee")) {
+				jedis.del("employee");
+			}
+			RedisUtils.setObject("employee",employee);
+		} catch (Exception e) {
+			logger.debug("redis存储失败！" + e.getMessage());
+
+		}
+		return AjaxResult.success();
+	}
 
 
+	/**
+	 *  查看员工信息
+	 */
+	@RequestMapping("/selectEmployeeByRedis")
+	@ResponseBody
+	public HRFI_Employee selectEmployeeByRedis() {
+		HRFI_Employee employee = new HRFI_Employee();
+		try {
+			employee = (HRFI_Employee)RedisUtils.getObject("employee");
+		} catch (Exception e) {
+			logger.debug("查看员工信息失败！" + e.getMessage());
+		}
+		return employee;
+	}
+
+
+
+	private void close(HttpServletRequest request, HttpServletResponse response,String fileName,HSSFWorkbook wb){
+	   try {
+		   this.setResponseHeader(response, fileName);
+		   OutputStream os = response.getOutputStream();
+		   wb.write(os);
+		   os.flush();
+		   os.close();
+	   } catch (Exception e) {
+		   logger.debug(e.getMessage());
+	   }
+   }
 }

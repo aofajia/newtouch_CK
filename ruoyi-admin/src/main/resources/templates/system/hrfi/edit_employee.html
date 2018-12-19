@@ -68,6 +68,28 @@
 <div th:include="include::footer"></div>
 <script type="text/javascript">
 
+    $.ajax(
+        {
+            type: "POST",
+            url: "/system/hr/selectEmployeeByRedis",
+            dataType: "JSON",
+            success: function (data) {
+                $('#id').val(data.id);
+                $('#name').val(data.name);
+                $('#company_name').val(data.company);
+                $('#dept').val(data.dept);
+                $('#gender').val(data.gender);
+                $('#phone').val(data.phone);
+                $('#email').val(data.email);
+                $('#startTime').val(data.entryDate);
+                $('#email').val(data.email);;
+            },
+            error: function () {
+                alert("获取数据失败", "error");
+            }
+
+        });
+
 
     function submitHandler()
     {
@@ -111,12 +133,12 @@
             alert("请选择导入日期");
             return;
         }else{
-            add();
+            edit();
         }
     }
 
     //员工新增
-    function add()
+    function edit()
     {
         var id = $('#id').val();
         var name = $('#name').val();
@@ -130,7 +152,7 @@
         $.ajax({
             cache : true,
             type : "POST",
-            url : ctx + "system/hr/addEmployee",
+            url : ctx + "system/hr/updateEmployee",
             dataType : 'json',
             data : {
                 "id" : id,
@@ -148,7 +170,7 @@
             },
             success : function(data) {
                 if(data.code == 0){
-                    alert("新增成功！")
+                    alert("修改成功！")
                     $.operate.saveSuccess(data);
                 }else{
                     alert("请保证数据正确！")
