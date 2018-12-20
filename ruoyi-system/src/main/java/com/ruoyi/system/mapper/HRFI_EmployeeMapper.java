@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.HRFI_Employee;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface HRFI_EmployeeMapper {
 
     int updateByPrimaryKey(HRFI_Employee record);
 
-    List<HRFI_Employee> list();
+    List<HRFI_Employee> list(@Param("id")String id,@Param("company")String company);
 }

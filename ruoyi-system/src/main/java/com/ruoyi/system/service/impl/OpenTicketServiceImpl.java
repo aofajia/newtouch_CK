@@ -5,10 +5,7 @@ import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.ReadExcel;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.mapper.EmployeeMapper;
-import com.ruoyi.system.mapper.HRFI_EmployeeMapper;
-import com.ruoyi.system.mapper.OpenTicketMapper;
-import com.ruoyi.system.mapper.WelfareMapper;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.OpenTicketService;
 import com.ruoyi.system.utils.NumberArithmeticUtils;
 import org.slf4j.Logger;
@@ -61,6 +58,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private WelfareMapper welfareMapper;
     @Autowired
     private HRFI_EmployeeMapper hrfi_employeeMapper;
+    @Autowired
+    private WithDrawalsMapper withDrawalsMapper;
 
     public static void main(String[] args) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
@@ -475,8 +474,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     }
 
     @Override
-    public List<HRFI_Employee> employeeList() {
-        return hrfi_employeeMapper.list();
+    public List<HRFI_Employee> employeeList(String id,String company) {
+        return hrfi_employeeMapper.list(id,company);
     }
 
     @Override
@@ -504,9 +503,14 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                 return AjaxResult.error();
             }
         } catch (Exception e) {
-            logger.debug("新增员工失败" + e.getMessage());
+            logger.debug("修改员工失败" + e.getMessage());
             return AjaxResult.error();
         }
+    }
+
+    @Override
+    public List<WithDrawals> quitList(String id) {
+        return withDrawalsMapper.list(id);
     }
 
     /**

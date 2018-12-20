@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.system.mapper.WithDrawalsMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.WithDrawals">
+        <id column="withdraw_no" property="withdrawNo" jdbcType="INTEGER"/>
+        <result column="staff_card" property="staffCard" jdbcType="INTEGER"/>
+        <result column="staff_name" property="staffName" jdbcType="VARCHAR"/>
+        <result column="member_id" property="memberId" jdbcType="INTEGER"/>
+        <result column="money" property="money" jdbcType="DECIMAL"/>
+        <result column="withdraw_type" property="withdrawType" jdbcType="CHAR"/>
+        <result column="t_begin" property="tBegin" jdbcType="INTEGER"/>
+        <result column="auditing" property="auditing" jdbcType="CHAR"/>
+        <result column="op_auditing" property="opAuditing" jdbcType="BIGINT"/>
+        <result column="t_auditing" property="tAuditing" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    withdraw_no, staff_card, staff_name, member_id, money, withdraw_type, t_begin, auditing, 
+    op_auditing, t_auditing
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sdb_b2c_member_withdrawals
+        where withdraw_no = #{withdrawNo,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sdb_b2c_member_withdrawals
+    where withdraw_no = #{withdrawNo,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.ruoyi.system.domain.WithDrawals">
+    insert into sdb_b2c_member_withdrawals (withdraw_no, staff_card, staff_name, 
+      member_id, money, withdraw_type, 
+      t_begin, auditing, op_auditing, 
+      t_auditing)
+    values (#{withdrawNo,jdbcType=INTEGER}, #{staffCard,jdbcType=INTEGER}, #{staffName,jdbcType=VARCHAR}, 
+      #{memberId,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{withdrawType,jdbcType=CHAR}, 
+      #{tBegin,jdbcType=INTEGER}, #{auditing,jdbcType=CHAR}, #{opAuditing,jdbcType=BIGINT}, 
+      #{tAuditing,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.ruoyi.system.domain.WithDrawals">
+        insert into sdb_b2c_member_withdrawals
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="withdrawNo != null">
+                withdraw_no,
+            </if>
+            <if test="staffCard != null">
+                staff_card,
+            </if>
+            <if test="staffName != null">
+                staff_name,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="withdrawType != null">
+                withdraw_type,
+            </if>
+            <if test="tBegin != null">
+                t_begin,
+            </if>
+            <if test="auditing != null">
+                auditing,
+            </if>
+            <if test="opAuditing != null">
+                op_auditing,
+            </if>
+            <if test="tAuditing != null">
+                t_auditing,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="withdrawNo != null">
+                #{withdrawNo,jdbcType=INTEGER},
+            </if>
+            <if test="staffCard != null">
+                #{staffCard,jdbcType=INTEGER},
+            </if>
+            <if test="staffName != null">
+                #{staffName,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawType != null">
+                #{withdrawType,jdbcType=CHAR},
+            </if>
+            <if test="tBegin != null">
+                #{tBegin,jdbcType=INTEGER},
+            </if>
+            <if test="auditing != null">
+                #{auditing,jdbcType=CHAR},
+            </if>
+            <if test="opAuditing != null">
+                #{opAuditing,jdbcType=BIGINT},
+            </if>
+            <if test="tAuditing != null">
+                #{tAuditing,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.WithDrawals">
+        update sdb_b2c_member_withdrawals
+        <set>
+            <if test="staffCard != null">
+                staff_card = #{staffCard,jdbcType=INTEGER},
+            </if>
+            <if test="staffName != null">
+                staff_name = #{staffName,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawType != null">
+                withdraw_type = #{withdrawType,jdbcType=CHAR},
+            </if>
+            <if test="tBegin != null">
+                t_begin = #{tBegin,jdbcType=INTEGER},
+            </if>
+            <if test="auditing != null">
+                auditing = #{auditing,jdbcType=CHAR},
+            </if>
+            <if test="opAuditing != null">
+                op_auditing = #{opAuditing,jdbcType=BIGINT},
+            </if>
+            <if test="tAuditing != null">
+                t_auditing = #{tAuditing,jdbcType=INTEGER},
+            </if>
+        </set>
+        where withdraw_no = #{withdrawNo,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.WithDrawals">
+    update sdb_b2c_member_withdrawals
+    set staff_card = #{staffCard,jdbcType=INTEGER},
+      staff_name = #{staffName,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      money = #{money,jdbcType=DECIMAL},
+      withdraw_type = #{withdrawType,jdbcType=CHAR},
+      t_begin = #{tBegin,jdbcType=INTEGER},
+      auditing = #{auditing,jdbcType=CHAR},
+      op_auditing = #{opAuditing,jdbcType=BIGINT},
+      t_auditing = #{tAuditing,jdbcType=INTEGER}
+    where withdraw_no = #{withdrawNo,jdbcType=INTEGER}
+  </update>
+
+    <!-- 查询离职提现记录 -->
+    <select id="list" resultType="com.ruoyi.system.domain.WithDrawals">
+        SELECT
+        s.staff_card AS staffCard,
+        s.staff_name AS staffName,
+        s.member_id AS memberId,
+        s.money AS money,
+        s.withdraw_type AS withdrawType,
+        FROM_UNIXTIME(s.t_begin) AS begin,
+        s.auditing AS auditing
+        FROM
+        sdb_b2c_member_withdrawals s
+        <where>
+            <if test="id != null">
+                AND s.staff_card = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

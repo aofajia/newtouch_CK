@@ -3,16 +3,11 @@ package com.ruoyi.web.controller.system;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.utils.ExcelUtil;
-import com.ruoyi.common.utils.ReadExcel;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.system.domain.EmployeeExample;
-import com.ruoyi.system.domain.HRFI_Employee;
-import com.ruoyi.system.domain.OpenTicketInfoCollect;
-import com.ruoyi.system.domain.OpenTicketParms;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.OpenTicketService;
-import com.ruoyi.system.utils.NumberArithmeticUtils;
 import com.ruoyi.web.controller.tool.RedisUtils;
 import com.ruoyi.web.core.base.BaseController;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,17 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -116,6 +106,13 @@ public class HRController extends BaseController {
 		return prefix + "/edit_employee";
 	}
 
+	/**
+	 *  跳转到离职提现界面
+	 */
+	@RequestMapping("/quit")
+	public String quit() {
+		return prefix + "/quit";
+	}
 
 	/**
 	 * 导出报表
@@ -378,9 +375,9 @@ public class HRController extends BaseController {
 	 */
 	@RequestMapping("/employeeList")
 	@ResponseBody
-	public TableDataInfo employeeList() {
+	public TableDataInfo employeeList(String id,String company) {
 		startPage();
-		return getDataTable(openTicketService.employeeList());
+		return getDataTable(openTicketService.employeeList(id,company));
 	}
 
 
@@ -470,6 +467,17 @@ public class HRController extends BaseController {
 			logger.debug("查看员工信息失败！" + e.getMessage());
 		}
 		return employee;
+	}
+
+	/**
+	 * 离职提现一览
+	 */
+	@RequestMapping("/quitList")
+	@ResponseBody
+	public TableDataInfo quitList(String id){
+		startPage();
+		List<WithDrawals> list = openTicketService.quitList(id);
+		return getDataTable(list);
 	}
 
 

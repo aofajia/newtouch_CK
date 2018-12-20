@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      lang="zh">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            员工编号：<input type="text" id="id" name="roleKey"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="searchByQuit()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+
+    //搜索
+    function searchByQuit() {
+        var id = $('#id').val();
+        var options = $('#bootstrap-table').bootstrapTable('refresh', {
+            url: "/system/hr/quitList",
+            query:
+                {
+                    id : id
+                }
+        });
+    }
+
+    //table初始化
+    var prefix = ctx + "system/hr"
+    $(function () {
+        var options = {
+            url: prefix + "/quitList",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'staffCard',
+                    title: '员工编号'
+                },
+                {
+                    field: 'staffName',
+                    title: '员工姓名',
+                },
+                {
+                    field: 'money',
+                    title: '金额',
+                },
+                {
+                    field: 'withdrawType',
+                    title: '类型',
+                    formatter: function (value, row, index) {
+                        var type = value;
+                        if(type == 'offjob'){
+                            type = '离职提现'
+                        }else{
+                            type = '年终提现'
+                        }
+                        return type;
+                    }
+                },
+                {
+                    field: 'begin',
+                    title: '提现日期',
+                    sortable: true
+                },
+            ]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

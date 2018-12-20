@@ -107,7 +107,7 @@ public interface OpenTicketService {
     /**
      * 公司员工信息总览
      */
-    List<HRFI_Employee> employeeList();
+    List<HRFI_Employee> employeeList(String id,String company);
 
 
     /**
@@ -119,6 +119,12 @@ public interface OpenTicketService {
      * 员工修改
      */
     public AjaxResult editEmployee(HRFI_Employee employee);
+
+
+    /**
+     *  离职提现一览
+     */
+    public List<WithDrawals> quitList(String id);
 
 
 }

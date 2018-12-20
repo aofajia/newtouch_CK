@@ -177,6 +177,14 @@
 
   <!--公司员工信息总览-->
   <select id="list" resultMap="BaseResultMap">
-      select * from hrfi_employee
+    select * from hrfi_employee
+    <where>
+      <if test="id != null">
+        AND id = #{id}
+      </if>
+      <if test="company != null  ">
+        AND company LIKE CONCAT('%',#{company},'%')
+      </if>
+    </where>
   </select>
 </mapper>

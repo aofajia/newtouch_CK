@@ -12,10 +12,13 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            月份：<input type="text" name="roleKey"/>
+                            员工编号：<input type="text" id="id" name="roleKey"/>
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                            公司：<input type="text" id="company" name="roleKey"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="searchByEmployee()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
                         </li>
                     </ul>
@@ -51,6 +54,20 @@
 <script th:inline="javascript">
 
 
+    //搜索
+    function searchByEmployee() {
+        var id = $('#id').val();
+        var company = $('#company').val();
+        var options = $('#bootstrap-table').bootstrapTable('refresh', {
+            url: "/system/hr/employeeList",
+            query:
+                {
+                   id : id,
+                   company : company
+                }
+        });
+    }
+    
     //新增员工
     function insert(id) {
         var url = "/system/hr/insertEmployee";
