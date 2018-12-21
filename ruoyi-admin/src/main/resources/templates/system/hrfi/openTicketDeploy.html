@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-store">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="billToer" id="billToer">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人联系方式：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="billToContact" id="billToContact" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人地址（省）：</label>
+            <div class="col-sm-8">
+                <select id="billToProvince" onchange="getSecondLevelAddress()">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人地址（市）：</label>
+            <select id="billToCity" onchange="getThreeLevelAddress()">
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人地址（区）：</label>
+            <select id="billToCounty">
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">收票人地址（详细地址）：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="billToAddress" name="billToAddress">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">订单总金额：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="orderAmountCash" name="orderAmountCash">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">发票类型：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" id="type" name="phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">期望开票日期:</label>
+            <div class="col-sm-8">
+                <li class="select-time">
+                    <input type="text" class="time-input" id="startTime"  name="params[beginTime]"/>
+                </li>
+            </div>
+        </div>
+        <div class="form-group" hidden="hidden">
+            <label class="col-sm-3 control-label">有效结束时间：</label>
+            <div class="col-sm-8">
+                <li class="select-time">
+                    <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
+                </li>
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+
+    
+    $.ajax(
+        {
+            type: "POST",
+            url: "/system/hr/firstLevelAddress",
+            dataType: "JSON",
+            success: function (msg) {
+                $("#billToProvince").empty();
+                for (var i = 0; i < msg.length; i++) {
+                    $("#billToProvince").append("<option value=" + msg[i].id + ">" + msg[i].addressName  + "</option>");
+                }
+                if (msg.length == 0) {
+                    $("#billToProvince").append("<option value='0'>请选择</option>");//添加第一个option值
+                    confirm("未查到任何供应商信息，请联系运维人员。");
+                }
+
+            },
+            error: function () {
+                alert("获取数据失败", "error");
+            }
+        });
+
+    //获取京东二级地址
+    function getSecondLevelAddress() {
+        $.ajax(
+            {
+                type: "POST",
+                url: "/system/hr/secondLevelAddress",
+                dataType: "JSON",
+                data:{
+                   id : $("#billToProvince").val()
+                },
+                success: function (msg) {
+                    $("#billToCity").empty();
+                    for (var i = 0; i < msg.length; i++) {
+                        $("#billToCity").append("<option value=" + msg[i].id + ">" + msg[i].addressName  + "</option>");
+                    }
+                    if (msg.length == 0) {
+                        $("#billToCity").append("<option value='0'>请选择</option>");//添加第一个option值
+                        confirm("未查到任何供应商信息，请联系运维人员。");
+                    }
+
+                },
+                error: function () {
+                    alert("获取数据失败", "error");
+                }
+            });
+    }
+
+
+    //获取京东三级地址
+    function getThreeLevelAddress() {
+        $.ajax(
+            {
+                type: "POST",
+                url: "/system/hr/threeLevelAddress",
+                dataType: "JSON",
+                data:{
+                    id : $("#billToCity").val()
+                },
+                success: function (msg) {
+                    $("#billToCounty").empty();
+                    for (var i = 0; i < msg.length; i++) {
+                        $("#billToCounty").append("<option value=" + msg[i].id + ">" + msg[i].addressName  + "</option>");
+                    }
+                    if (msg.length == 0) {
+                        $("#billToCounty").append("<option value='0'>请选择</option>");//添加第一个option值
+                        confirm("未查到任何供应商信息，请联系运维人员。");
+                    }
+
+                },
+                error: function () {
+                    alert("获取数据失败", "error");
+                }
+            });
+    }
+
+
+    function submitHandler()
+    {
+
+    }
+
+    //员工新增
+    function add()
+    {   
+        var id = $('#id').val();
+        var name = $('#name').val();
+        var company_name = $('#company_name').val();
+        var dept = $('#dept').val();
+        var gender = $('#gender').val();
+        var phone = $('#phone').val();
+        var email = $('#email').val();
+        var export_date = $('#startTime').val();
+        var email = $('#email').val();
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : ctx + "system/hr/addEmployee",
+            dataType : 'json',
+            data : {
+                "id" : id,
+                "name" : name,
+                "company" : company_name,
+                "dept" : dept,
+                "gender" : gender,
+                "phone" : phone,
+                "email" : email,
+                "entryDate" : export_date,
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                if(data.code == 0){
+                    alert("新增成功！")
+                    $.operate.saveSuccess(data);
+                }else{
+                    alert("请保证数据正确！")
+                }
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

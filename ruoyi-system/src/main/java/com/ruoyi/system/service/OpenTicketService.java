@@ -5,6 +5,7 @@ import com.ruoyi.system.domain.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public interface OpenTicketService {
 
@@ -125,6 +126,19 @@ public interface OpenTicketService {
      *  离职提现一览
      */
     public List<WithDrawals> quitList(String id);
+
+
+    /**
+     * 京东一级地址
+     */
+    List<JDAddress> firstLevelAddress();
+
+    /**
+     * 京东其他地址
+     */
+    List<JDAddress> otherLevelAddress(Integer id,String address);
+
+
 
 
 }

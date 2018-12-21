@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -40,6 +41,10 @@ public class HRController extends BaseController {
 	//跳转前缀
 	private String prefix = "system/hrfi";
 
+	//JD二级地址
+	private final String JD_SECOND_ADDRESS = "http://test.third-party.newtouch.com/jdmp/ntpmp-api/query-city";
+	//JD三级地址
+	private final String JD_THREE_ADDRESS = "http://test.third-party.newtouch.com/jdmp/ntpmp-api/query-county";
 
 	/**
 	 * 跳转Hr首页
@@ -112,6 +117,15 @@ public class HRController extends BaseController {
 	@RequestMapping("/quit")
 	public String quit() {
 		return prefix + "/quit";
+	}
+
+
+	/**
+	 *  跳转到开票界面配置页面
+	 */
+	@RequestMapping("/deploy")
+	public String deploy(){
+		return prefix+"/openTicketDeploy";
 	}
 
 	/**
@@ -480,7 +494,32 @@ public class HRController extends BaseController {
 		return getDataTable(list);
 	}
 
+	/**
+	 * JD一级地址
+	 */
+	@RequestMapping("/firstLevelAddress")
+	@ResponseBody
+	public List<JDAddress> firstLevelAddress(){
+		return openTicketService.firstLevelAddress();
+	}
 
+	/**
+	 * JD二级地址
+	 */
+	@RequestMapping("/secondLevelAddress")
+	@ResponseBody
+	public List<JDAddress> secondLevelAddress(String id){
+		return openTicketService.otherLevelAddress(Integer.parseInt(id),JD_SECOND_ADDRESS);
+	}
+
+	/**
+	 * JD三级地址
+	 */
+	@RequestMapping("/threeLevelAddress")
+	@ResponseBody
+	public List<JDAddress> threeLevelAddress(String id){
+		return openTicketService.otherLevelAddress(Integer.parseInt(id),JD_THREE_ADDRESS);
+	}
 
 	private void close(HttpServletRequest request, HttpServletResponse response,String fileName,HSSFWorkbook wb){
 	   try {

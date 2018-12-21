@@ -36,7 +36,7 @@
 
         <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
             <a class="btn btn-primary btn-rounded btn-sm" onclick="applyOpenTicket()">
-                <i class="fa fa-plus"></i> 申请开票
+                <i class="fa fa-plus"></i> 京东申请开票
             </a>
             <!--<a class="btn btn-danger btn-rounded btn-sm" onclick="tableWith()" >-->
                 <!--<i class=""></i> 同步数据-->
@@ -132,14 +132,26 @@
     
     //申请开票
     function applyOpenTicket() {
-        confirm("确定申请开票？请保证数据准确无误！", function (result) {
-            if (!result) {
-                return;
-            } else {
+        var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        if (data == null || data == ''){
+            alert("请先选择一家公司开票！");
+            return;
+        }
+        if(data.length > 1){
+            alert("不能同时选择多家公司开票！");
+            return;
+        }
 
-            }
-
-        })
+        var url = "/system/hr/deploy";
+        $.modal.open("开票" + "配置信息填写", url);
+//        confirm("确定申请开票？请保证数据准确无误！", function (result) {
+//            if (!result) {
+//                return;
+//            } else {
+//
+//            }
+//
+//        })
     }
 
 

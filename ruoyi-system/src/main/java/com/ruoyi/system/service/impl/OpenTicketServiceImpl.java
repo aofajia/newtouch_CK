@@ -34,7 +34,8 @@ import static com.ruoyi.common.utils.http.HttpClient.sendPost;
 @Service
 public class OpenTicketServiceImpl implements OpenTicketService {
 
-
+    //JD一级地址
+    private final String JD_FIRST_ADDRESS = "http://test.third-party.newtouch.com/jdmp/ntpmp-api/query-province";
     //携程开卡
     private final String XC_OPEN_CARD = "http://third-party.newtouch.com/ctripmp/ntpmp-api/send-personnel-info";
     //饿了么全员同步地址
@@ -474,8 +475,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     }
 
     @Override
-    public List<HRFI_Employee> employeeList(String id,String company) {
-        return hrfi_employeeMapper.list(id,company);
+    public List<HRFI_Employee> employeeList(String id, String company) {
+        return hrfi_employeeMapper.list(id, company);
     }
 
     @Override
@@ -513,6 +514,86 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         return withDrawalsMapper.list(id);
     }
 
+    @Override
+    public List<JDAddress> firstLevelAddress() {
+        List<JDAddress> list = new ArrayList<>();
+        int count = 3;
+        do {
+            try {
+                Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+                paramMap.put("appId", "newtouchmall");
+                org.json.JSONObject json = new org.json.JSONObject(paramMap);
+                String result = NumberArithmeticUtils.sendPost(JD_FIRST_ADDRESS, JDParams(json.toString()), "utf-8", "application/json", json.toString());
+                JSONObject jsonObject = JSON.parseObject(result);
+                //解析数据
+                JDAddress jdAddress = null;
+                String success = jsonObject.getString("success");
+                if (success.equals("true")) {
+                    String data = jsonObject.getString("result");
+                    String sData = data.substring(1, data.length() - 1);
+                    String[] address = sData.split(",");
+                    list = JDAddressResolve(address, list, jdAddress);
+                    if (jumpOut(list)){
+                        break;
+                    }
+                } else {
+                    logger.debug("调用京东一级地址失败！" + System.currentTimeMillis());
+                }
+            } catch (Exception e) {
+                logger.debug("调用京东一级地址异常！" + e.getMessage());
+                e.getMessage();
+            }
+            count--;
+        }while (count > 1);
+        return list;
+    }
+
+    @Override
+    public List<JDAddress> otherLevelAddress(Integer id, String address) {
+        List<JDAddress> list = new ArrayList<>();
+        int count = 3;
+        do {
+            try {
+                Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+                paramMap.put("appId", "newtouchmall");
+                paramMap.put("id", id);
+                org.json.JSONObject json = new org.json.JSONObject(paramMap);
+                String result = NumberArithmeticUtils.sendPost(address, JDParams(json.toString()), "utf-8", "application/json", json.toString());
+                JSONObject jsonObject = JSON.parseObject(result);
+                //解析数据
+                String success = jsonObject.getString("success");
+                JDAddress jdAddress = null;
+                if (success.equals("true")) {
+                    String data = jsonObject.getString("result");
+                    String sData = data.substring(1, data.length() - 1);
+                    String[] sAddress = sData.split(",");
+                    list = JDAddressResolve(sAddress, list, jdAddress);
+                    if (jumpOut(list)){
+                        break;
+                    }else{
+                        continue;
+                    }
+                } else {
+                    logger.debug("调用京东地址失败！" + System.currentTimeMillis());
+                }
+            } catch (Exception e) {
+                logger.debug("调用京东地址失败！" + e.getMessage());
+                e.getMessage();
+            }
+        }while (count > 1);
+
+        return list;
+    }
+
+    //跳出循环
+    private boolean jumpOut(Object obj){
+        if (obj != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     /**
      * 计算百分比
      */
@@ -538,8 +619,41 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         return card;
     }
 
+
     /**
-     * 对接饿了么 sign算法
+     * 解析京东地址算法
+     */
+    private List<JDAddress> JDAddressResolve(String[] data, List<JDAddress> list, JDAddress jdAddress) {
+        for (int i = 0; i < data.length; i++) {
+            String[] nextAddress = data[i].split(":");
+            jdAddress = new JDAddress();
+            jdAddress.setAddressName(nextAddress[0]);
+            jdAddress.setId(Integer.parseInt(nextAddress[1]));
+            list.add(jdAddress);
+        }
+        return list;
+    }
+
+
+    /**
+     * 对接京东地址sign
+     */
+    private Map<String, Object> JDParams(String object) {
+        Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
+        StringBuffer stringBuffer = new StringBuffer();
+        long time = System.currentTimeMillis();
+        stringBuffer.append(time);
+        stringBuffer.append(object);
+        stringBuffer.append("651e83d0ef47603076d99601ceb95d64");
+        String md5 = Md5Utils.string2MD5(stringBuffer.toString());
+        paramMap.put("appId", "newtouchmall");
+        paramMap.put("timestamp", time);
+        paramMap.put("sign", md5.toUpperCase());
+        return paramMap;
+    }
+
+    /**
+     * 对接JD sign算法
      */
     private Map<String, Object> params(List<EmployeeExample> list) {
         Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
@@ -575,5 +689,6 @@ public class OpenTicketServiceImpl implements OpenTicketService {
         paramMap.put("sign", md5.toUpperCase());
         return paramMap;
     }
+
 
 }
