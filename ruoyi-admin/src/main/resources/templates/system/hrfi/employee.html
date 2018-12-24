@@ -62,12 +62,12 @@
             url: "/system/hr/employeeList",
             query:
                 {
-                   id : id,
-                   company : company
+                    id: id,
+                    company: company
                 }
         });
     }
-    
+
     //新增员工
     function insert(id) {
         var url = "/system/hr/insertEmployee";
@@ -78,67 +78,72 @@
     function update(id) {
         var data = $("#bootstrap-table").bootstrapTable('getSelections');
         console.log(data);
-        if (data.length > 1){
+        if (data.length > 1) {
             alert("不能多选！");
         }
         $.ajax(
             {
-                cache : true,
-                type : "POST",
-                url : ctx+"system/hr/storeEmployeeByRedis",
-                dataType : "JSON",
-                data : {
-                    "id" : data[0].id,
-                    "name" : data[0].name,
-                    "company" : data[0].company,
-                    "dept" : data[0].dept,
-                    "gender" : data[0].gender,
-                    "phone" : data[0].phone,
-                    "email" : data[0].email,
-                    "entryDate" : data[0].entryDate,
+                cache: true,
+                type: "POST",
+                url: ctx + "system/hr/storeEmployeeByRedis",
+                dataType: "JSON",
+                data: {
+                    "id": data[0].id,
+                    "name": data[0].name,
+                    "company": data[0].company,
+                    "dept": data[0].dept,
+                    "gender": data[0].gender,
+                    "phone": data[0].phone,
+                    "email": data[0].email,
+                    "entryDate": data[0].entryDate,
                 },
-                async : false,
+                async: false,
             });
         var url = "/system/hr/editEmployee";
         $.modal.open("修改" + "修改员工信息", url);
     }
 
 
-
     //导出
     function exportTemplet() {
-        window.location.href="/system/hr/exportEmployee";
+        window.location.href = "/system/hr/exportEmployee";
     }
 
     //导入
     function exports() {
-        if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
-            alert("请先选择一个文件!")
-            return
-        } else {
-            $.ajax(
-                {
-                    type: "POST",
-                    url: "/system/hr/exportDataEmployee",
-                    dataType: "JSON",
-                    data: {
-                        address: $("#excel_file").val()
-                    },
-                    success: function (msg) {
-                        console.log(msg);
-                        if (msg.code == 0) {
-                            alert("导入数据成功！");
-                            $("#bootstrap-table").bootstrapTable('refresh');
-                            $("#excel_file").val(null)
-                        } else {
-                            alert("导入数据失败！请您使用IE浏览器进行导入！");
+        if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+            if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
+                alert("请先选择一个文件!")
+                return
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/system/hr/exportDataEmployee",
+                        dataType: "JSON",
+                        data: {
+                            address: $("#excel_file").val()
+                        },
+                        success: function (msg) {
+                            console.log(msg);
+                            if (msg.code == 0) {
+                                alert("导入数据成功！");
+                                $("#bootstrap-table").bootstrapTable('refresh');
+                                $("#excel_file").val(null)
+                            } else {
+                                alert("导入数据失败！");
+                            }
+                        },
+                        error: function () {
+                            alert("获取数据失败", "error");
                         }
-                    },
-                    error: function () {
-                        alert("获取数据失败", "error");
-                    }
-                });
+                    });
+            }
+        } else {
+            alert("请使用IE浏览器！");
+            return;
         }
+
     }
 
     //table初始化
