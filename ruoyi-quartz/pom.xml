@@ -29,10 +29,24 @@
 			</exclusions>
 		</dependency>
 
-		<!-- 通用工具-->
+        <!-- 通用工具-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common</artifactId>
+            <version>${ruoyi.version}</version>
+        </dependency>
+
+        <!--系统-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-system</artifactId>
+            <version>${ruoyi.version}</version>
+        </dependency>
+
+        <!--邮箱-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-mailservice</artifactId>
             <version>${ruoyi.version}</version>
         </dependency>
 		
