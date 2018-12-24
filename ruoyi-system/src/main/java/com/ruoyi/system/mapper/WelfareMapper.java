@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Welfare;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public interface WelfareMapper {
 
     String uuid();
 
-    List<Welfare> listWelfare();
+    List<Welfare> listWelfare(@Param("id") String id);
 }

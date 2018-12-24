@@ -12,13 +12,11 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            月份：<input type="text" name="roleKey"/>
+                            员工编号：<input type="text" id="id" name="roleKey"/>
                         </li>
                         <li>
-                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="hrSearch()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
-                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
-                                    class="fa fa-refresh"></i>&nbsp;重置</a>
                         </li>
                     </ul>
                 </div>
@@ -45,39 +43,56 @@
 
     //导出
     function exportTemplet() {
-        window.location.href="/system/hr/export";
+        window.location.href = "/system/hr/export";
     }
 
-
+    //搜索 
+    function hrSearch() {
+        var id = $("#id").val();
+        var options = $('#bootstrap-table').bootstrapTable('refresh', {
+            url: "/system/hr/selectWelfare",
+            query:
+                {
+                    id : id
+                }
+        });
+    }
+    
     //导入
     function exports() {
-        if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
-            alert("请先选择一个文件!")
-            return
-        } else {
-            $.ajax(
-                {
-                    type: "POST",
-                    url: "/system/hr/exportData",
-                    dataType: "JSON",
-                    data: {
-                        address: $("#excel_file").val()
-                    },
-                    success: function (msg) {
-                        console.log(msg);
-                        if (msg.code == 0) {
-                            alert("导入数据成功！");
-                            $("#bootstrap-table").bootstrapTable('refresh');
-                            $("#excel_file").val(null)
-                        } else {
-                            alert("导入数据失败！请您使用IE浏览器进行导入！");
+        if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+            if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
+                alert("请先选择一个文件!")
+                return
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/system/hr/exportData",
+                        dataType: "JSON",
+                        data: {
+                            address: $("#excel_file").val()
+                        },
+                        success: function (msg) {
+                            console.log(msg);
+                            if (msg.code == 0) {
+                                alert("导入数据成功！");
+                                $("#bootstrap-table").bootstrapTable('refresh');
+                                $("#excel_file").val(null)
+                            } else {
+                                alert("导入数据失败！");
+                            }
+                        },
+                        error: function () {
+                            alert("获取数据失败", "error");
                         }
-                    },
-                    error: function () {
-                        alert("获取数据失败", "error");
-                    }
-                });
+                    });
+            }
+        } else {
+            alert("请您使用IE浏览器进行导入！");
+            return;
         }
+
     }
 
     //table初始化

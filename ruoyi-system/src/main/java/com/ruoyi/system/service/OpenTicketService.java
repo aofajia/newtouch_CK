@@ -90,7 +90,7 @@ public interface OpenTicketService {
     /**
      *  查询福利数据
      */
-    public List<Welfare> listWelfare();
+    public List<Welfare> listWelfare(String id);
 
 
     /**

@@ -123,5 +123,10 @@
   <!-- 分页信息显示 -->
   <select id="listWelfare" resultMap="BaseResultMap">
        select * from hrfi_welfare
+       <where>
+         <if test="id != null">
+           AND id = #{id}
+         </if>
+       </where>
   </select>
 </mapper>

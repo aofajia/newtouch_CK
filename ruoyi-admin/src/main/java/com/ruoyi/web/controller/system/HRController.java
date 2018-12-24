@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -137,7 +136,7 @@ public class HRController extends BaseController {
 	@ResponseBody
 	public AjaxResult export(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//excel标题
-		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费","福利类型"};
+		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费"};
 		//excel文件名
 		String fileName = "welfare" + System.currentTimeMillis() + ".xls";
 		//sheet名
@@ -400,9 +399,10 @@ public class HRController extends BaseController {
 	 */
 	@RequestMapping("/selectWelfare")
 	@ResponseBody
-	public TableDataInfo selectWelfare() {
+	public TableDataInfo selectWelfare(String id) {
 		startPage();
-		return getDataTable(openTicketService.listWelfare());
+		List<Welfare> list = openTicketService.listWelfare(id);
+		return getDataTable(list);
 	}
 
 

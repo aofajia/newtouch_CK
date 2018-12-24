@@ -397,8 +397,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     }
 
     @Override
-    public List<Welfare> listWelfare() {
-        return welfareMapper.listWelfare();
+    public List<Welfare> listWelfare(String id) {
+        return welfareMapper.listWelfare(id);
     }
 
     @Override
