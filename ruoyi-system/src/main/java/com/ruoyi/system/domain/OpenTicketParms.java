@@ -16,6 +16,17 @@ public class OpenTicketParms implements Serializable {
     //供应商
     String supplier;
 
+    //总订单金额
+    String money;
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
     public String getStartDate() {
         return startDate;
     }

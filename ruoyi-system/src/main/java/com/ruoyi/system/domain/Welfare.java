@@ -15,12 +15,16 @@ public class Welfare {
 
     private String dept;
 
+    private String status;
+
+    private String type;
+
     public String getUuid() {
         return uuid;
     }
 
     public void setUuid(String uuid) {
-        this.uuid = uuid;
+        this.uuid = uuid == null ? null : uuid.trim();
     }
 
     public String getId() {
@@ -69,5 +73,21 @@ public class Welfare {
 
     public void setDept(String dept) {
         this.dept = dept == null ? null : dept.trim();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 }

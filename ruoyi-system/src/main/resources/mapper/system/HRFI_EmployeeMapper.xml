@@ -186,6 +186,7 @@
         AND company LIKE CONCAT('%',#{company},'%')
       </if>
     </where>
+    ORDER BY company,dept
   </select>
 
 </mapper>

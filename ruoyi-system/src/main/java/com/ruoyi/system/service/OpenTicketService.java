@@ -96,7 +96,7 @@ public interface OpenTicketService {
     /**
      *  京东开票
      */
-    public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list);
+    public AjaxResult JDOpenCard(JDOpenTicketParams JDParams,OpenTicketParms parms);
 
 
     /**

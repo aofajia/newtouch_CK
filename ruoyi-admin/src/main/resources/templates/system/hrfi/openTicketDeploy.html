@@ -41,15 +41,12 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">订单总金额：</label>
-            <div class="col-sm-8">
-                <input class="form-control" type="text" id="orderAmountCash" name="orderAmountCash">
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-3 control-label">发票类型：</label>
             <div class="col-sm-8">
-                <input class="form-control" type="text" id="type" name="phone">
+                <select id="invoiceType">
+                    <option value="1">普通发票</option>
+                    <option value="3">电子票</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -153,51 +150,32 @@
 
     function submitHandler()
     {
-
+//        JDOpenTicket();
     }
 
-    //员工新增
-    function add()
-    {   
-        var id = $('#id').val();
-        var name = $('#name').val();
-        var company_name = $('#company_name').val();
-        var dept = $('#dept').val();
-        var gender = $('#gender').val();
-        var phone = $('#phone').val();
-        var email = $('#email').val();
-        var export_date = $('#startTime').val();
-        var email = $('#email').val();
-        $.ajax({
-            cache : true,
-            type : "POST",
-            url : ctx + "system/hr/addEmployee",
-            dataType : 'json',
-            data : {
-                "id" : id,
-                "name" : name,
-                "company" : company_name,
-                "dept" : dept,
-                "gender" : gender,
-                "phone" : phone,
-                "email" : email,
-                "entryDate" : export_date,
-            },
-            async : false,
-            error : function(request) {
-                $.modal.alertError("系统错误");
-            },
-            success : function(data) {
-                if(data.code == 0){
-                    alert("新增成功！")
-                    $.operate.saveSuccess(data);
-                }else{
-                    alert("请保证数据正确！")
-                }
-
-            }
-        });
+    //京东开票
+    function JDOpenTicket() {
+        alert(1111);
+        $.ajax(
+            {
+                cache: true,
+                type: "POST",
+                url: ctx + "system/hr/JDOpenTicket",
+                dataType: "JSON",
+                data: {
+                    "billToer": $("#billToer").val(),
+                    "billToContact": $("#billToContact").val(),
+                    "billToProvince": $("#billToProvince").val(),
+                    "billToCity": $("#billToCity").val(),
+                    "billToCounty": $("#billToCounty").val(),
+                    "billToAddress": $("#billToAddress").val(),
+                    "invoiceType": $("#invoiceType").val(),
+                    "invoiceDate": $("#startTime").val(),
+                },
+                async: false,
+            });
     }
+
 </script>
 </body>
 </html>

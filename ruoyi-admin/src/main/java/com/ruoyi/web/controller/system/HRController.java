@@ -10,6 +10,7 @@ import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.OpenTicketService;
 import com.ruoyi.web.controller.tool.RedisUtils;
 import com.ruoyi.web.core.base.BaseController;
+import io.swagger.models.auth.In;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -136,7 +138,7 @@ public class HRController extends BaseController {
 	@ResponseBody
 	public AjaxResult export(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//excel标题
-		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费"};
+		String[] title = {"员工编号", "员工姓名", "公司名称", "部门名称", "福利费","福利类型"};
 		//excel文件名
 		String fileName = "welfare" + System.currentTimeMillis() + ".xls";
 		//sheet名
@@ -411,14 +413,9 @@ public class HRController extends BaseController {
 	 */
 	@RequestMapping("/JDOpenTicket")
 	@ResponseBody
-	public AjaxResult JDOpenTicket() {
-		OpenTicketParms ps = (OpenTicketParms) RedisUtils.getObject("ps");
-		String id = ps.getCompanyId();
-		String supplier = ps.getSupplier();
-		String startDate = ps.getStartDate();
-		String endDate = ps.getEndDate();
-		List<OpenTicketInfoCollect> list = openTicketService.orderList(id, supplier, startDate, endDate);
-		openTicketService.JDOpenCard(list);
+	public AjaxResult JDOpenTicket(JDOpenTicketParams params) {
+		OpenTicketParms ps = (OpenTicketParms) RedisUtils.getObject("parms");
+		openTicketService.JDOpenCard(params,ps);
 		return null;
 	}
 
@@ -521,6 +518,14 @@ public class HRController extends BaseController {
 		return openTicketService.otherLevelAddress(Integer.parseInt(id),JD_THREE_ADDRESS);
 	}
 
+
+	@RequestMapping("/storeJDParams")
+	@ResponseBody
+	public AjaxResult storeJDParams(OpenTicketParms parms){
+		RedisUtils.setObject("parms",parms);
+        return AjaxResult.success();
+	}
+
 	private void close(HttpServletRequest request, HttpServletResponse response,String fileName,HSSFWorkbook wb){
 	   try {
 		   this.setResponseHeader(response, fileName);
@@ -531,5 +536,6 @@ public class HRController extends BaseController {
 	   } catch (Exception e) {
 		   logger.debug(e.getMessage());
 	   }
-   }
+    }
+
 }

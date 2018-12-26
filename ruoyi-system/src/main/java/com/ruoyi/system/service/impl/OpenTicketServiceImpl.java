@@ -46,8 +46,8 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     private final String ELM_DELETE_CARD = "http://third-party.newtouch.com/elemp/ntpmp-api/delete-employee";
     //获取新员工地址
     private final String NEW_EMPLOYEE = "http://59.80.30.153:4090/HR/getNewEmpoloyeeInfo";
-    //京东开卡
-    private final String JD_OPEN_CARD = "";
+    //京东开卡机构
+    private final Integer JD_OPEN_CARD = 544;
     //记录日志
     Logger logger = LoggerFactory.getLogger(OpenTicketServiceImpl.class);
     //注入开票订单表
@@ -384,6 +384,7 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                     welfare.setCompany(sData[2]);
                     welfare.setDept(sData[3]);
                     welfare.setWelfare(sData[4]);
+                    welfare.setType(sData[5]);
                     welfare.setUuid(welfareMapper.uuid());
                     welfareMapper.insertSelective(welfare);
                 }
@@ -402,24 +403,45 @@ public class OpenTicketServiceImpl implements OpenTicketService {
     }
 
     @Override
-    public AjaxResult JDOpenCard(List<OpenTicketInfoCollect> list) {
+    public AjaxResult JDOpenCard(JDOpenTicketParams JDParams,OpenTicketParms parms) {
         try {
+
+            //获取公司id
+            String companyId = parms.getCompanyId();
+            //获取订单总金额
+            String money = parms.getMoney();
+            //获取开始时间
+            String startDate = parms.getStartDate();
+            //获取结束时间
+            String endDate = parms.getEndDate();
+            //获取供应商
+            String supplier = parms.getSupplier();
+
+            //使开始日期和结束日期为null
+            if (startDate.equals("0") || endDate.equals("0")) {
+                startDate = null;
+                endDate = null;
+            }
+            if (supplier.equals("0")) {
+                supplier = null;
+            }
+            //获取订单明细信息
+            List<OpenTicketInfoCollect> list = openTicketMapper.listOrders(companyId, supplier, startDate, endDate);
             Map<String, Object> paramMap = new LinkedHashMap<String, Object>();
             paramMap.put("appId", "newtouchmall");
             paramMap.put("settlementId", "");//结算单号（一个结算单号可对对应多个第三方申请单号）
-            paramMap.put("invoiceType", 1);//发票类型   1普通 2增值税
-            paramMap.put("invoiceOrg", "1"); //开票机构id
-            paramMap.put("invoiceDate", "1");//期望开票时间
-            paramMap.put("billToParty", "1");//收票单位 （填写开票省份）
-            paramMap.put("billToer", "吴亿笛");//收票人
-            paramMap.put("billToContact", "");//收票人联系方式
-            paramMap.put("billToProvince", 0);//收票人地址（省）
-            paramMap.put("billToCity", 0);//收票人地址（市）
-            paramMap.put("billToCounty", 0);//收票人地址（区）
+            paramMap.put("invoiceType", Integer.parseInt(JDParams.getInvoiceType()));//发票类型   1普通 2增值税
+            paramMap.put("invoiceOrg", JD_OPEN_CARD); //开票机构id
+            paramMap.put("invoiceDate", JDParams.getInvoiceDate());//期望开票时间
+            paramMap.put("billToer", JDParams.getBillToer());//收票人
+            paramMap.put("billToContact",JDParams.getBillToContact());//收票人联系方式
+            paramMap.put("billToProvince",JDParams.getBillToProvince());//收票人地址（省）
+            paramMap.put("billToCity",JDParams.getBillToCity());//收票人地址（市）
+            paramMap.put("billToCounty",JDParams.getBillToCounty());//收票人地址（区）
             paramMap.put("billToTown", 0);//收票人地址（街道）
-            paramMap.put("billToAddress", "");//收票人地址（详细地址）
-            paramMap.put("orderAmountCash", new BigDecimal(1));//总金额
-            paramMap.put("invoiceParticulars", list);//开票详情（限制在500个订单之内）
+            paramMap.put("billToAddress",JDParams.getBillToAddress());//收票人地址（详细地址）
+            paramMap.put("orderAmountCash",money);//总金额
+            //paramMap.put("invoiceParticulars", list);//开票详情（限制在500个订单之内）
 
         } catch (Exception e) {
             logger.debug("申请京东发表失败！" + e.getMessage());
@@ -458,7 +480,6 @@ public class OpenTicketServiceImpl implements OpenTicketService {
                     employee.setGender(sData[5]);
                     employee.setEmail(sData[6]);
                     employee.setEntryDate(df.format(new Date()));
-                    employee.setUpdateDate(session.getId());
                     employee.setUpdateDate(df.format(new Date()));
                     hrfi_employeeMapper.insertSelective(employee);
                 }

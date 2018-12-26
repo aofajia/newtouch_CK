@@ -94,8 +94,7 @@
                     "dept": data[0].dept,
                     "gender": data[0].gender,
                     "phone": data[0].phone,
-                    "email": data[0].email,
-                    "entryDate": data[0].entryDate,
+                    "email": data[0].email
                 },
                 async: false,
             });
@@ -111,7 +110,6 @@
 
     //导入
     function exports() {
-        if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
             if ($("#excel_file").val() == null || $("#excel_file").val() == '') {
                 alert("请先选择一个文件!")
                 return
@@ -139,11 +137,6 @@
                         }
                     });
             }
-        } else {
-            alert("请使用IE浏览器！");
-            return;
-        }
-
     }
 
     //table初始化
@@ -185,8 +178,21 @@
                     title: '邮箱',
                 },
                 {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function (value, row, index) {
+                        var name;
+                        if(value == '0'){
+                            name =  "<span class='badge badge-primary"  + "'>" +'启用'+ "</span>"
+                        }else{
+                            name =  "<span class='badge badge-danger"  + "'>" +'停用'+ "</span>"
+                        }
+                        return name;
+                    }
+                },
+                {
                     field: 'entryDate',
-                    title: '导入日期',
+                    title: '生效日期',
                     align: 'center',
                 },
             ]

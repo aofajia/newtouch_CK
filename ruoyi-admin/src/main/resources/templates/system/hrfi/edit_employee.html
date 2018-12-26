@@ -32,7 +32,10 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">性别：</label>
             <div class="col-sm-8">
-                <input class="form-control" type="text" id="gender" name="gender">
+                <select id="gender">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -45,22 +48,6 @@
             <label class="col-sm-3 control-label">邮箱：</label>
             <div class="col-sm-8">
                 <input class="form-control" type="text" name="email" id="email" >
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">导入日期</label>
-            <div class="col-sm-8">
-                <li class="select-time">
-                    <input type="text" class="time-input" id="startTime"  name="params[beginTime]"/>
-                </li>
-            </div>
-        </div>
-        <div class="form-group" hidden="hidden">
-            <label class="col-sm-3 control-label">有效结束时间：</label>
-            <div class="col-sm-8">
-                <li class="select-time">
-                    <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endTime]"/>
-                </li>
             </div>
         </div>
     </form>
@@ -81,8 +68,6 @@
                 $('#gender').val(data.gender);
                 $('#phone').val(data.phone);
                 $('#email').val(data.email);
-                $('#startTime').val(data.entryDate);
-                $('#email').val(data.email);;
             },
             error: function () {
                 alert("获取数据失败", "error");
@@ -127,11 +112,6 @@
         if($("#email").val() == null || $("#email").val() == ''){
             alert("邮箱不能为空");
             return;
-        }
-        //请选择导入日期
-        if($("#startTime").val() == null || $("#startTime").val() == ''){
-            alert("请选择导入日期");
-            return;
         }else{
             edit();
         }
@@ -147,8 +127,6 @@
         var gender = $('#gender').val();
         var phone = $('#phone').val();
         var email = $('#email').val();
-        var export_date = $('#startTime').val();
-        var email = $('#email').val();
         $.ajax({
             cache : true,
             type : "POST",
@@ -161,8 +139,7 @@
                 "dept" : dept,
                 "gender" : gender,
                 "phone" : phone,
-                "email" : email,
-                "entryDate" : export_date,
+                "email" : email
             },
             async : false,
             error : function(request) {

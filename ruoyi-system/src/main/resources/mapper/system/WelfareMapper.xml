@@ -2,34 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ruoyi.system.mapper.WelfareMapper" >
   <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Welfare" >
-    <id column="uuid" property="uuid" jdbcType="INTEGER" />
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="id" property="id" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="welfare" property="welfare" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="dept" property="dept" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, id, name, welfare, date, company, dept
+    uuid, id, name, welfare, date, company, dept, status, type
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
     <include refid="Base_Column_List" />
     from hrfi_welfare
-    where uuid = #{uuid,jdbcType=INTEGER}
+    where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from hrfi_welfare
-    where uuid = #{uuid,jdbcType=INTEGER}
+    where uuid = #{uuid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.ruoyi.system.domain.Welfare" >
-    insert into hrfi_welfare (uuid, id, name, 
-      welfare, date, company, 
-      dept)
-    values (#{uuid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{welfare,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
-      #{dept,jdbcType=VARCHAR})
+    insert into hrfi_welfare (uuid, id, name,
+    welfare, date, company,
+    dept, status, type)
+    values (#{uuid,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+    #{welfare,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},
+    #{dept,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.ruoyi.system.domain.Welfare" >
     insert into hrfi_welfare
@@ -55,10 +57,16 @@
       <if test="dept != null" >
         dept,
       </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uuid != null" >
-        #{uuid,jdbcType=INTEGER},
+        #{uuid,jdbcType=VARCHAR},
       </if>
       <if test="id != null" >
         #{id,jdbcType=VARCHAR},
@@ -77,6 +85,12 @@
       </if>
       <if test="dept != null" >
         #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -101,18 +115,26 @@
       <if test="dept != null" >
         dept = #{dept,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
     </set>
-    where uuid = #{uuid,jdbcType=INTEGER}
+    where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.Welfare" >
     update hrfi_welfare
     set id = #{id,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      welfare = #{welfare,jdbcType=VARCHAR},
-      date = #{date,jdbcType=VARCHAR},
-      company = #{company,jdbcType=VARCHAR},
-      dept = #{dept,jdbcType=VARCHAR}
-    where uuid = #{uuid,jdbcType=INTEGER}
+    name = #{name,jdbcType=VARCHAR},
+    welfare = #{welfare,jdbcType=VARCHAR},
+    date = #{date,jdbcType=VARCHAR},
+    company = #{company,jdbcType=VARCHAR},
+    dept = #{dept,jdbcType=VARCHAR},
+    status = #{status,jdbcType=VARCHAR},
+    type = #{type,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
 
   <!-- 返回uuid-->

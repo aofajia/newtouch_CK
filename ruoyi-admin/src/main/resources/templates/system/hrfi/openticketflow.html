@@ -132,7 +132,34 @@
     
     //申请开票
     function applyOpenTicket() {
+        var startTime = $('#startTime').val();
+        var endTime = $('#endTime').val();
+        var suppliertype = $('#suppliertype option:selected').val();
+        if(startTime == null || startTime == ''){
+            startTime = 0;
+        }
+        if(endTime == null || endTime == ''){
+            endTime = 0;
+        }
+        if(suppliertype == null || suppliertype == ''){
+            suppliertype = 0;
+        }
         var data = $("#bootstrap-table").bootstrapTable('getSelections');
+        $.ajax(
+            {
+                cache: true,
+                type: "POST",
+                url: ctx + "system/hr/storeJDParams",
+                dataType: "JSON",
+                data: {
+                    "companyId" : data[0].company_id,
+                    "money" : data[0].money_num,
+                    "startDate" : startTime ,
+                    "endTime" : endTime,
+                    "supplier" : suppliertype
+                },
+                async: false,
+            });
         if (data == null || data == ''){
             alert("请先选择一家公司开票！");
             return;
