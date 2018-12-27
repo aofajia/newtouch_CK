@@ -182,7 +182,7 @@ public class OrderCheckingServiceImpl implements IOrderCheckingService
             {
                 continue;
             }
-            else
+            else if("103".equals(store_id))
             {
                 shop_name = "欧飞";
             }

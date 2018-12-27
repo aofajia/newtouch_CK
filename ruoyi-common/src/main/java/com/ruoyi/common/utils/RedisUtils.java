@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.tool;
+package com.ruoyi.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;

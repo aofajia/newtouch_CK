@@ -26,14 +26,13 @@ import java.util.Map;
 
 /**
  * 订单对账
- * 
+ *
  * @author
  */
 @Controller
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequestMapping("/fi/orderchecking")
-public class OrderCheckingController extends BaseController
-{
+public class OrderCheckingController extends BaseController {
 
     private String prefix = "system/hrfi";
 
@@ -41,15 +40,13 @@ public class OrderCheckingController extends BaseController
     private IOrderCheckingService orderCheckingService;
 
     @RequestMapping("/home")
-    public String home()
-    {
-        return  prefix+"/orderchecking";
+    public String home() {
+        return prefix + "/orderchecking";
     }
 
     @PostMapping("/storelist")
     @ResponseBody
-    public List<Storemanger> storeList()
-    {
+    public List<Storemanger> storeList() {
         startPage();
         List<Storemanger> storemangers = orderCheckingService.selectStoreAll();
         return storemangers;
@@ -57,8 +54,7 @@ public class OrderCheckingController extends BaseController
 
     @PostMapping("/storeConfigList")
     @ResponseBody
-    public List<StoreConfig> storeConfigList()
-    {
+    public List<StoreConfig> storeConfigList() {
         startPage();
         List<StoreConfig> storeConfigs = orderCheckingService.selectStoreConfigList();
         return storeConfigs;
@@ -66,60 +62,47 @@ public class OrderCheckingController extends BaseController
 
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo gatDifferenceOrderList(String id,String startTime,String mainid, String flag)
-    {
+    public TableDataInfo gatDifferenceOrderList(String id, String startTime, String mainid, String flag) {
         startPage();
-        if(id != null && startTime != null && flag == null)
-        {
+        if (id != null && startTime != null && flag == null) {
             List differenceOrderList = orderCheckingService.gatDifferenceOrderList(id, startTime, mainid);
             return getDataTable(differenceOrderList);
-        }
-        else if("0".equals(flag))
-        {
+        } else if ("0".equals(flag)) {
             return getDataTable(orderCheckingService.getchinkingList(mainid));
-        }
-        else
-        {
+        } else {
             return getDataTable(new ArrayList<>());
         }
     }
 
     @PostMapping("/getchinkinginfo")
     @ResponseBody
-    public Result getChinkingInfo(@RequestParam(required = false) String startTime)
-    {
+    public Result getChinkingInfo(@RequestParam(required = false) String startTime) {
         Map map = null;
-        try
-        {
+        try {
             map = orderCheckingService.getchinkinginfo(startTime);
             return Result.success(map);
-        }
-        catch (HRFIExctption hrfiExctption)
-        {
-            return Result.failure(ResultCode.RESULE_DATA_NONE,hrfiExctption);
+        } catch (HRFIExctption hrfiExctption) {
+            return Result.failure(ResultCode.RESULE_DATA_NONE, hrfiExctption);
         }
     }
 
     @PostMapping("/chinking")
     @ResponseBody
-    public Result chinking(@RequestParam(required = false) String startTime)
-    {
-        Map map = orderCheckingService.chinkingMemberAdvance(startTime,1);
+    public Result chinking(@RequestParam(required = false) String startTime) {
+        Map map = orderCheckingService.chinkingMemberAdvance(startTime, 1);
         return Result.success(map);
     }
 
     @PostMapping("/storechecking")
     @ResponseBody
-    public List storeChecking(@RequestParam(required = false) String startTime,@RequestParam(required = false) String mainid)
-    {
-        List storeCheckingList = orderCheckingService.storeChecking(startTime,mainid);
+    public List storeChecking(@RequestParam(required = false) String startTime, @RequestParam(required = false) String mainid) {
+        List storeCheckingList = orderCheckingService.storeChecking(startTime, mainid);
         return storeCheckingList;
     }
 
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(String id,String startTime,String mainid)
-    {
+    public AjaxResult export(String id, String startTime, String mainid) {
         List differenceOrderList = orderCheckingService.getchinkingList(mainid);
         ExcelUtil<CheckingLog> util = new ExcelUtil<CheckingLog>(CheckingLog.class);
         return util.exportExcel(differenceOrderList, "DifferenceOrderList");

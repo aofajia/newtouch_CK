@@ -1,116 +1,127 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ruoyi.system.mapper.StoreOrdersMapper" >
-  <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.StoreOrders" >
-    <id column="orderid" property="orderid" jdbcType="VARCHAR" />
-    <result column="ordermoney" property="ordermoney" jdbcType="DECIMAL" />
-    <result column="supplierid" property="supplierid" jdbcType="VARCHAR" />
-    <result column="suppliername" property="suppliername" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="VARCHAR" />
-    <result column="date" property="date" jdbcType="TIMESTAMP" />
-    <result column="commitdate" property="commitdate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    orderid, ordermoney, supplierid, suppliername, status, date, commitdate
+<mapper namespace="com.ruoyi.system.mapper.StoreOrdersMapper">
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.StoreOrders">
+        <id column="orderid" property="orderid" jdbcType="VARCHAR"/>
+        <result column="ordermoney" property="ordermoney" jdbcType="DECIMAL"/>
+        <result column="supplierid" property="supplierid" jdbcType="VARCHAR"/>
+        <result column="suppliername" property="suppliername" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="freight" property="freight" jdbcType="DECIMAL"/>
+        <result column="date" property="date" jdbcType="TIMESTAMP"/>
+        <result column="commitdate" property="commitdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    orderid, ordermoney, supplierid, suppliername, status, date, freight, commitdate
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from hrfi_storeorders
-    where orderid = #{orderid,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from hrfi_storeorders
+        where orderid = #{orderid,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from hrfi_storeorders
     where orderid = #{orderid,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.ruoyi.system.domain.StoreOrders" >
+    <insert id="insert" parameterType="com.ruoyi.system.domain.StoreOrders">
     insert into hrfi_storeorders (orderid, ordermoney, supplierid, 
-      suppliername, status, date, 
+      suppliername, status, date, freight,
       commitdate)
     values (#{orderid,jdbcType=VARCHAR}, #{ordermoney,jdbcType=DECIMAL}, #{supplierid,jdbcType=VARCHAR}, 
-      #{suppliername,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, 
+      #{suppliername,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{freight,jdbcType=DECIMAL}
       #{commitdate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.ruoyi.system.domain.StoreOrders" >
-    insert into hrfi_storeorders
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="orderid != null" >
-        orderid,
-      </if>
-      <if test="ordermoney != null" >
-        ordermoney,
-      </if>
-      <if test="supplierid != null" >
-        supplierid,
-      </if>
-      <if test="suppliername != null" >
-        suppliername,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="date != null" >
-        date,
-      </if>
-      <if test="commitdate != null" >
-        commitdate,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="orderid != null" >
-        #{orderid,jdbcType=VARCHAR},
-      </if>
-      <if test="ordermoney != null" >
-        #{ordermoney,jdbcType=DECIMAL},
-      </if>
-      <if test="supplierid != null" >
-        #{supplierid,jdbcType=VARCHAR},
-      </if>
-      <if test="suppliername != null" >
-        #{suppliername,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="date != null" >
-        #{date,jdbcType=TIMESTAMP},
-      </if>
-      <if test="commitdate != null" >
-        #{commitdate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.StoreOrders" >
-    update hrfi_storeorders
-    <set >
-      <if test="ordermoney != null" >
-        ordermoney = #{ordermoney,jdbcType=DECIMAL},
-      </if>
-      <if test="supplierid != null" >
-        supplierid = #{supplierid,jdbcType=VARCHAR},
-      </if>
-      <if test="suppliername != null" >
-        suppliername = #{suppliername,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="date != null" >
-        date = #{date,jdbcType=TIMESTAMP},
-      </if>
-      <if test="commitdate != null" >
-        commitdate = #{commitdate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where orderid = #{orderid,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.StoreOrders" >
+    <insert id="insertSelective" parameterType="com.ruoyi.system.domain.StoreOrders">
+        insert into hrfi_storeorders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderid != null">
+                orderid,
+            </if>
+            <if test="ordermoney != null">
+                ordermoney,
+            </if>
+            <if test="supplierid != null">
+                supplierid,
+            </if>
+            <if test="suppliername != null">
+                suppliername,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="date != null">
+                date,
+            </if>
+            <if test="freight != null">
+                freight,
+            </if>
+            <if test="commitdate != null">
+                commitdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderid != null">
+                #{orderid,jdbcType=VARCHAR},
+            </if>
+            <if test="ordermoney != null">
+                #{ordermoney,jdbcType=DECIMAL},
+            </if>
+            <if test="supplierid != null">
+                #{supplierid,jdbcType=VARCHAR},
+            </if>
+            <if test="suppliername != null">
+                #{suppliername,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null">
+                #{date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="freight != null">
+                #{freight,jdbcType=DECIMAL},
+            </if>
+            <if test="commitdate != null">
+                #{commitdate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.system.domain.StoreOrders">
+        update hrfi_storeorders
+        <set>
+            <if test="ordermoney != null">
+                ordermoney = #{ordermoney,jdbcType=DECIMAL},
+            </if>
+            <if test="supplierid != null">
+                supplierid = #{supplierid,jdbcType=VARCHAR},
+            </if>
+            <if test="suppliername != null">
+                suppliername = #{suppliername,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null">
+                date = #{date,jdbcType=TIMESTAMP},
+            </if>
+            <if test="freight != null">
+                freight = #{freight,jdbcType=DECIMAL},
+            </if>
+            <if test="commitdate != null">
+                commitdate = #{commitdate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where orderid = #{orderid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ruoyi.system.domain.StoreOrders">
     update hrfi_storeorders
     set ordermoney = #{ordermoney,jdbcType=DECIMAL},
       supplierid = #{supplierid,jdbcType=VARCHAR},
       suppliername = #{suppliername,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       date = #{date,jdbcType=TIMESTAMP},
+      freight=#{freight,jdbcType=DECIMAL},
       commitdate = #{commitdate,jdbcType=TIMESTAMP}
     where orderid = #{orderid,jdbcType=VARCHAR}
   </update>

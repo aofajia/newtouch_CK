@@ -14,6 +14,8 @@ public class StoreOrders {
 
     private String status;
 
+    private BigDecimal freight;
+
     private Date date;
 
     private Date commitdate;
@@ -64,6 +66,14 @@ public class StoreOrders {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public BigDecimal getFreight() {
+        return freight;
+    }
+
+    public void setFreight(BigDecimal freight) {
+        this.freight = freight;
     }
 
     public Date getCommitdate() {
